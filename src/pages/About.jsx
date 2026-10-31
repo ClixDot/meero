@@ -50,13 +50,6 @@ export default function About({ onOpenApplyModal }) {
               <span className="text-[#21B8C1]">Opportunities Without Borders.</span>
             </motion.h1>
 
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-[#168F88]/30 border border-[#21B8C1]/40 text-[#21B8C1] text-xs sm:text-sm font-semibold backdrop-blur-md whitespace-nowrap">
-              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#21B8C1] shrink-0" />
-              <span>
-                <span className="sm:hidden">MEA Approved · Govt. of India</span>
-                <span className="hidden sm:inline">Ministry of External Affairs Approved · Govt. of India</span>
-              </span>
-            </div>
 
             <p className="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed font-light">
               Kerala-rooted, MEA-approved, and dedicated to ethical overseas careers. Sourcing India&apos;s best medical, engineering, technical, and hospitality professionals for certified employers across the GCC and Europe.
