@@ -50,11 +50,6 @@ export default function About({ onOpenApplyModal }) {
               <span className="text-[#21B8C1]">Opportunities Without Borders.</span>
             </motion.h1>
 
-
-            <p className="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed font-light">
-              Kerala-rooted, MEA-approved, and dedicated to ethical overseas careers. Sourcing India&apos;s best medical, engineering, technical, and hospitality professionals for certified employers across the GCC and Europe.
-            </p>
-
           </div>
         </div>
       </section>

@@ -8,8 +8,7 @@ import {
   Users2, 
   FileCheck, 
   ArrowRight, 
-  CheckCircle2, 
-  ShieldCheck
+  CheckCircle2
 } from 'lucide-react';
 
 import Button from '../components/Button';
@@ -55,18 +54,6 @@ export default function Services({ onOpenApplyModal }) {
               Comprehensive <br />
               <span className="text-[#21B8C1]">Recruitment Solutions.</span>
             </motion.h1>
-
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-[#168F88]/30 border border-[#21B8C1]/40 text-[#21B8C1] text-xs sm:text-sm font-semibold backdrop-blur-md whitespace-nowrap">
-              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#21B8C1] shrink-0" />
-              <span>
-                <span className="sm:hidden">MEA Approved · Overseas Manpower</span>
-                <span className="hidden sm:inline">MEA Approved · End-to-End Overseas Manpower</span>
-              </span>
-            </div>
-
-            <p className="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed font-light">
-              Proposed service capabilities designed to connect qualified Indian talent with verified international employment opportunities across the GCC, Europe, and global markets.
-            </p>
 
           </div>
         </div>

@@ -5,7 +5,6 @@ import {
   Mail, 
   MapPin, 
   Clock, 
-  ShieldCheck, 
   MessageCircle, 
   ArrowRight,
   ArrowUpRight 
@@ -44,18 +43,6 @@ export default function Contact() {
               Let&apos;s Talk About <br />
               <span className="text-[#21B8C1]">Your Next Opportunity.</span>
             </motion.h1>
-
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-[#168F88]/30 border border-[#21B8C1]/40 text-[#21B8C1] text-xs sm:text-sm font-semibold backdrop-blur-md whitespace-nowrap">
-              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#21B8C1] shrink-0" />
-              <span>
-                <span className="sm:hidden">Cochin Office · Consultation</span>
-                <span className="hidden sm:inline">Direct Office &amp; Recruiter Consultation · Cochin, Kerala</span>
-              </span>
-            </div>
-
-            <p className="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed font-light">
-              Whether you are an aspiring candidate preparing for an overseas role or an international employer seeking qualified Indian talent, our Cochin headquarters is ready to assist.
-            </p>
 
           </div>
         </div>

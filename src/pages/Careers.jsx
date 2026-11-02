@@ -6,7 +6,6 @@ import {
   Briefcase, 
   RotateCcw, 
   AlertCircle, 
-  ShieldCheck, 
   ArrowRight,
   Sparkles
 } from 'lucide-react';
@@ -102,18 +101,6 @@ export default function Careers({ onOpenApplyModal, onOpenJobDetails }) {
               Find the Opportunity <br />
               <span className="text-[#21B8C1]">That Moves You Forward.</span>
             </motion.h1>
-
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-[#168F88]/30 border border-[#21B8C1]/40 text-[#21B8C1] text-xs sm:text-sm font-semibold backdrop-blur-md whitespace-nowrap">
-              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#21B8C1] shrink-0" />
-              <span>
-                <span className="sm:hidden">Verified Jobs · MEA Authorized</span>
-                <span className="hidden sm:inline">Verified International Job Board · MEA Authorized</span>
-              </span>
-            </div>
-
-            <p className="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed font-light">
-              Explore available international opportunities and submit your profile for consideration in upcoming overseas client drives.
-            </p>
 
           </div>
         </div>
