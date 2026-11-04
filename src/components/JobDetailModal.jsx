@@ -1,22 +1,10 @@
-import React, { useEffect } from 'react';
-import { X, MapPin, Briefcase, Clock, GraduationCap, DollarSign, Calendar, CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
+import React from 'react';
+import { X, MapPin, Briefcase, Clock, GraduationCap, CheckCircle2, ShieldCheck, ArrowRight, Image as ImageIcon } from 'lucide-react';
 import Button from './Button';
+import useScrollLock from '../hooks/useScrollLock';
 
-export default function JobDetailModal({ job, isOpen, onClose, onApply }) {
-  // Prevent background scroll and pause Lenis when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.__lenis?.stop();
-    } else {
-      document.body.style.overflow = 'unset';
-      window.__lenis?.start();
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-      window.__lenis?.start();
-    };
-  }, [isOpen]);
+export default function JobDetailModal({ job, isOpen, onClose, onApply, onViewPoster }) {
+  useScrollLock(isOpen);
 
   if (!isOpen || !job) return null;
 
@@ -99,6 +87,26 @@ export default function JobDetailModal({ job, isOpen, onClose, onApply }) {
               </div>
             </div>
           </div>
+
+          {/* Hiring Poster */}
+          {job.poster && (
+            <button
+              type="button"
+              onClick={() => onViewPoster && onViewPoster(job)}
+              className="w-full flex items-center gap-3 p-2.5 rounded-2xl border border-[#E5ECEA] hover:border-[#168F88]/50 hover:bg-[#F5FAF9] transition-colors text-left"
+            >
+              <img
+                src={job.poster}
+                alt=""
+                loading="lazy"
+                className="w-12 h-15 object-cover rounded-lg bg-slate-100 shrink-0"
+              />
+              <span className="flex items-center gap-1.5 font-bold text-[#168F88]">
+                <ImageIcon className="w-4 h-4 shrink-0" />
+                View Hiring Poster
+              </span>
+            </button>
+          )}
 
           {/* Job Overview */}
           <div>

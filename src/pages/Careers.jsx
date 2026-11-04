@@ -1,13 +1,10 @@
 import React, { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  Search, 
-  MapPin, 
-  Briefcase, 
-  RotateCcw, 
-  AlertCircle, 
-  ArrowRight,
-  Sparkles
+import {
+  Search,
+  RotateCcw,
+  MessageCircle
 } from 'lucide-react';
 
 import Button from '../components/Button';
@@ -20,10 +17,24 @@ import {
   industriesList, 
   employmentTypesList 
 } from '../data/jobs';
+import { companyInfo } from '../data/companyInfo';
 
-export default function Careers({ onOpenApplyModal, onOpenJobDetails }) {
+const driveUpdatesChatUrl = `https://wa.me/${companyInfo.contact.whatsappNumber}?text=${encodeURIComponent('Hello Meero HR Consultancy, please share updates on upcoming overseas drives.')}`;
+
+export default function Careers({
+  onOpenApplyModal,
+  onOpenJobDetails,
+  onViewPoster,
+  whatsappChannelUrl = companyInfo.contact.whatsappChannelUrl
+}) {
+  // Home page destination cards link here with ?country=<name>
+  const [searchParams] = useSearchParams();
+  const countryParam = searchParams.get('country')?.toLowerCase();
+
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState('All Countries');
+  const [selectedCountry, setSelectedCountry] = useState(() => (
+    (countryParam && destinationCountries.find((country) => country.toLowerCase().includes(countryParam))) || 'All Countries'
+  ));
   const [selectedIndustry, setSelectedIndustry] = useState('All Industries');
   const [selectedType, setSelectedType] = useState('All Types');
   const [sortBy, setSortBy] = useState('latest');
@@ -217,6 +228,7 @@ export default function Careers({ onOpenApplyModal, onOpenJobDetails }) {
                   job={job}
                   onViewDetails={onOpenJobDetails}
                   onApply={onOpenApplyModal}
+                  onViewPoster={onViewPoster}
                 />
               ))}
             </div>
@@ -239,9 +251,18 @@ export default function Careers({ onOpenApplyModal, onOpenJobDetails }) {
                 Looking for Upcoming Overseas Drives?
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
-                Client delegations visit our Cochin center regularly. Submit your profile to be pre-screened for upcoming vacancies.
+                Client delegations visit our Cochin center regularly. Follow new drives on WhatsApp, or submit your profile to be pre-screened for upcoming vacancies.
               </p>
-              <div className="pt-2">
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+                <a
+                  href={whatsappChannelUrl || driveUpdatesChatUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold bg-[#25D366] text-[#0D151E] hover:bg-[#20ba5a] hover:scale-105 active:scale-95 transition-all shadow-md"
+                >
+                  <MessageCircle className="w-4 h-4 shrink-0" />
+                  {whatsappChannelUrl ? 'Join Our WhatsApp Channel' : 'Get Drive Updates on WhatsApp'}
+                </a>
                 <button
                   type="button"
                   onClick={() => onOpenApplyModal && onOpenApplyModal()}

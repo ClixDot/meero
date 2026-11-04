@@ -10,8 +10,8 @@ import {
   ArrowUpRight 
 } from 'lucide-react';
 
-import Button from '../components/Button';
 import ContactForm from '../components/ContactForm';
+import InstagramIcon from '../components/InstagramIcon';
 import { companyInfo } from '../data/companyInfo';
 
 export default function Contact() {
@@ -98,7 +98,7 @@ export default function Contact() {
                       Telephone &amp; Mobile
                     </h4>
                     <div className="flex flex-wrap items-center gap-2 pt-0.5 font-semibold text-[#171B20]">
-                      <a href={`tel:${companyInfo.contact.cleanOfficeMobile}`} className="hover:text-[#168F88]">
+                      <a href={`tel:+${companyInfo.contact.cleanOfficeMobile}`} className="hover:text-[#168F88]">
                         {companyInfo.contact.officeMobile}
                       </a>
                       <span className="text-slate-300">·</span>
@@ -122,10 +122,10 @@ export default function Contact() {
                   </div>
                 </div>
 
-                {/* WhatsApp & MD Direct Actions */}
+                {/* WhatsApp, Instagram, Email & MD Direct Actions */}
                 <div className="pt-3 border-t border-[#E5ECEA] flex flex-col gap-2.5">
                   <a
-                    href="https://wa.me/919947334733"
+                    href={companyInfo.contact.whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-[#168F88] hover:bg-[#137d77] text-white transition-all shadow-sm group"
@@ -137,7 +137,7 @@ export default function Contact() {
                           WhatsApp Consultation
                         </span>
                         <span className="text-[11px] text-emerald-100 font-medium leading-tight mt-0.5">
-                          +91 99 4733 4733
+                          {companyInfo.contact.officeMobile}
                         </span>
                       </div>
                     </div>
@@ -148,9 +148,31 @@ export default function Contact() {
                     </span>
                   </a>
 
+                  {companyInfo.contact.instagramUrl && (
+                    <a
+                      href={companyInfo.contact.instagramUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-[#E5ECEA] hover:border-[#168F88]/50 text-[#171B20] transition-all"
+                    >
+                      <InstagramIcon className="w-5 h-5 shrink-0 text-[#168F88]" />
+                      <span className="text-xs font-bold">Follow us on Instagram</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 ml-auto shrink-0 text-[#168F88]" />
+                    </a>
+                  )}
+
+                  <a
+                    href={`mailto:${companyInfo.contact.email}`}
+                    className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-[#E5ECEA] hover:border-[#168F88]/50 text-[#171B20] transition-all min-w-0"
+                  >
+                    <Mail className="w-5 h-5 shrink-0 text-[#168F88]" />
+                    <span className="text-xs font-bold truncate">{companyInfo.contact.email}</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 ml-auto shrink-0 text-[#168F88]" />
+                  </a>
+
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 px-3.5 py-2.5 rounded-xl bg-white border border-[#E5ECEA] text-xs">
                     <span className="text-[#697477]">Managing Director: <strong className="text-[#171B20]">{companyInfo.managingDirector.name}</strong></span>
-                    <a href={`tel:${companyInfo.managingDirector.cleanDirectMobile}`} className="font-bold text-[#168F88] hover:underline">
+                    <a href={`tel:+${companyInfo.managingDirector.cleanDirectMobile}`} className="font-bold text-[#168F88] hover:underline">
                       {companyInfo.managingDirector.directMobile}
                     </a>
                   </div>
@@ -178,7 +200,7 @@ export default function Contact() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
               <div>
                 <h4 className="text-base sm:text-lg font-bold font-heading text-[#171B20]">
-                  Cochin Office Location Map
+                  Office Location Map
                 </h4>
                 <p className="text-xs text-[#697477]">
                   Ravipuram Road, Near Sree Krishna Temple, Cochin, Kerala 682016

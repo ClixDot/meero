@@ -1,8 +1,8 @@
 import React from 'react';
-import { MapPin, Briefcase, Clock, ArrowRight } from 'lucide-react';
+import { MapPin, Briefcase, Clock, ArrowRight, Image as ImageIcon } from 'lucide-react';
 import Button from './Button';
 
-export default function JobCard({ job, onViewDetails, onApply }) {
+export default function JobCard({ job, onViewDetails, onApply, onViewPoster }) {
   // Extract short experience (e.g. "5 - 8 Years") to avoid wrapping or squashing the industry tag
   const shortExperience = job.experience
     ? job.experience.split('(')[0].trim()
@@ -47,6 +47,18 @@ export default function JobCard({ job, onViewDetails, onApply }) {
           {job.salaryNote || "Competitive Tax-Free Salary"}
         </span>
       </div>
+
+      {/* Hiring Poster */}
+      {job.poster && (
+        <button
+          type="button"
+          onClick={() => onViewPoster && onViewPoster(job)}
+          className="px-4 sm:px-5 py-2.5 border-t border-slate-100 flex items-center gap-1.5 text-xs font-bold text-[#168F88] hover:text-[#0f6c67] hover:bg-[#F5FAF9] transition-colors text-left"
+        >
+          <ImageIcon className="w-3.5 h-3.5 shrink-0" />
+          View Hiring Poster
+        </button>
+      )}
 
       {/* Card Footer Actions */}
       <div className="p-4 sm:p-5 pt-3.5 flex items-center justify-between gap-3 bg-white border-t border-slate-100">

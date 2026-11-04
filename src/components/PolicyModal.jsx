@@ -1,21 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { X, ShieldCheck } from 'lucide-react';
 import Button from './Button';
+import useScrollLock from '../hooks/useScrollLock';
 
 export default function PolicyModal({ isOpen, onClose, type = 'privacy' }) {
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.__lenis?.stop();
-    } else {
-      document.body.style.overflow = 'unset';
-      window.__lenis?.start();
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-      window.__lenis?.start();
-    };
-  }, [isOpen]);
+  useScrollLock(isOpen);
 
   if (!isOpen) return null;
 
@@ -84,7 +73,7 @@ export default function PolicyModal({ isOpen, onClose, type = 'privacy' }) {
               </p>
               <h4 className="font-bold text-[#171B20] pt-2">1. Statutory Compliance</h4>
               <p>
-                MEERO Overseas HR Consultancy operates with authorization from the Ministry of External Affairs (MEA), Government of India. All overseas placements are executed through approved foreign demand letters and verified employment visas.
+                MEERO Overseas HR Consultancy is a Govt of India approved recruiting agency. All overseas placements are executed through approved foreign demand letters and verified employment visas.
               </p>
               <h4 className="font-bold text-[#171B20] pt-2">2. Ethical Recruitment Standards</h4>
               <p>

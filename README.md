@@ -1,6 +1,6 @@
 # MEERO Overseas HR Consultancy — Official Website
 
-A premium, modern, dynamic 5-page web platform for **MEERO Overseas HR Consultancy**, an overseas recruitment and human resources consultancy based in Cochin, Kerala, India, authorized by the **Ministry of External Affairs (MEA), Government of India**.
+A premium, modern, dynamic 5-page web platform for **MEERO Overseas HR Consultancy**, a **Govt of India approved recruiting agency** based in Cochin, Kerala, India.
 
 ---
 
@@ -13,27 +13,27 @@ A premium, modern, dynamic 5-page web platform for **MEERO Overseas HR Consultan
 - **Main Heading Text:** `#171B20`
 - **Secondary Text:** `#697477`
 - **Subtle Borders:** `#E5ECEA`
-- **Brand Motifs:** Fingerprint circular concentric loop inspired by the Meero brand identity, with floating degree indicator and MEA India government approval emblem.
+- **Brand Motifs:** Fingerprint circular concentric loop inspired by the Meero brand identity, with floating degree indicator and the State Emblem of India beside the approval tagline.
 
 ---
 
 ## 🚀 Key Features
 
 1. **Exactly 5 Distinct Pages with React Router Navigation:**
-   - **Page 1: Home (`/`)**: Hero section with international career visual, trust introduction, 3 feature cards, 6 proposed service categories, 4-step recruitment journey, 4 pillars of excellence, dynamic featured vacancies, and final CTA.
-   - **Page 2: About Us (`/about`)**: Company profile, split layout, official MEA authorization, mission & vision, 5 core values, candidate & employer dual support charter, and leadership spotlight on Managing Director Abdul Latheef.
-   - **Page 3: Services (`/services`)**: In-depth cards for 6 proposed recruitment categories (Overseas Recruitment, Medical & Healthcare, Engineering & Technical, Skilled & Non-Skilled, HR Consultancy, Interview & Documentation Assistance), desktop horizontal & mobile vertical timeline, and Candidate vs Employer enquiry selector.
-   - **Page 4: Careers (`/careers`)**: Searchable and filterable job board with keyword search, destination country filter, industry filter, employment type filter, sorting, interactive Job Detail modal, and complete candidate application modal with drag-and-drop resume upload and validation.
-   - **Page 5: Contact Us (`/contact`)**: Verified Cochin office contact info, click-to-call, click-to-email, direct WhatsApp button, validated contact form, Google Maps embed for Ravipuram, office hours, and Managing Director details.
+   - **Page 1: Home (`/`)**: Hero section with international career visual, trust introduction, 3 feature cards, 9 recruitment specializations, 4-step recruitment journey, 4 pillars of excellence, dynamic featured vacancies, and final CTA.
+   - **Page 2: About Us (`/about`)**: Story, mission & vision, values, and closing call to action. All copy lives in `src/data/aboutContent.js`.
+   - **Page 3: Services (`/services`)**: The 9 specializations in order: Logistics and transport, FMCG, Retail, Hospitality, Facility management, Construction, Oil and gas, Healthcare, Manufacturing. Edit them in `src/data/services.js`.
+   - **Page 4: Careers (`/careers`)**: Searchable and filterable job board with keyword search, destination country filter, industry filter, employment type filter, sorting, interactive Job Detail modal, hiring poster modal, WhatsApp channel link (`whatsappChannelUrl` in `src/data/companyInfo.js`), and complete candidate application modal with drag-and-drop resume upload and validation.
+   - **Page 5: Contact Us (`/contact`)**: Contact desk info, click-to-call, email, WhatsApp, and Instagram (`instagramUrl` in `src/data/companyInfo.js`) links, validated contact form, Google Maps embed for Ravipuram, office hours, and Managing Director details.
 
 2. **Verified Company Details (Zero Fabrication):**
    - **Managing Director:** Abdul Latheef (Direct: `+91 99 4733 4733`)
-   - **Office Mobile:** `+91 99 4655 5198`
+   - **Office Mobile:** `+91 98 4655 5198`
    - **Telephone:** `+91 484 2356 123`
    - **Email:** `hrmeero@gmail.com`
    - **Website:** `www.meerohr.com`
    - **Office Address:** 2nd Floor, Krishnanjali Building, Near Sree Krishna Temple, Ravipuram, Cochin – 682016, Kerala, India
-   - **Regulatory Approval:** Approved by Ministry of External Affairs (MEA), Government of India
+   - **Regulatory Approval:** Govt of India approved recruiting agency
 
 3. **Production Tech Stack:**
    - React 19 + Vite 8

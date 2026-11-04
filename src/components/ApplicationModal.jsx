@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { X, Upload, CheckCircle2, AlertCircle, FileText, Loader2, ArrowRight } from 'lucide-react';
+import { X, Upload, CheckCircle2, AlertCircle, FileText, ArrowRight, Image as ImageIcon } from 'lucide-react';
 import Button from './Button';
 import CustomDropdown from './CustomDropdown';
 import { destinationCountries } from '../data/jobs';
+import useScrollLock from '../hooks/useScrollLock';
 
-export default function ApplicationModal({ isOpen, onClose, preselectedJob = null }) {
+export default function ApplicationModal({ isOpen, onClose, preselectedJob = null, onViewPoster }) {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -35,22 +36,14 @@ export default function ApplicationModal({ isOpen, onClose, preselectedJob = nul
     }
   }, [preselectedJob]);
 
-  // Lock body scroll and pause Lenis while modal is open
+  useScrollLock(isOpen);
+
+  // Reset submission state each time the modal opens
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.__lenis?.stop();
-      // Reset states
       setIsSuccess(false);
       setErrorMessage('');
-    } else {
-      document.body.style.overflow = 'unset';
-      window.__lenis?.start();
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-      window.__lenis?.start();
-    };
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -230,6 +223,16 @@ export default function ApplicationModal({ isOpen, onClose, preselectedJob = nul
           <p className="text-xs sm:text-sm text-[#697477] mt-1">
             Complete the form below to register your profile for verified client vacancies.
           </p>
+          {preselectedJob?.poster && !isSuccess && (
+            <button
+              type="button"
+              onClick={() => onViewPoster && onViewPoster(preselectedJob)}
+              className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-[#168F88] hover:text-[#0f6c67]"
+            >
+              <ImageIcon className="w-3.5 h-3.5 shrink-0" />
+              View Hiring Poster
+            </button>
+          )}
         </div>
 
         {/* Body Content */}

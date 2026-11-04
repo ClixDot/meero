@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import Header from './components/Header';
@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
 import ApplicationModal from './components/ApplicationModal';
 import JobDetailModal from './components/JobDetailModal';
+import PosterModal from './components/PosterModal';
 import PolicyModal from './components/PolicyModal';
 import ScrollToTop from './components/ScrollToTop';
 
@@ -29,6 +30,10 @@ export default function App() {
   const [isJobDetailOpen, setIsJobDetailOpen] = useState(false);
   const [activeJobForDetails, setActiveJobForDetails] = useState(null);
 
+  // Hiring Poster Modal state (the job whose poster is showing)
+  const [posterJob, setPosterJob] = useState(null);
+  const closePoster = useCallback(() => setPosterJob(null), []);
+
   // Policy Modal state ('privacy' | 'terms' | null)
   const [policyModalType, setPolicyModalType] = useState(null);
 
@@ -48,6 +53,12 @@ export default function App() {
   const handleApplyFromDetail = (job) => {
     setIsJobDetailOpen(false);
     handleOpenApplyModal(job);
+  };
+
+  // Apply from the poster, which may be open on top of the Job Detail Modal
+  const handleApplyFromPoster = (job) => {
+    closePoster();
+    handleApplyFromDetail(job);
   };
 
   return (
@@ -88,9 +99,10 @@ export default function App() {
           <Route 
             path="/careers" 
             element={
-              <Careers 
+              <Careers
                 onOpenApplyModal={handleOpenApplyModal}
                 onOpenJobDetails={handleOpenJobDetails}
+                onViewPoster={setPosterJob}
               />
             } 
           />
@@ -118,6 +130,7 @@ export default function App() {
         isOpen={isApplyModalOpen}
         onClose={() => setIsApplyModalOpen(false)}
         preselectedJob={activeJobForApplication}
+        onViewPoster={setPosterJob}
       />
 
       {/* Global Job Detail Specifications Modal */}
@@ -126,7 +139,18 @@ export default function App() {
         onClose={() => setIsJobDetailOpen(false)}
         job={activeJobForDetails}
         onApply={handleApplyFromDetail}
+        onViewPoster={setPosterJob}
       />
+
+      {/* Hiring Poster Modal */}
+      {posterJob && (
+        <PosterModal
+          key={posterJob.id}
+          job={posterJob}
+          onClose={closePoster}
+          onApply={handleApplyFromPoster}
+        />
+      )}
 
       {/* Privacy Policy & Terms Modal */}
       <PolicyModal

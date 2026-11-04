@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import Button from './Button';
+import { companyInfo } from '../data/companyInfo';
 
 export default function ContactForm({ initialEnquiryType = 'Candidate Job Enquiry' }) {
   const [formData, setFormData] = useState({
@@ -93,10 +94,10 @@ export default function ContactForm({ initialEnquiryType = 'Candidate Job Enquir
           Message Successfully Sent
         </h3>
         <p className="text-sm text-[#697477] max-w-md mx-auto">
-          Thank you, <strong className="text-[#171B20]">{formData.name}</strong>. Your enquiry regarding <strong className="text-[#168F88]">{formData.enquiryType}</strong> has been directed to our Cochin desk.
+          Thank you, <strong className="text-[#171B20]">{formData.name}</strong>. Your enquiry regarding <strong className="text-[#168F88]">{formData.enquiryType}</strong> has been directed to our contact desk.
         </p>
         <p className="text-xs text-[#697477]">
-          We typically respond within 1 business day. For urgent matters, feel free to call our office at <span className="font-semibold text-[#171B20]">+91 484 2356 123</span> or chat on WhatsApp.
+          We typically respond within 1 business day. For urgent matters, feel free to call our office at <span className="font-semibold text-[#171B20]">{companyInfo.contact.officeMobile}</span> or chat on WhatsApp.
         </p>
         <button
           type="button"

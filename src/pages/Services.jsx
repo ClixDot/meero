@@ -1,31 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Globe2, 
-  Stethoscope, 
-  Cpu, 
-  Wrench, 
-  Users2, 
-  FileCheck, 
-  ArrowRight, 
-  CheckCircle2
+import {
+  ArrowRight,
+  Building2,
+  CheckCircle2,
+  Factory,
+  Fuel,
+  HardHat,
+  PackageOpen,
+  Stethoscope,
+  Store,
+  Truck,
+  UtensilsCrossed
 } from 'lucide-react';
 
 import Button from '../components/Button';
-import { servicesList, recruitmentSteps } from '../data/services';
+import { servicesList } from '../data/services';
 
 const iconMap = {
-  Globe2,
+  Truck,
+  PackageOpen,
+  Store,
+  UtensilsCrossed,
+  Building2,
+  HardHat,
+  Fuel,
   Stethoscope,
-  Cpu,
-  Wrench,
-  Users2,
-  FileCheck,
+  Factory,
 };
 
 export default function Services({ onOpenApplyModal }) {
-  const [activeTab, setActiveTab] = useState('candidate');
-
   return (
     <div className="min-h-screen bg-[#0B0F17]">
       
@@ -68,7 +72,7 @@ export default function Services({ onOpenApplyModal }) {
           {/* Detailed Service Cards */}
           <div className="space-y-8 sm:space-y-12">
             {servicesList.map((service, index) => {
-              const IconComp = iconMap[service.icon] || Globe2;
+              const IconComp = iconMap[service.icon];
               const isEven = index % 2 === 0;
 
               return (
@@ -98,11 +102,11 @@ export default function Services({ onOpenApplyModal }) {
                     </h3>
 
                     <p className="text-xs sm:text-sm text-[#697477] leading-relaxed">
-                      {service.simpleDesc || service.shortDescription}
+                      {service.description}
                     </p>
 
                     <div className="pt-1 space-y-1.5">
-                      {(service.simpleHighlights || service.keyHighlights.slice(0, 2)).map((hl, i) => (
+                      {service.highlights.map((hl, i) => (
                         <div key={i} className="flex items-center gap-2 text-xs text-[#171B20]">
                           <CheckCircle2 className="w-3.5 h-3.5 text-[#168F88] shrink-0" />
                           <span>{hl}</span>

@@ -6,38 +6,25 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-import { 
-  ArrowRight, 
-  ShieldCheck, 
-  Globe2, 
-  Users, 
-  Compass, 
-  CheckCircle2, 
-  MapPin, 
-  Briefcase, 
-  FileText, 
-  Building2, 
-  PhoneCall, 
+import {
+  ArrowRight,
+  CheckCircle2,
+  MapPin,
   Sparkles,
   ChevronRight,
   ChevronDown,
-  ExternalLink,
-  Award,
   Stethoscope,
-  Cpu,
   Wrench,
-  UtensilsCrossed,
-  FileBadge,
-  HelpCircle,
   MessageCircle,
   Phone
 } from 'lucide-react';
 
 import Button from '../components/Button';
 import FingerprintGraphic from '../components/FingerprintGraphic';
+import TrustBadge from '../components/TrustBadge';
 
 import { companyInfo } from '../data/companyInfo';
-import { servicesList, recruitmentSteps, recruitmentSectors } from '../data/services';
+import { servicesList, recruitmentSteps } from '../data/services';
 import { sampleJobs } from '../data/jobs';
 import { faqList, destinationMarkets } from '../data/destinations';
 
@@ -48,7 +35,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
   const heroContentRef = useRef(null);
 
   // Active selected service in the 3-column explorer
-  const [activeServiceId, setActiveServiceId] = useState(servicesList[0].id); // default: medical-healthcare
+  const [activeServiceId, setActiveServiceId] = useState(servicesList[0].id);
 
   // Active accordion FAQ item
   const [openFaqId, setOpenFaqId] = useState('faq-1');
@@ -232,7 +219,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
         );
       }
 
-      // 8. Cochin Career Desk CTA Banner
+      // 8. Career Desk CTA Banner
       const deskBanner = document.querySelector('.gsap-desk-banner');
       if (deskBanner) {
         gsap.fromTo(deskBanner,
@@ -345,30 +332,25 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
         <div className="max-w-[1560px] 2xl:max-w-[1680px] w-full mx-auto px-4 sm:px-6 lg:px-10 relative z-10 my-auto">
           <div ref={heroContentRef} className="max-w-3xl space-y-6">
             
-            {/* Huge Clean Bold Headline (Style: "Digital Marketing Services") */}
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
+            {/* Government approval logo and tagline */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
+            >
+              <TrustBadge tone="dark" size="lg" />
+            </motion.div>
+
+            {/* Huge Clean Bold Headline (Style: "Digital Marketing Services") */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.15 }}
               className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white font-heading leading-[1.1] sm:leading-[1.08] break-words"
             >
               Your Global Career <br />
               <span className="text-white">Starts Here.</span>
             </motion.h1>
-
-            {/* Pill Tag / Badge */}
-            <motion.div 
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-[#168F88]/30 border border-[#21B8C1]/40 text-[#21B8C1] text-xs sm:text-sm font-semibold backdrop-blur-md whitespace-nowrap"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#21B8C1] shrink-0" />
-              <span>
-                <span className="sm:hidden">MEA Approved · Govt. of India</span>
-                <span className="hidden sm:inline">Approved by Ministry of External Affairs · Govt. of India</span>
-              </span>
-            </motion.div>
 
             {/* Action Buttons */}
             <motion.div 
@@ -390,7 +372,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                 to="/contact"
                 className="w-full sm:w-auto text-center justify-center px-6 py-3 rounded-full text-xs sm:text-sm font-semibold bg-white/10 text-white hover:bg-white/20 border border-white/20 backdrop-blur-md transition-all"
               >
-                Contact Cochin Desk
+                Contact Desk
               </Link>
             </motion.div>
 
@@ -433,7 +415,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                     >
                       <div className="flex items-center gap-2">
                         <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[#168F88]' : 'bg-slate-300 group-hover:bg-slate-400'}`} />
-                        <span className="truncate">{service.shortTitle || service.title}</span>
+                        <span className="truncate">{service.title}</span>
                       </div>
                       <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isActive ? 'translate-x-0.5 text-[#168F88]' : 'opacity-0 group-hover:opacity-100 text-slate-400'}`} />
                     </button>
@@ -459,12 +441,12 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                     </h3>
 
                     <p className="text-xs sm:text-sm text-[#697477] leading-relaxed">
-                      {activeService.simpleDesc || activeService.shortDescription}
+                      {activeService.description}
                     </p>
 
                     {/* Concise Highlights */}
                     <div className="pt-1.5 space-y-1.5">
-                      {(activeService.simpleHighlights || activeService.keyHighlights.slice(0, 2)).map((hl, i) => (
+                      {activeService.highlights.map((hl, i) => (
                         <div key={i} className="flex items-center gap-2 text-xs text-[#171B20]">
                           <CheckCircle2 className="w-3.5 h-3.5 text-[#168F88] shrink-0" />
                           <span>{hl}</span>
@@ -745,7 +727,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               {destinationMarkets.map((dest, i) => (
                 <Link
                   key={i}
-                  to={`/careers?country=${encodeURIComponent(dest.shortName)}`}
+                  to={`/careers?country=${encodeURIComponent(dest.country)}`}
                   className="gsap-dest-card group p-5 rounded-2xl bg-[#F5FAF9] hover:bg-white border border-[#E5ECEA] hover:border-[#168F88]/40 hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
                 >
                   <div className="space-y-3">
@@ -911,7 +893,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
           </div>
 
           {/* ----------------------------------------------------
-              SECTION: COCHIN CAREER DESK
+              SECTION: CAREER DESK
           ---------------------------------------------------- */}
           <div className="pt-14 pb-14 border-b border-slate-200">
             <div className="gsap-desk-banner rounded-2xl sm:rounded-3xl bg-[#0D151E] text-white p-6 sm:p-10 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 relative overflow-hidden">
@@ -936,21 +918,21 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               {/* Right Column: Clean, Direct Action Buttons */}
               <div className="relative z-10 flex flex-col sm:flex-row lg:flex-col gap-3 w-full sm:w-auto shrink-0">
                 <a
-                  href="https://wa.me/919947334733"
+                  href={companyInfo.contact.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-4 sm:px-6 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold bg-[#168F88] text-white hover:bg-[#137d77] hover:scale-105 active:scale-95 transition-all shadow-md text-center whitespace-nowrap shrink-0"
                 >
                   <MessageCircle className="w-4 h-4 shrink-0" />
-                  <span className="whitespace-nowrap">WhatsApp: +91 99 4733 4733</span>
+                  <span className="whitespace-nowrap">WhatsApp: {companyInfo.contact.officeMobile}</span>
                 </a>
 
                 <a
-                  href="tel:+919946555198"
+                  href={`tel:+${companyInfo.contact.cleanOfficeMobile}`}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-4 sm:px-6 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-semibold bg-white/10 text-white hover:bg-white/20 border border-white/15 hover:scale-105 active:scale-95 transition-all text-center whitespace-nowrap shrink-0"
                 >
                   <Phone className="w-4 h-4 text-[#21B8C1] shrink-0" />
-                  <span className="whitespace-nowrap">Call: +91 99 4655 5198</span>
+                  <span className="whitespace-nowrap">Call: {companyInfo.contact.officeMobile}</span>
                 </a>
               </div>
 
@@ -958,20 +940,14 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
           </div>
 
           {/* ----------------------------------------------------
-              SECTION 5: VERIFIED CREDENTIALS & COCHIN OFFICE
+              SECTION 5: VERIFIED CREDENTIALS & OFFICE
           ---------------------------------------------------- */}
           <div className="pt-10 sm:pt-14">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 bg-gradient-to-r from-[#F5FAF9] to-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#E5ECEA] overflow-hidden w-full max-w-full">
               <div className="w-full min-w-0 space-y-3 text-center lg:text-left flex flex-col items-center lg:items-start">
-                <div className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold whitespace-nowrap">
-                  <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 shrink-0" />
-                  <span>
-                    <span className="sm:hidden">MEA Approved · Govt. of India</span>
-                    <span className="hidden sm:inline">Ministry of External Affairs Approved · Govt. of India</span>
-                  </span>
-                </div>
+                <TrustBadge tone="light" />
                 <h4 className="text-xl sm:text-2xl font-bold text-[#171B20] font-heading break-words">
-                  Headquartered in Ravipuram, Cochin, Kerala
+                  Our Office in Ravipuram, Cochin, Kerala
                 </h4>
                 <p className="text-xs sm:text-sm text-[#697477] max-w-xl mx-auto lg:mx-0 leading-relaxed">
                   Led by Managing Director <strong>Abdul Latheef</strong>. Hosting direct client interview delegations, technical trade tests, and pre-departure briefings.
@@ -993,7 +969,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                   size="md"
                   className="w-full sm:w-auto justify-center"
                 >
-                  Visit Cochin Office
+                  Visit Our Office
                 </Button>
               </div>
             </div>

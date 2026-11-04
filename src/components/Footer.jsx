@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, Globe, ShieldCheck, ArrowRight, MessageCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageCircle } from 'lucide-react';
 import Logo from './Logo';
+import InstagramIcon from './InstagramIcon';
+import TrustBadge from './TrustBadge';
 import { companyInfo } from '../data/companyInfo';
 import { servicesList } from '../data/services';
 
@@ -33,17 +35,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
               Connecting ambition with international opportunities. Meero Overseas HR Consultancy provides trusted recruitment and personalized career guidance from Cochin, Kerala.
             </p>
 
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
-              <ShieldCheck className="w-5 h-5 text-[#21B8C1] shrink-0 mt-0.5" />
-              <div>
-                <span className="text-xs font-semibold text-white block">
-                  Ministry of External Affairs
-                </span>
-                <span className="text-[11px] text-[#21B8C1]">
-                  Government of India Approved Overseas Recruitment Agency
-                </span>
-              </div>
-            </div>
+            <TrustBadge tone="dark" />
           </div>
 
           {/* Col 2: Navigation (Col span 2) */}
@@ -102,7 +94,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
           {/* Col 4: Contact & Office (Col span 3) */}
           <div className="lg:col-span-3">
             <h4 className="text-xs font-bold uppercase tracking-widest text-white font-heading mb-4">
-              Cochin Headquarters
+              Our Office
             </h4>
             <div className="space-y-3 text-xs sm:text-sm text-slate-400">
               <div className="flex items-start gap-2.5">
@@ -115,7 +107,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#21B8C1] shrink-0" />
                 <div className="text-xs">
-                  <a href={`tel:${companyInfo.contact.cleanOfficeMobile}`} className="hover:text-white text-slate-300">
+                  <a href={`tel:+${companyInfo.contact.cleanOfficeMobile}`} className="hover:text-white text-slate-300">
                     {companyInfo.contact.officeMobile}
                   </a> (Office) · 
                   <a href={`tel:${companyInfo.contact.cleanTelephone}`} className="hover:text-white text-slate-300 ml-1">
@@ -135,7 +127,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
                 <span className="text-white font-medium">Managing Director: </span>
                 <span>{companyInfo.managingDirector.name}</span>
                 <span className="block text-[#21B8C1]">
-                  <a href={`tel:${companyInfo.managingDirector.cleanDirectMobile}`} className="hover:underline">
+                  <a href={`tel:+${companyInfo.managingDirector.cleanDirectMobile}`} className="hover:underline">
                     {companyInfo.managingDirector.directMobile}
                   </a>
                 </span>
@@ -158,6 +150,18 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
             >
               <MessageCircle className="w-4 h-4" />
             </a>
+            {companyInfo.contact.instagramUrl && (
+              <a
+                href={companyInfo.contact.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#E1306C] text-white flex items-center justify-center transition-colors"
+                title="Instagram"
+                aria-label="Instagram"
+              >
+                <InstagramIcon className="w-4 h-4" />
+              </a>
+            )}
             <a
               href={`mailto:${companyInfo.contact.email}`}
               className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#168F88] text-white flex items-center justify-center transition-colors"
@@ -166,7 +170,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
               <Mail className="w-4 h-4" />
             </a>
             <a
-              href={`tel:${companyInfo.contact.cleanOfficeMobile}`}
+              href={`tel:+${companyInfo.contact.cleanOfficeMobile}`}
               className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#21B8C1] text-white flex items-center justify-center transition-colors"
               title="Call"
             >

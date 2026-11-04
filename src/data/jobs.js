@@ -1,12 +1,17 @@
+import { servicesList } from "./services.js";
+
+// To change a hiring poster: add the image to public/images/posters/ and update
+// the job's `poster` path. Remove the field to hide the poster option for that job.
 export const sampleJobs = [
   {
     id: "job-001",
+    poster: "/images/posters/job-001.jpg",
     title: "Registered Staff Nurse (ICU / Emergency / CCU)",
     destinationCountry: "United Arab Emirates",
     location: "Abu Dhabi / Dubai, UAE",
     countryCode: "AE",
     flagEmoji: "🇦🇪",
-    industry: "Healthcare & Medical",
+    industry: "Healthcare",
     employmentType: "Full-Time",
     experience: "3 - 5 Years (Minimum 2 yrs bedside ICU)",
     minExperienceYears: 3,
@@ -38,12 +43,13 @@ export const sampleJobs = [
   },
   {
     id: "job-002",
+    poster: "/images/posters/job-002.jpg",
     title: "Senior MEP Project Engineer (High-Rise & Infrastructure)",
     destinationCountry: "Kingdom of Saudi Arabia",
     location: "Riyadh & Dammam, Saudi Arabia",
     countryCode: "SA",
     flagEmoji: "🇸🇦",
-    industry: "Engineering & Technical",
+    industry: "Construction",
     employmentType: "Full-Time Contract",
     experience: "6 - 10 Years (Minimum 3 yrs GCC experience)",
     minExperienceYears: 6,
@@ -75,12 +81,13 @@ export const sampleJobs = [
   },
   {
     id: "job-003",
+    poster: "/images/posters/job-003.jpg",
     title: "Civil Infrastructure QA/QC Inspector",
     destinationCountry: "Qatar",
     location: "Doha, Qatar",
     countryCode: "QA",
     flagEmoji: "🇶🇦",
-    industry: "Engineering & Technical",
+    industry: "Construction",
     employmentType: "Full-Time",
     experience: "4 - 7 Years",
     minExperienceYears: 4,
@@ -112,12 +119,13 @@ export const sampleJobs = [
   },
   {
     id: "job-004",
+    poster: "/images/posters/job-004.jpg",
     title: "Executive Sous Chef (Continental & Mediterranean)",
     destinationCountry: "Oman",
     location: "Muscat, Oman",
     countryCode: "OM",
     flagEmoji: "🇴🇲",
-    industry: "Hospitality & Tourism",
+    industry: "Hospitality",
     employmentType: "Full-Time",
     experience: "5 - 8 Years (Upscale Hotel / Fine Dining)",
     minExperienceYears: 5,
@@ -149,12 +157,13 @@ export const sampleJobs = [
   },
   {
     id: "job-005",
+    poster: "/images/posters/job-005.jpg",
     title: "Certified 6G TIG & ARC Welders (Refinery Project)",
     destinationCountry: "Kingdom of Saudi Arabia",
     location: "Jubail / Yanbu, Saudi Arabia",
     countryCode: "SA",
     flagEmoji: "🇸🇦",
-    industry: "Skilled Trades & Technical Personnel",
+    industry: "Oil and gas",
     employmentType: "Full-Time Contract",
     experience: "3 - 6 Years (Aramco / Oil & Gas)",
     minExperienceYears: 3,
@@ -186,12 +195,13 @@ export const sampleJobs = [
   },
   {
     id: "job-006",
+    poster: "/images/posters/job-006.jpg",
     title: "Warehouse Logistics Operations Supervisor",
     destinationCountry: "Kuwait",
     location: "Shuwaikh / Al Ahmadi, Kuwait",
     countryCode: "KW",
     flagEmoji: "🇰🇼",
-    industry: "Logistics & Supply Chain",
+    industry: "Logistics and transport",
     employmentType: "Full-Time",
     experience: "3 - 6 Years",
     minExperienceYears: 3,
@@ -223,12 +233,13 @@ export const sampleJobs = [
   },
   {
     id: "job-007",
+    poster: "/images/posters/job-007.jpg",
     title: "Registered Nurses - European Pathway (Germany)",
     destinationCountry: "Germany",
     location: "Bavaria & North Rhine-Westphalia, Germany",
     countryCode: "DE",
     flagEmoji: "🇩🇪",
-    industry: "Healthcare & Medical",
+    industry: "Healthcare",
     employmentType: "Full-Time Permanent",
     experience: "2 - 5 Years Clinical Bedside Experience",
     minExperienceYears: 2,
@@ -260,12 +271,13 @@ export const sampleJobs = [
   },
   {
     id: "job-008",
+    poster: "/images/posters/job-008.jpg",
     title: "HVAC Commissioning & Maintenance Technicians",
     destinationCountry: "United Arab Emirates",
     location: "Dubai & Sharjah, UAE",
     countryCode: "AE",
     flagEmoji: "🇦🇪",
-    industry: "Skilled Trades & Technical Personnel",
+    industry: "Facility management",
     employmentType: "Full-Time",
     experience: "3 - 5 Years",
     minExperienceYears: 3,
@@ -309,11 +321,7 @@ export const destinationCountries = [
 
 export const industriesList = [
   "All Industries",
-  "Healthcare & Medical",
-  "Engineering & Technical",
-  "Skilled Trades & Technical Personnel",
-  "Hospitality & Tourism",
-  "Logistics & Supply Chain"
+  ...servicesList.map((service) => service.title)
 ];
 
 export const employmentTypesList = [

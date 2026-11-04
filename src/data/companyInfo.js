@@ -1,7 +1,7 @@
 export const companyInfo = {
   name: "MEERO Overseas HR Consultancy",
   tagline: "Genuine International Careers, Handled with Care.",
-  shortDescription: "A trusted, MEA-approved overseas manpower recruitment agency based in Ravipuram, Cochin, Kerala. Connecting Indian healthcare, engineering, technical, and hospitality professionals with certified employers across the GCC and Europe.",
+  shortDescription: "A Govt of India approved recruiting agency based in Ravipuram, Cochin, Kerala. Connecting Indian professionals with certified employers across the GCC and Europe.",
   managingDirector: {
     name: "Abdul Latheef",
     title: "Managing Director",
@@ -10,16 +10,23 @@ export const companyInfo = {
     note: "Providing transparent leadership, ethical emigration practices, and dedicated candidate welfare in international recruitment."
   },
   contact: {
-    officeMobile: "+91 99 4655 5198",
-    cleanOfficeMobile: "919946555198",
+    officeMobile: "+91 98 4655 5198",
+    cleanOfficeMobile: "919846555198",
     mdMobile: "+91 99 4733 4733",
     telephone: "+91 484 2356 123",
     cleanTelephone: "04842356123",
     email: "hrmeero@gmail.com",
     website: "https://www.meerohr.com",
     displayWebsite: "www.meerohr.com",
-    whatsappNumber: "919946555198",
-    whatsappUrl: "https://wa.me/919946555198?text=Hello%20Meero%20HR%20Consultancy%2C%20I%20would%20like%20to%20enquire%20about%20overseas%20job%20opportunities.",
+    // Every WhatsApp button on the site uses these two fields.
+    whatsappNumber: "919846555198",
+    whatsappUrl: "https://wa.me/919846555198?text=Hello%20Meero%20HR%20Consultancy%2C%20I%20would%20like%20to%20enquire%20about%20overseas%20job%20opportunities.",
+    // Client to supply. Careers page: while empty, the overseas drive button
+    // opens a WhatsApp chat instead of the channel.
+    whatsappChannelUrl: "",
+    // Client to supply. Contact page and footer: the Instagram button stays
+    // hidden while this is empty, so the site never shows a dead link.
+    instagramUrl: "",
   },
   address: {
     floor: "2nd Floor",
@@ -33,8 +40,9 @@ export const companyInfo = {
     googleMapsEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.569438965874!2d76.29051837568585!3d9.967838390135894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0872d8a4369a41%3A0xb6bb6cfaef9f15ad!2sRavipuram%2C%20Perumanoor%2C%20Kochi%2C%20Ernakulam%2C%20Kerala%20682016!5e0!3m2!1sen!2sin!4v1714000000000!5m2!1sen!2sin"
   },
   credentials: {
-    governmentApproval: "Approved by Ministry of External Affairs (MEA), Government of India",
-    approvalBody: "Ministry of External Affairs (MEA), Emigration Division",
+    governmentApproval: "Govt of India approved recruiting agency",
+    approvalLogo: "/images/credentials/emblem-of-india.png",
+    approvalLogoAlt: "State Emblem of India",
     jurisdiction: "Government of India",
     focusMarkets: [
       "Kingdom of Saudi Arabia (KSA)",
