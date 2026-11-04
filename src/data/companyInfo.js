@@ -24,9 +24,9 @@ export const companyInfo = {
     // Client to supply. Careers page: while empty, the overseas drive button
     // opens a WhatsApp chat instead of the channel.
     whatsappChannelUrl: "",
-    // Client to supply. Contact page and footer: the Instagram button stays
-    // hidden while this is empty, so the site never shows a dead link.
-    instagramUrl: "",
+    // DEMO LINK: replace with the client's profile URL before launch.
+    // Contact page and footer: the Instagram button is hidden if this is empty.
+    instagramUrl: "https://www.instagram.com/",
   },
   address: {
     floor: "2nd Floor",
