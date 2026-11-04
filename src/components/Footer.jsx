@@ -65,6 +65,11 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
                 </Link>
               </li>
               <li>
+                <Link to="/gallery" className="text-slate-400 hover:text-white transition-colors">
+                  Gallery
+                </Link>
+              </li>
+              <li>
                 <Link to="/contact" className="text-slate-400 hover:text-white transition-colors">
                   Contact Us
                 </Link>

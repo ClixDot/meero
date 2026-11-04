@@ -14,6 +14,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Services from './pages/Services';
 import Careers from './pages/Careers';
+import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
 
 import useLenis from './hooks/useLenis';
@@ -111,6 +112,8 @@ export default function App() {
             element={<Contact />} 
           />
           
+          <Route path="/gallery" element={<Gallery />} />
+
           {/* Catch-all fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

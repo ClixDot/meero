@@ -1,6 +1,6 @@
 # MEERO Overseas HR Consultancy — Official Website
 
-A premium, modern, dynamic 5-page web platform for **MEERO Overseas HR Consultancy**, a **Govt of India approved recruiting agency** based in Cochin, Kerala, India.
+A premium, modern, dynamic 6-page web platform for **MEERO Overseas HR Consultancy**, a **Govt of India approved recruiting agency** based in Cochin, Kerala, India.
 
 ---
 
@@ -19,12 +19,13 @@ A premium, modern, dynamic 5-page web platform for **MEERO Overseas HR Consultan
 
 ## 🚀 Key Features
 
-1. **Exactly 5 Distinct Pages with React Router Navigation:**
+1. **Exactly 6 Distinct Pages with React Router Navigation:**
    - **Page 1: Home (`/`)**: Hero section with international career visual, trust introduction, 3 feature cards, 9 recruitment specializations, 4-step recruitment journey, 4 pillars of excellence, dynamic featured vacancies, and final CTA.
    - **Page 2: About Us (`/about`)**: Story, mission & vision, values, and closing call to action. All copy lives in `src/data/aboutContent.js`.
    - **Page 3: Services (`/services`)**: The 9 specializations in order: Logistics and transport, FMCG, Retail, Hospitality, Facility management, Construction, Oil and gas, Healthcare, Manufacturing. Edit them in `src/data/services.js`.
    - **Page 4: Careers (`/careers`)**: Searchable and filterable job board with keyword search, destination country filter, industry filter, employment type filter, sorting, interactive Job Detail modal, hiring poster modal, WhatsApp channel link (`whatsappChannelUrl` in `src/data/companyInfo.js`), and complete candidate application modal with drag-and-drop resume upload and validation.
    - **Page 5: Contact Us (`/contact`)**: Contact desk info, click-to-call, email, WhatsApp, and Instagram (`instagramUrl` in `src/data/companyInfo.js`) links, validated contact form, Google Maps embed for Ravipuram, office hours, and Managing Director details.
+   - **Page 6: Gallery (`/gallery`)**: Filterable photo grid of drives, venues, and delegations with a full-screen viewer. Edit photos and captions in `src/data/galleryData.js`.
 
 2. **Verified Company Details (Zero Fabrication):**
    - **Managing Director:** Abdul Latheef (Direct: `+91 99 4733 4733`)

@@ -43,6 +43,7 @@ export default function Header({ onOpenApplyModal }) {
     { name: 'About Us', path: '/about' },
     { name: 'Services', path: '/services' },
     { name: 'Careers', path: '/careers' },
+    { name: 'Gallery', path: '/gallery' },
     { name: 'Contact', path: '/contact' },
   ];
 
