@@ -35,7 +35,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
               Connecting ambition with international opportunities. Meero Overseas HR Consultancy provides trusted recruitment and personalized career guidance from Cochin, Kerala.
             </p>
 
-            <TrustBadge tone="dark" />
+            <TrustBadge />
           </div>
 
           {/* Col 2: Navigation (Col span 2) */}
@@ -128,15 +128,19 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
                 </a>
               </div>
 
-              <div className="pt-2 border-t border-white/10 text-[11px] text-slate-400">
-                <span className="text-white font-medium">Managing Director: </span>
-                <span>{companyInfo.managingDirector.name}</span>
-                <span className="block text-[#21B8C1]">
-                  <a href={`tel:+${companyInfo.managingDirector.cleanDirectMobile}`} className="hover:underline">
-                    {companyInfo.managingDirector.directMobile}
+              {companyInfo.contact.instagramUrl && (
+                <div className="flex items-center gap-2.5">
+                  <InstagramIcon className="w-4 h-4 text-[#21B8C1] shrink-0" />
+                  <a
+                    href={companyInfo.contact.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs hover:text-white text-slate-300"
+                  >
+                    Follow us on Instagram
                   </a>
-                </span>
-              </div>
+                </div>
+              )}
             </div>
           </div>
 

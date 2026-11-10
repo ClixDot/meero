@@ -12,7 +12,7 @@ export const faqList = [
   {
     id: "faq-3",
     question: "What is GAMCA (Wafid) medical examination and who needs it?",
-    answer: "GAMCA (now known as Wafid) is an accredited medical fitness examination mandatory for all Indian citizens traveling on employment visas to GCC nations (Saudi Arabia, UAE, Qatar, Oman, Kuwait, and Bahrain). The medical checkup must be completed at an authorized center in Kerala or India before visa stamping. Our documentation desk assists selected candidates in booking their appointments smoothly."
+    answer: "GAMCA (now known as Wafid) is an accredited medical fitness examination mandatory for all Indian citizens traveling on employment visas to GCC nations (Saudi Arabia, Oman, Kuwait, and Bahrain). The medical checkup must be completed at an authorized center in Kerala or India before visa stamping. Our documentation desk assists selected candidates in booking their appointments smoothly."
   },
   {
     id: "faq-4",

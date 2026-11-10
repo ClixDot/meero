@@ -11,9 +11,10 @@ export const aboutContent = {
     imageAlt: "International HR team"
   },
   story: {
-    heading: "Who We Are",
+    heading: "About Us",
     paragraphs: [
-      "MEERO Overseas HR Consultancy is a Govt of India approved recruiting agency in Ravipuram, Cochin, connecting Indian talent with verified employers across the GCC and Europe."
+      "Meero HR Consultancy is a licensed overseas manpower recruitment consultancy under the Ministry of External Affairs, India, specialising in connecting employers across the GCC region with skilled, semi-skilled and unskilled talent from India.",
+      "With over 30 years of industry experience and excellence, under the leadership of our Founder, Mr. Abdul Latheef, we bring extensive recruitment expertise, strong industry knowledge and a deep understanding of international workforce requirements. We work closely with employers to identify the right talent, support their manpower requirements and build reliable, long-term recruitment partnerships. Our commitment to professionalism, quality and efficiency drives us to deliver dependable recruitment solutions across diverse industries."
     ],
     image: "https://images.unsplash.com/photo-1573496799652-408c2ac9fe98?auto=format&fit=crop&w=1000&q=80",
     imageAlt: "Career consultation interview"

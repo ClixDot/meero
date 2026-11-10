@@ -41,8 +41,8 @@ export const companyInfo = {
   },
   credentials: {
     governmentApproval: "Govt of India approved recruiting agency",
-    approvalLogo: "/images/credentials/emblem-of-india.png",
-    approvalLogoAlt: "State Emblem of India",
+    approvalLogo: "/images/credentials/mea-logo-white.png",
+    approvalLogoAlt: "Ministry of External Affairs, Government of India",
     jurisdiction: "Government of India",
     focusMarkets: [
       "Kingdom of Saudi Arabia (KSA)",
@@ -63,10 +63,6 @@ export const companyInfo = {
     {
       title: "100% Legal Work Visas",
       desc: "Strictly legitimate employment visas verified under Indian emigration regulations. Never visit or tourist visas."
-    },
-    {
-      title: "DataFlow & Licensing Coaching",
-      desc: "Dedicated guidance for Prometric, DHA, HAAD, SCFHS, and European professional equivalence."
     },
     {
       title: "Transparent Terms & Wage Safeguards",

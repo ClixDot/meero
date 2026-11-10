@@ -13,8 +13,6 @@ import {
   Sparkles,
   ChevronRight,
   ChevronDown,
-  Stethoscope,
-  Wrench,
   MessageCircle,
   Phone
 } from 'lucide-react';
@@ -26,7 +24,7 @@ import TrustBadge from '../components/TrustBadge';
 import { companyInfo } from '../data/companyInfo';
 import { servicesList, recruitmentSteps } from '../data/services';
 import { sampleJobs } from '../data/jobs';
-import { faqList, destinationMarkets } from '../data/destinations';
+import { faqList } from '../data/destinations';
 
 export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
   // GSAP animation container and element refs
@@ -81,7 +79,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
         });
       }
 
-      // 2. Active GCC & European Vacancies Gallery Cards
+      // 2. Active Overseas Opportunities Gallery Cards
       const galleryCards = gsap.utils.toArray('.gsap-gallery-card');
       if (galleryCards.length > 0) {
         gsap.fromTo(galleryCards,
@@ -99,52 +97,6 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
             },
             onComplete: () => {
               gsap.set(galleryCards, { clearProps: 'all' });
-            }
-          }
-        );
-      }
-
-      // 3. Strategic Recruitment Divisions (Healthcare & Technical)
-      const divisionCards = gsap.utils.toArray('.gsap-division-card');
-      if (divisionCards.length > 0) {
-        gsap.fromTo(divisionCards,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.55,
-            stagger: 0.12,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: '.gsap-division-grid',
-              start: 'top 85%',
-              once: true
-            },
-            onComplete: () => {
-              gsap.set(divisionCards, { clearProps: 'all' });
-            }
-          }
-        );
-      }
-
-      // 4. Primary Destination Markets Grid
-      const destCards = gsap.utils.toArray('.gsap-dest-card');
-      if (destCards.length > 0) {
-        gsap.fromTo(destCards,
-          { opacity: 0, y: 20 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.45,
-            stagger: 0.05,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: '.gsap-dest-grid',
-              start: 'top 85%',
-              once: true
-            },
-            onComplete: () => {
-              gsap.set(destCards, { clearProps: 'all' });
             }
           }
         );
@@ -338,7 +290,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <TrustBadge tone="dark" size="lg" />
+              <TrustBadge size="lg" />
             </motion.div>
 
             {/* Huge Clean Bold Headline (Style: "Digital Marketing Services") */}
@@ -514,7 +466,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
             {/* Gallery Section Header */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
               <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#171B20] font-heading">
-                Active GCC &amp; European Vacancies
+                Active Overseas Opportunities
               </h3>
 
               <Link
@@ -574,208 +526,6 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
           </div>
 
           {/* ----------------------------------------------------
-              SECTION: MEDICAL & TECHNICAL DIVISIONS (INSPIRED BY ROOHI)
-          ---------------------------------------------------- */}
-          <div className="pt-14 pb-14 border-b border-slate-200">
-            <div className="text-center max-w-2xl mx-auto mb-10">
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#171B20] font-heading">
-                Medical &amp; Technical Recruitment Divisions
-              </h3>
-              <p className="text-xs sm:text-sm text-[#697477] mt-2">
-                Dedicated recruitment pathways tailored to the stringent credentialing, licensing exams, and trade testing of each discipline.
-              </p>
-            </div>
-
-            <div className="gsap-division-grid grid grid-cols-1 lg:grid-cols-2 gap-6">
-              
-              {/* Division 1: Healthcare & Medical */}
-              <div className="gsap-division-card rounded-3xl bg-[#F5FAF9] border border-[#D5E5E2] p-6 sm:p-8 flex flex-col justify-between hover:shadow-lg transition-shadow">
-                <div className="space-y-4">
-                  <div className="w-12 h-12 rounded-2xl bg-[#168F88] text-white flex items-center justify-center shadow-md shadow-[#168F88]/20">
-                    <Stethoscope className="w-6 h-6" />
-                  </div>
-
-                  <div>
-                    <h4 className="text-xl font-extrabold text-[#171B20] font-heading">
-                      Healthcare &amp; Medical Division
-                    </h4>
-                    <p className="text-xs sm:text-sm text-[#697477] mt-1.5 leading-relaxed">
-                      Placing qualified Indian doctors, registered staff nurses, and allied healthcare professionals in accredited government and private hospitals across the GCC and Europe.
-                    </p>
-                  </div>
-
-                  <div className="space-y-2 pt-2">
-                    <div className="flex items-start gap-2.5 text-xs text-[#171B20]">
-                      <CheckCircle2 className="w-4 h-4 text-[#168F88] shrink-0 mt-0.5" />
-                      <span><strong>Licensing guidance:</strong> DHA, DOH (HAAD), SCFHS (Mumaris+), OMSB, QCHP, and German B2 adaptation.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs text-[#171B20]">
-                      <CheckCircle2 className="w-4 h-4 text-[#168F88] shrink-0 mt-0.5" />
-                      <span><strong>DataFlow (PSV) verification:</strong> Primary source credential verification handled end-to-end.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs text-[#171B20]">
-                      <CheckCircle2 className="w-4 h-4 text-[#168F88] shrink-0 mt-0.5" />
-                      <span><strong>Specialist clinical roles:</strong> ICU, CCU, NICU, OT, Emergency, Dialysis, and Pediatric nursing.</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-6 mt-6 border-t border-[#D5E5E2]/80 flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <button
-                    type="button"
-                    onClick={() => onOpenApplyModal && onOpenApplyModal()}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-[#168F88] text-white hover:bg-[#0e6761] transition-colors shadow-sm whitespace-nowrap shrink-0"
-                  >
-                    <span>Register for Healthcare Roles</span>
-                    <ArrowRight className="w-3.5 h-3.5 shrink-0" />
-                  </button>
-                  <Link
-                    to="/services"
-                    className="text-xs font-semibold text-[#168F88] hover:text-[#0e6761] flex items-center justify-center gap-1 py-1 whitespace-nowrap shrink-0"
-                  >
-                    <span>Learn More</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-
-              {/* Division 2: Technical, Engineering & Skilled Trades */}
-              <div className="gsap-division-card rounded-3xl bg-[#0D151E] text-white p-6 sm:p-8 flex flex-col justify-between hover:shadow-xl transition-shadow relative overflow-hidden group">
-                
-                {/* Subtle background decoration */}
-                <div className="absolute -right-10 -bottom-10 opacity-10 pointer-events-none group-hover:scale-105 transition-transform duration-500">
-                  <FingerprintGraphic className="w-56 h-56" color="#21B8C1" />
-                </div>
-
-                <div className="relative z-10 space-y-4">
-                  <div className="w-12 h-12 rounded-2xl bg-white/10 text-[#21B8C1] border border-white/10 flex items-center justify-center">
-                    <Wrench className="w-6 h-6" />
-                  </div>
-
-                  <div>
-                    <h4 className="text-xl font-extrabold text-white font-heading">
-                      Technical, Engineering &amp; Skilled Trades
-                    </h4>
-                    <p className="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed font-light">
-                      Sourcing specialized talent for mega infrastructure, refinery EPC turnarounds, commercial MEP networks, and premier 5-star hospitality chains abroad.
-                    </p>
-                  </div>
-
-                  <div className="space-y-2 pt-2">
-                    <div className="flex items-start gap-2.5 text-xs text-slate-200">
-                      <CheckCircle2 className="w-4 h-4 text-[#21B8C1] shrink-0 mt-0.5" />
-                      <span><strong>Certified trade testing:</strong> 6G TIG/ARC welding, electrical, HVAC, and plumbing tests in Kerala.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs text-slate-200">
-                      <CheckCircle2 className="w-4 h-4 text-[#21B8C1] shrink-0 mt-0.5" />
-                      <span><strong>Client delegations:</strong> Direct face-to-face and technical interviews with Gulf project managers.</span>
-                    </div>
-                    <div className="flex items-start gap-2.5 text-xs text-slate-200">
-                      <CheckCircle2 className="w-4 h-4 text-[#21B8C1] shrink-0 mt-0.5" />
-                      <span><strong>Contract transparency:</strong> Verified offer letters detailing salary, overtime, housing, and flights.</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="relative z-10 pt-6 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <button
-                    type="button"
-                    onClick={() => onOpenApplyModal && onOpenApplyModal()}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-[#21B8C1] text-[#0B0F17] hover:bg-[#1ba3ab] transition-colors shadow-sm whitespace-nowrap shrink-0"
-                  >
-                    <span>Register for Technical Roles</span>
-                    <ArrowRight className="w-3.5 h-3.5 shrink-0" />
-                  </button>
-                  <Link
-                    to="/services"
-                    className="text-xs font-semibold text-slate-300 hover:text-white flex items-center justify-center gap-1 py-1 whitespace-nowrap shrink-0"
-                  >
-                    <span>Learn More</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-
-              </div>
-
-            </div>
-          </div>
-
-          {/* ----------------------------------------------------
-              SECTION: PRIMARY DESTINATION COUNTRIES (INSPIRED BY ROOHI)
-          ---------------------------------------------------- */}
-          <div className="pt-14 pb-14 border-b border-slate-200">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-              <div>
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-[#171B20] font-heading">
-                  Global Placement Destinations
-                </h3>
-                <p className="text-xs sm:text-sm text-[#697477] mt-1">
-                  Direct hiring channels across prime international markets throughout the Middle East and Europe.
-                </p>
-              </div>
-
-              <Link
-                to="/careers"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-[#171B20] text-white hover:bg-[#168F88] hover:scale-105 active:scale-95 transition-all shadow-sm shrink-0 group"
-              >
-                <span>View Jobs by Country</span>
-                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-
-            <div className="gsap-dest-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-              {destinationMarkets.map((dest, i) => (
-                <Link
-                  key={i}
-                  to={`/careers?country=${encodeURIComponent(dest.country)}`}
-                  className="gsap-dest-card group p-5 rounded-2xl bg-[#F5FAF9] hover:bg-white border border-[#E5ECEA] hover:border-[#168F88]/40 hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="w-10 h-7 rounded overflow-hidden shadow-xs border border-slate-200 shrink-0 bg-white">
-                        <img 
-                          src={dest.flagUrl} 
-                          alt={dest.country} 
-                          className="w-full h-full object-cover" 
-                          loading="lazy"
-                        />
-                      </div>
-                      <div className="w-7 h-7 rounded-full bg-white group-hover:bg-[#168F88] group-hover:text-white text-[#168F88] flex items-center justify-center transition-colors shadow-2xs">
-                        <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="text-base font-bold text-[#171B20] font-heading group-hover:text-[#168F88] transition-colors">
-                        {dest.country}
-                      </h4>
-                      <p className="text-xs text-[#697477] mt-0.5">
-                        {dest.keyCities}
-                      </p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      {dest.sectors.map((sec, sIdx) => (
-                        <span 
-                          key={sIdx}
-                          className="px-2.5 py-0.5 rounded-md bg-white border border-slate-200 text-[11px] font-medium text-[#171B20]"
-                        >
-                          {sec}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="pt-3 mt-3 border-t border-slate-200/60 flex items-center justify-between text-xs font-semibold text-[#168F88]">
-                    <span>View Vacancies</span>
-                    <span className="text-[11px] text-[#697477] font-normal group-hover:text-[#168F88]">Explore →</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* ----------------------------------------------------
               SECTION 3: ETHICAL RECRUITMENT GUARANTEES (INSPIRED BY ROOHI)
           ---------------------------------------------------- */}
           <div className="pt-14 pb-14 border-b border-slate-200">
@@ -788,7 +538,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               </p>
             </div>
 
-            <div className="gsap-guarantee-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="gsap-guarantee-grid grid grid-cols-1 sm:grid-cols-3 gap-6">
               {companyInfo.guarantees.map((item, idx) => (
                 <div key={idx} className="gsap-guarantee-card p-6 rounded-2xl bg-[#F5FAF9] border border-[#E5ECEA] flex flex-col justify-between">
                   <div>
@@ -911,7 +661,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                 </h3>
 
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
-                  Free consultation on licensing exams, DataFlow verification, trade tests, and verified Gulf vacancies from our Cochin office.
+                  Licensing exams, DataFlow verification, trade tests, and verified Gulf vacancies from our Cochin office.
                 </p>
               </div>
 
@@ -945,7 +695,6 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
           <div className="pt-10 sm:pt-14">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 bg-gradient-to-r from-[#F5FAF9] to-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#E5ECEA] overflow-hidden w-full max-w-full">
               <div className="w-full min-w-0 space-y-3 text-center lg:text-left flex flex-col items-center lg:items-start">
-                <TrustBadge tone="light" />
                 <h4 className="text-xl sm:text-2xl font-bold text-[#171B20] font-heading break-words">
                   Our Office in Ravipuram, Cochin, Kerala
                 </h4>

@@ -14,8 +14,7 @@ import CustomDropdown from '../components/CustomDropdown';
 import { 
   sampleJobs, 
   destinationCountries, 
-  industriesList, 
-  employmentTypesList 
+  industriesList
 } from '../data/jobs';
 import { companyInfo } from '../data/companyInfo';
 
@@ -36,7 +35,6 @@ export default function Careers({
     (countryParam && destinationCountries.find((country) => country.toLowerCase().includes(countryParam))) || 'All Countries'
   ));
   const [selectedIndustry, setSelectedIndustry] = useState('All Industries');
-  const [selectedType, setSelectedType] = useState('All Types');
   const [sortBy, setSortBy] = useState('latest');
 
   // Filter & Search Logic
@@ -57,11 +55,7 @@ export default function Careers({
         selectedIndustry === 'All Industries' ||
         job.industry.toLowerCase() === selectedIndustry.toLowerCase();
 
-      const matchesType = 
-        selectedType === 'All Types' ||
-        job.employmentType.toLowerCase().includes(selectedType.toLowerCase());
-
-      return matchesSearch && matchesCountry && matchesIndustry && matchesType;
+      return matchesSearch && matchesCountry && matchesIndustry;
     }).sort((a, b) => {
       if (sortBy === 'latest') {
         return new Date(b.postedDate) - new Date(a.postedDate);
@@ -74,13 +68,12 @@ export default function Careers({
       }
       return 0;
     });
-  }, [searchTerm, selectedCountry, selectedIndustry, selectedType, sortBy]);
+  }, [searchTerm, selectedCountry, selectedIndustry, sortBy]);
 
   const handleResetFilters = () => {
     setSearchTerm('');
     setSelectedCountry('All Countries');
     setSelectedIndustry('All Industries');
-    setSelectedType('All Types');
     setSortBy('latest');
   };
 
@@ -147,7 +140,7 @@ export default function Careers({
             </div>
 
             {/* Dropdown Filters */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
               <div>
                 <label className="block text-xs font-semibold text-[#697477] mb-1">
                   Destination Country
@@ -174,18 +167,6 @@ export default function Careers({
 
               <div>
                 <label className="block text-xs font-semibold text-[#697477] mb-1">
-                  Employment Type
-                </label>
-                <CustomDropdown
-                  value={selectedType}
-                  onChange={setSelectedType}
-                  options={employmentTypesList}
-                  size="sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#697477] mb-1">
                   Sort Order
                 </label>
                 <CustomDropdown
@@ -205,7 +186,7 @@ export default function Careers({
               <div>
                 Showing <strong className="text-[#171B20]">{filteredJobs.length}</strong> available openings
               </div>
-              {(searchTerm || selectedCountry !== 'All Countries' || selectedIndustry !== 'All Industries' || selectedType !== 'All Types') && (
+              {(searchTerm || selectedCountry !== 'All Countries' || selectedIndustry !== 'All Industries') && (
                 <button
                   type="button"
                   onClick={handleResetFilters}

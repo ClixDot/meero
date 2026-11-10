@@ -122,7 +122,7 @@ export default function Contact() {
                   </div>
                 </div>
 
-                {/* WhatsApp, Instagram, Email & MD Direct Actions */}
+                {/* WhatsApp, Instagram & Email Actions */}
                 <div className="pt-3 border-t border-[#E5ECEA] flex flex-col gap-2.5">
                   <a
                     href={companyInfo.contact.whatsappUrl}
@@ -169,13 +169,6 @@ export default function Contact() {
                     <span className="text-xs font-bold truncate">{companyInfo.contact.email}</span>
                     <ArrowUpRight className="w-3.5 h-3.5 ml-auto shrink-0 text-[#168F88]" />
                   </a>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 px-3.5 py-2.5 rounded-xl bg-white border border-[#E5ECEA] text-xs">
-                    <span className="text-[#697477]">Managing Director: <strong className="text-[#171B20]">{companyInfo.managingDirector.name}</strong></span>
-                    <a href={`tel:+${companyInfo.managingDirector.cleanDirectMobile}`} className="font-bold text-[#168F88] hover:underline">
-                      {companyInfo.managingDirector.directMobile}
-                    </a>
-                  </div>
                 </div>
 
               </div>

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Upload, CheckCircle2, AlertCircle, FileText, ArrowRight, Image as ImageIcon } from 'lucide-react';
 import Button from './Button';
-import CustomDropdown from './CustomDropdown';
-import { destinationCountries } from '../data/jobs';
 import useScrollLock from '../hooks/useScrollLock';
 
 export default function ApplicationModal({ isOpen, onClose, preselectedJob = null, onViewPoster }) {
@@ -11,7 +9,6 @@ export default function ApplicationModal({ isOpen, onClose, preselectedJob = nul
     email: '',
     phone: '',
     preferredJob: preselectedJob ? preselectedJob.title : '',
-    preferredCountry: preselectedJob ? preselectedJob.destinationCountry : 'United Arab Emirates',
     qualification: '',
     experienceYears: '',
     currentLocation: '',
@@ -30,8 +27,7 @@ export default function ApplicationModal({ isOpen, onClose, preselectedJob = nul
     if (preselectedJob) {
       setFormData(prev => ({
         ...prev,
-        preferredJob: preselectedJob.title,
-        preferredCountry: preselectedJob.destinationCountry
+        preferredJob: preselectedJob.title
       }));
     }
   }, [preselectedJob]);
@@ -112,7 +108,7 @@ export default function ApplicationModal({ isOpen, onClose, preselectedJob = nul
     }
 
     if (!formData.qualification.trim()) {
-      newErrors.qualification = 'Highest educational or technical qualification is required';
+      newErrors.qualification = 'Education qualification is required';
     }
 
     if (!formData.experienceYears.trim()) {
@@ -178,7 +174,6 @@ export default function ApplicationModal({ isOpen, onClose, preselectedJob = nul
         email: formData.email,
         phone: formData.phone,
         preferredJob: formData.preferredJob,
-        preferredCountry: formData.preferredCountry,
         qualification: formData.qualification,
         experienceYears: formData.experienceYears,
         resumeFileName: resumeFile.name,
@@ -253,10 +248,6 @@ export default function ApplicationModal({ isOpen, onClose, preselectedJob = nul
                 <div className="flex justify-between text-xs">
                   <span className="text-[#697477]">Reference ID:</span>
                   <span className="font-mono font-bold text-[#168F88]">{submissionId}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-[#697477]">Preferred Destination:</span>
-                  <span className="font-semibold text-[#171B20]">{formData.preferredCountry}</span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-[#697477]">Resume Attached:</span>
@@ -354,9 +345,8 @@ export default function ApplicationModal({ isOpen, onClose, preselectedJob = nul
                 </div>
               </div>
 
-              {/* Job & Destination Country */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
+              {/* Preferred Job */}
+              <div>
                   <label className="block text-xs sm:text-sm font-semibold text-[#171B20] mb-1">
                     Preferred Job Role <span className="text-red-500">*</span>
                   </label>
@@ -371,30 +361,13 @@ export default function ApplicationModal({ isOpen, onClose, preselectedJob = nul
                     } focus:outline-none focus:ring-2 focus:ring-[#168F88] transition-all`}
                   />
                   {errors.preferredJob && <p className="text-red-500 text-[11px] mt-1">{errors.preferredJob}</p>}
-                </div>
-
-                <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-[#171B20] mb-1">
-                    Preferred Destination Country
-                  </label>
-                  <CustomDropdown
-                    value={formData.preferredCountry}
-                    onChange={(val) => setFormData(prev => ({ ...prev, preferredCountry: val }))}
-                    options={[
-                      ...destinationCountries.filter(c => c !== "All Countries"),
-                      { value: "Any Gulf Country", label: "Any Gulf Country (GCC)" },
-                      { value: "Europe / UK", label: "Europe / United Kingdom" }
-                    ]}
-                    size="md"
-                  />
-                </div>
               </div>
 
               {/* Qualification & Experience */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs sm:text-sm font-semibold text-[#171B20] mb-1">
-                    Highest Qualification <span className="text-red-500">*</span>
+                    Education Qualification <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"

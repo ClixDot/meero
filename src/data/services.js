@@ -6,7 +6,7 @@ export const servicesList = [
     title: "Logistics and transport",
     description: "Recruiting drivers, warehouse teams, and supply chain supervisors for distribution, freight, and transport operators overseas.",
     icon: "Truck",
-    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=1200&q=80",
     highlights: [
       "Drivers, warehouse crews & logistics supervisors",
       "Experience and licence checks before client interviews"
@@ -17,7 +17,7 @@ export const servicesList = [
     title: "FMCG",
     description: "Sourcing sales, merchandising, production, and distribution staff for fast-moving consumer goods companies across the GCC.",
     icon: "PackageOpen",
-    image: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1200&q=80",
     highlights: [
       "Sales, merchandising & distribution roles",
       "Candidates matched against verified employer demand letters"
@@ -28,7 +28,7 @@ export const servicesList = [
     title: "Retail",
     description: "Staffing store teams, cashiers, supervisors, and managers for supermarkets, malls, and retail chains abroad.",
     icon: "Store",
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=1200&q=80",
     highlights: [
       "Store staff, cashiers, supervisors & managers",
       "Clear pre-signing terms on wages and accommodation"
@@ -39,7 +39,7 @@ export const servicesList = [
     title: "Hospitality",
     description: "Staffing chefs, culinary teams, and front-of-house professionals for hotels, resorts, and catering groups across the GCC.",
     icon: "UtensilsCrossed",
-    image: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80",
     highlights: [
       "Chefs, F&B teams & guest relations staff",
       "Practical culinary tastings and service vetting"
@@ -50,7 +50,7 @@ export const servicesList = [
     title: "Facility management",
     description: "Placing technicians, housekeeping teams, and site supervisors with companies that maintain commercial towers, malls, and public facilities.",
     icon: "Building2",
-    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1200&q=80",
     highlights: [
       "HVAC, electrical & maintenance technicians",
       "Housekeeping teams and site supervisors"
@@ -61,7 +61,7 @@ export const servicesList = [
     title: "Construction",
     description: "Connecting engineers, QA/QC inspectors, and skilled trades with contractors delivering building and infrastructure projects overseas.",
     icon: "HardHat",
-    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1200&q=80",
     highlights: [
       "Civil & MEP engineers, inspectors and site trades",
       "Technical interview and trade test coordination"
@@ -72,7 +72,7 @@ export const servicesList = [
     title: "Oil and gas",
     description: "Sourcing welders, fitters, technicians, and engineers for refinery, petrochemical, and energy projects in the Middle East.",
     icon: "Fuel",
-    image: "https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=1200&q=80",
     highlights: [
       "Welders, pipe fitters, technicians & engineers",
       "Practical trade test facilitation in Kerala"
@@ -83,7 +83,7 @@ export const servicesList = [
     title: "Healthcare",
     description: "Connecting qualified nurses, doctors, and allied health specialists with hospital networks across the GCC and Europe, with licensing and credential support.",
     icon: "Stethoscope",
-    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=80",
     highlights: [
       "DHA, HAAD, SCFHS & Prometric exam guidance",
       "DataFlow Primary Source Verification (PSV) support"
@@ -94,7 +94,7 @@ export const servicesList = [
     title: "Manufacturing",
     description: "Recruiting machine operators, production technicians, and quality staff for factories and industrial plants overseas.",
     icon: "Factory",
-    image: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80",
     highlights: [
       "Machine operators, fabricators & production staff",
       "Skill and work history verification"
@@ -117,14 +117,14 @@ export const recruitmentSteps = [
   },
   {
     step: "03",
-    title: "Interview & Selection Coaching",
+    title: "Interview & Selection",
     description: "Participate in client interviews (virtual panel or face-to-face recruitment drives in Cochin) with personalized preparation coaching.",
     icon: "Users"
   },
   {
     step: "04",
-    title: "Licensing, GAMCA & Departure Guidance",
-    description: "Complete DataFlow, Prometric, GAMCA medicals, embassy visa stamping, and pre-departure cultural briefing before legal departure.",
+    title: "Departure Guidance",
+    description: "GAMCA medicals, embassy visa stamping, and pre-departure cultural briefing before legal departure.",
     icon: "PlaneTakeoff"
   }
 ];

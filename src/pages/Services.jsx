@@ -39,7 +39,7 @@ export default function Services({ onOpenApplyModal }) {
       <section className="relative pt-28 pb-32 md:pt-36 md:pb-40 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=80"
+            src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2000&q=80"
             alt="International Business Skyscraper"
             className="w-full h-full object-cover filter brightness-[0.35] contrast-[1.1]"
           />

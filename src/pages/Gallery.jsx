@@ -1,22 +1,13 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 
 import GalleryLightbox from '../components/GalleryLightbox';
-import { galleryCategories, galleryItems } from '../data/galleryData';
-
-const ALL_CATEGORIES = 'All';
-const filterTabs = [ALL_CATEGORIES, ...galleryCategories];
+import { galleryItems } from '../data/galleryData';
 
 export default function Gallery() {
-  const [activeCategory, setActiveCategory] = useState(ALL_CATEGORIES);
   const [lightboxIndex, setLightboxIndex] = useState(null);
-
-  const visibleItems = useMemo(() => (
-    activeCategory === ALL_CATEGORIES
-      ? galleryItems
-      : galleryItems.filter((item) => item.category === activeCategory)
-  ), [activeCategory]);
+  const visibleItems = galleryItems;
 
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
 
@@ -46,14 +37,6 @@ export default function Gallery() {
             >
               Our Recruitment Drives <span className="text-[#21B8C1]">&amp; Events</span>
             </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed max-w-2xl"
-            >
-              A glimpse into our overseas hiring drives, candidate interactions, and venue sessions across India.
-            </motion.p>
           </div>
         </div>
       </section>
@@ -63,28 +46,6 @@ export default function Gallery() {
       ======================================================== */}
       <section className="relative z-20 px-2.5 sm:px-6 lg:px-10 -mt-20 md:-mt-28 pb-20">
         <div className="max-w-[1560px] 2xl:max-w-[1680px] w-full mx-auto rounded-[24px] sm:rounded-[36px] md:rounded-[48px] lg:rounded-[52px] bg-white text-[#171B20] p-4 sm:p-8 md:p-12 lg:p-16 shadow-2xl shadow-black/30 border border-slate-100 space-y-8">
-
-          {/* Filter Tabs */}
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter photos by category">
-            {filterTabs.map((category) => {
-              const isActive = category === activeCategory;
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  aria-pressed={isActive}
-                  onClick={() => setActiveCategory(category)}
-                  className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold border transition-colors ${
-                    isActive
-                      ? 'bg-[#168F88] border-[#168F88] text-white font-bold shadow-sm'
-                      : 'bg-[#F5FAF9] border-[#E5ECEA] text-[#697477] hover:text-[#171B20] hover:border-[#168F88]/40'
-                  }`}
-                >
-                  {category}
-                </button>
-              );
-            })}
-          </div>
 
           {/* Photo Grid */}
           {visibleItems.length > 0 ? (
@@ -123,7 +84,7 @@ export default function Gallery() {
             </div>
           ) : (
             <div className="p-8 sm:p-12 text-center rounded-2xl sm:rounded-3xl bg-[#F5FAF9] border border-[#E5ECEA] max-w-2xl mx-auto">
-              <p className="text-sm text-[#697477]">No photos in this category yet.</p>
+              <p className="text-sm text-[#697477]">No photos yet.</p>
             </div>
           )}
 
