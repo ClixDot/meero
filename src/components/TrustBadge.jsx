@@ -2,8 +2,8 @@ import React from 'react';
 import { companyInfo } from '../data/companyInfo';
 
 const heights = {
-  md: 'h-11 sm:h-12',
-  lg: 'h-14 sm:h-16'
+  md: 'h-20 sm:h-24',
+  lg: 'h-24 sm:h-32 md:h-40'
 };
 
 // Government approval logo (Ministry of External Affairs, Government of India).
