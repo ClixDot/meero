@@ -1,37 +1,38 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import meeroLogo from '../assets/meero.png';
 
 /**
  * Meero Official Brand Logo Component
- * Uses the exact brand logo supplied by the user.
+ * Uses the exact brand logo supplied by the user (src/assets/meero.png).
  */
 export default function Logo({ 
-  variant = 'dark', 
+  variant: _variant = 'dark', 
   size = 'md',
   showLink = true,
-  className = ''
+  className = '',
+  imgClassName = ''
 }) {
-  const isLight = variant === 'light';
   
   // Height classes by size (responsively scaled for all screen sizes)
-  const heightClass = {
-    sm: 'h-7 sm:h-8',
-    md: 'h-8 sm:h-10 md:h-12',
-    lg: 'h-11 sm:h-14 md:h-16'
-  }[size] || 'h-8 sm:h-10 md:h-12';
+  const sizeMap = {
+    sm: 'h-8 sm:h-9 md:h-10',
+    md: 'h-11 sm:h-13 md:h-16 lg:h-18',
+    lg: 'h-13 sm:h-16 md:h-20 lg:h-24',
+    xl: 'h-16 sm:h-20 md:h-24 lg:h-28'
+  };
 
-  // Use the transparent light-text version on dark backgrounds,
-  // and the transparent dark-text version on light backgrounds.
-  const logoSrc = isLight 
-    ? '/images/meero-logo-light.png' 
-    : '/images/meero-logo-dark.png';
+  const heightClass = sizeMap[size] || size;
+
+  // Use the official meero.png logo
+  const logoSrc = meeroLogo;
 
   const Content = (
     <div className={`inline-flex items-center select-none ${className}`}>
       <img
         src={logoSrc}
         alt="MEERO Overseas HR Consultancy"
-        className={`${heightClass} w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]`}
+        className={`${heightClass} ${imgClassName} w-auto object-contain transition-all duration-300 ease-in-out group-hover:scale-[1.02]`}
         loading="eager"
       />
     </div>

@@ -12,12 +12,12 @@ export const faqList = [
   {
     id: "faq-3",
     question: "What is GAMCA (Wafid) medical examination and who needs it?",
-    answer: "GAMCA (now known as Wafid) is an accredited medical fitness examination mandatory for all Indian citizens traveling on employment visas to GCC nations (Saudi Arabia, Oman, Kuwait, and Bahrain). The medical checkup must be completed at an authorized center in Kerala or India before visa stamping. Our documentation desk assists selected candidates in booking their appointments smoothly."
+    answer: "GAMCA (now known as Wafid) is an accredited medical fitness examination mandatory for all Indian citizens traveling on employment visas to GCC nations (Saudi Arabia, Oman, Kuwait, and Bahrain). The medical checkup must be completed at an authorized center in India before visa stamping. Our documentation desk assists selected candidates in booking their appointments smoothly."
   },
   {
     id: "faq-4",
-    question: "Do you offer interview coaching and trade testing in Cochin?",
-    answer: "Yes. For technical trades (such as 6G Radiography welders, electricians, and HVAC technicians), we facilitate practical trade tests at certified technical workshops in Kerala. For healthcare and corporate professionals, our team provides briefing on employer interview formats, common clinical case scenarios, and cultural readiness."
+    question: "Do you offer interview coaching and technical trade testing?",
+    answer: "Yes. For technical trades (such as 6G Radiography welders, electricians, and HVAC technicians), we facilitate practical trade tests at certified technical workshops. For healthcare and corporate professionals, our team provides briefing on employer interview formats, common clinical case scenarios, and cultural readiness."
   },
   {
     id: "faq-5",
@@ -26,8 +26,8 @@ export const faqList = [
   },
   {
     id: "faq-6",
-    question: "Can I consult with your team in Malayalam at your Cochin office?",
-    answer: "Yes. Our recruitment coordinators and career counselors at our Ravipuram, Cochin office provide consultations in both Malayalam and English. Candidates and families are welcome to visit or call to understand job terms, contracts, and overseas work environments in their preferred language."
+    question: "Can I consult with your team in regional languages?",
+    answer: "Yes. Our recruitment coordinators and career counselors provide consultations in multiple languages including English, Hindi, and Malayalam. Candidates and families are welcome to call or message to understand job terms, contracts, and overseas work environments in their preferred language."
   }
 ];
 

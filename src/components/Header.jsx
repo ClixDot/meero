@@ -53,14 +53,17 @@ export default function Header({ onOpenApplyModal }) {
       <header 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled 
-            ? 'bg-[#0B0F17]/90 backdrop-blur-md py-3.5 border-b border-white/10 shadow-2xl' 
-            : 'bg-transparent py-5 sm:py-6 border-b border-transparent'
+            ? 'bg-[#0B0F17]/95 backdrop-blur-md py-2.5 sm:py-3 border-b border-white/10 shadow-2xl' 
+            : 'bg-transparent py-3.5 sm:py-4 md:py-5 border-b border-transparent'
         }`}
       >
         <div className="max-w-[1560px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between">
           
-          {/* Brand Logo in Light Mode (for dark hero backdrop) */}
-          <Logo variant="light" size="md" />
+          {/* Brand Logo in Light Mode (shrinks smoothly when scrolled) */}
+          <Logo 
+            variant="light" 
+            size={isScrolled ? 'h-9 sm:h-10 md:h-11 lg:h-12' : 'h-13 sm:h-16 md:h-20 lg:h-24'} 
+          />
 
           {/* Desktop Navigation (Floating Pill) */}
           <nav className="hidden lg:flex items-center gap-1.5 bg-white/10 border-none px-3.5 py-1.5 rounded-full backdrop-blur-md">

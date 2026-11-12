@@ -150,7 +150,7 @@ export default function Services({ onOpenApplyModal }) {
                   Ready to Discuss Your Requirements?
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
-                  Whether you are an aspiring candidate or a corporate recruiter looking to hire from India, our team in Cochin is ready to support your process.
+                  Whether you are an aspiring candidate or a corporate recruiter looking to hire from India, our team is ready to support your process.
                 </p>
               </div>
 

@@ -75,7 +75,7 @@ export const servicesList = [
     image: "https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=1200&q=80",
     highlights: [
       "Welders, pipe fitters, technicians & engineers",
-      "Practical trade test facilitation in Kerala"
+      "Practical trade test facilitation"
     ]
   },
   {
@@ -106,7 +106,7 @@ export const recruitmentSteps = [
   {
     step: "01",
     title: "Profile Registration & Credential Audit",
-    description: "Submit your comprehensive resume and certifications online or at our Cochin office. Free registration with zero upfront assessment fee.",
+    description: "Submit your comprehensive resume and certifications online. Free registration with zero upfront assessment fee.",
     icon: "Send"
   },
   {
@@ -118,7 +118,7 @@ export const recruitmentSteps = [
   {
     step: "03",
     title: "Interview & Selection",
-    description: "Participate in client interviews (virtual panel or face-to-face recruitment drives in Cochin) with personalized preparation coaching.",
+    description: "Participate in client interviews (virtual panel or direct recruitment drives) with personalized preparation coaching.",
     icon: "Users"
   },
   {

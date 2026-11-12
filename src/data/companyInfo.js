@@ -1,7 +1,7 @@
 export const companyInfo = {
   name: "MEERO Overseas HR Consultancy",
   tagline: "Genuine International Careers, Handled with Care.",
-  shortDescription: "A Govt of India approved recruiting agency based in Ravipuram, Cochin, Kerala. Connecting Indian professionals with certified employers across the GCC and Europe.",
+  shortDescription: "A Govt. of India approved recruiting agency based in Ravipuram, Keralam. Connecting Indian professionals with certified employers across the GCC and Europe.",
   managingDirector: {
     name: "Abdul Latheef",
     title: "Managing Director",
@@ -31,16 +31,16 @@ export const companyInfo = {
   address: {
     floor: "2nd Floor",
     building: "Krishnanjali Building",
-    landmark: "Near Sree Krishna Temple, Ravipuram",
-    city: "Cochin",
+    landmark: "Near Sree Krishna Temple",
+    city: "Kochi",
     postalCode: "682016",
-    state: "Kerala",
+    state: "Keralam",
     country: "India",
-    fullAddress: "2nd Floor, Krishnanjali Building, Near Sree Krishna Temple, Ravipuram, Cochin – 682016, Kerala, India",
+    fullAddress: "2nd Floor, Krishnanjali Building, Near Sree Krishna Temple, Ravipuram, Kochi – 682016, Keralam, India",
     googleMapsEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.569438965874!2d76.29051837568585!3d9.967838390135894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0872d8a4369a41%3A0xb6bb6cfaef9f15ad!2sRavipuram%2C%20Perumanoor%2C%20Kochi%2C%20Ernakulam%2C%20Kerala%20682016!5e0!3m2!1sen!2sin!4v1714000000000!5m2!1sen!2sin"
   },
   credentials: {
-    governmentApproval: "Govt of India approved recruiting agency",
+    governmentApproval: "Govt. of India Approved Recruiting Agency",
     approvalLogo: "/images/credentials/mea-logo-white.png",
     approvalLogoAlt: "Ministry of External Affairs, Government of India",
     jurisdiction: "Government of India",
@@ -73,7 +73,7 @@ export const companyInfo = {
     weekday: "Monday to Friday: 9:30 AM – 6:00 PM IST",
     saturday: "Saturday: 9:30 AM – 2:00 PM IST",
     sunday: "Sunday: Closed",
-    candidateDropIn: "Walk-in consultations welcome during office hours in Ravipuram, Cochin."
+    candidateDropIn: "Consultations and candidate guidance available during working hours."
   },
   values: [
     {

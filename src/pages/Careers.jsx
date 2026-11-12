@@ -232,7 +232,7 @@ export default function Careers({
                 Looking for Upcoming Overseas Drives?
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
-                Client delegations visit our Cochin center regularly. Follow new drives on WhatsApp, or submit your profile to be pre-screened for upcoming vacancies.
+                Client delegations visit our recruitment center regularly. Follow new drives on WhatsApp, or submit your profile to be pre-screened for upcoming vacancies.
               </p>
               <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
                 <a

@@ -32,10 +32,10 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
             <Logo variant="light" size="md" />
             
             <p className="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-sm pt-2">
-              Connecting ambition with international opportunities. Meero Overseas HR Consultancy provides trusted recruitment and personalized career guidance from Cochin, Kerala.
+              Connecting ambition with international opportunities. Meero Overseas HR Consultancy provides trusted recruitment and personalized career guidance from Keralam.
             </p>
 
-            <TrustBadge />
+            <TrustBadge size="h-14 sm:h-16 md:h-20" showTagline className="pt-2" />
           </div>
 
           {/* Col 2: Navigation (Col span 2) */}
@@ -99,48 +99,57 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
           {/* Col 4: Contact & Office (Col span 3) */}
           <div className="lg:col-span-3">
             <h4 className="text-xs font-bold uppercase tracking-widest text-white font-heading mb-4">
-              Our Office
+              From Our Office
             </h4>
-            <div className="space-y-3 text-xs sm:text-sm text-slate-400">
-              <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-[#21B8C1] shrink-0 mt-0.5" />
-                <address className="not-italic text-xs leading-relaxed text-slate-300">
-                  {companyInfo.address.fullAddress}
-                </address>
-              </div>
-
-              <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-[#21B8C1] shrink-0" />
-                <div className="text-xs">
-                  <a href={`tel:+${companyInfo.contact.cleanOfficeMobile}`} className="hover:text-white text-slate-300">
-                    {companyInfo.contact.officeMobile}
-                  </a> (Office) · 
-                  <a href={`tel:${companyInfo.contact.cleanTelephone}`} className="hover:text-white text-slate-300 ml-1">
-                    {companyInfo.contact.telephone}
-                  </a>
+            <div className="space-y-4 text-xs sm:text-sm text-slate-400">
+              {/* Location Block */}
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2 text-white font-bold text-xs sm:text-sm">
+                  <MapPin className="w-4 h-4 text-[#21B8C1] shrink-0" />
+                  <span>Our Location</span>
+                </div>
+                <div className="text-xs text-slate-300 leading-relaxed space-y-0.5 pl-6">
+                  <p>2nd Floor, Krishnanjali Building</p>
+                  <p>Near Sree Krishna Temple</p>
+                  <p>Ravipuram, Kochi – 682016</p>
+                  <p>Keralam, India</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#21B8C1] shrink-0" />
-                <a href={`mailto:${companyInfo.contact.email}`} className="text-xs hover:text-white text-slate-300">
-                  {companyInfo.contact.email}
-                </a>
-              </div>
-
-              {companyInfo.contact.instagramUrl && (
+              <div className="space-y-2.5 pt-2 border-t border-white/10">
                 <div className="flex items-center gap-2.5">
-                  <InstagramIcon className="w-4 h-4 text-[#21B8C1] shrink-0" />
-                  <a
-                    href={companyInfo.contact.instagramUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs hover:text-white text-slate-300"
-                  >
-                    Follow us on Instagram
+                  <Phone className="w-4 h-4 text-[#21B8C1] shrink-0" />
+                  <div className="text-xs">
+                    <a href={`tel:+${companyInfo.contact.cleanOfficeMobile}`} className="hover:text-white text-slate-300">
+                      {companyInfo.contact.officeMobile}
+                    </a> (Office) · 
+                    <a href={`tel:${companyInfo.contact.cleanTelephone}`} className="hover:text-white text-slate-300 ml-1">
+                      {companyInfo.contact.telephone}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2.5">
+                  <Mail className="w-4 h-4 text-[#21B8C1] shrink-0" />
+                  <a href={`mailto:${companyInfo.contact.email}`} className="text-xs hover:text-white text-slate-300">
+                    {companyInfo.contact.email}
                   </a>
                 </div>
-              )}
+
+                {companyInfo.contact.instagramUrl && (
+                  <div className="flex items-center gap-2.5">
+                    <InstagramIcon className="w-4 h-4 text-[#21B8C1] shrink-0" />
+                    <a
+                      href={companyInfo.contact.instagramUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs hover:text-white text-slate-300"
+                    >
+                      Follow us on Instagram
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

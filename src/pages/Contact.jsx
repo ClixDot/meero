@@ -78,12 +78,13 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-[#171B20] font-heading">
-                      Office Address
+                      Our Location
                     </h4>
                     <p className="text-xs text-[#697477] mt-1 leading-relaxed">
-                      {companyInfo.address.floor}, {companyInfo.address.building},<br />
-                      {companyInfo.address.landmark},<br />
-                      {companyInfo.address.city} – {companyInfo.address.postalCode}, {companyInfo.address.state}, India.
+                      {companyInfo.address.floor}, {companyInfo.address.building}<br />
+                      {companyInfo.address.landmark}<br />
+                      Ravipuram, {companyInfo.address.city} – {companyInfo.address.postalCode}<br />
+                      {companyInfo.address.state}, India
                     </p>
                   </div>
                 </div>
@@ -196,7 +197,7 @@ export default function Contact() {
                   Office Location Map
                 </h4>
                 <p className="text-xs text-[#697477]">
-                  Ravipuram Road, Near Sree Krishna Temple, Cochin, Kerala 682016
+                  Ravipuram Road, Near Sree Krishna Temple, Kochi, Keralam 682016
                 </p>
               </div>
 

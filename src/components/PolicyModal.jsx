@@ -39,7 +39,7 @@ export default function PolicyModal({ isOpen, onClose, type = 'privacy' }) {
             {isPrivacy ? 'Privacy Policy' : 'Terms & Conditions of Service'}
           </h2>
           <p className="text-xs text-[#697477] mt-1">
-            MEERO Overseas HR Consultancy · Cochin, Kerala, India
+            MEERO Overseas HR Consultancy · Kochi, Keralam, India
           </p>
         </div>
 
@@ -47,7 +47,7 @@ export default function PolicyModal({ isOpen, onClose, type = 'privacy' }) {
           {isPrivacy ? (
             <>
               <p>
-                MEERO Overseas HR Consultancy (&quot;Meero&quot;, &quot;we&quot;, &quot;us&quot;) is committed to protecting candidate and client privacy. This policy explains how we collect, store, and utilize personal data provided through our website and Cochin office.
+                MEERO Overseas HR Consultancy (&quot;Meero&quot;, &quot;we&quot;, &quot;us&quot;) is committed to protecting candidate and client privacy. This policy explains how we collect, store, and utilize personal data provided through our website and recruitment services.
               </p>
               <h4 className="font-bold text-[#171B20] pt-2">1. Information We Collect</h4>
               <p>
@@ -85,7 +85,7 @@ export default function PolicyModal({ isOpen, onClose, type = 'privacy' }) {
               </p>
               <h4 className="font-bold text-[#171B20] pt-2">4. Jurisdiction</h4>
               <p>
-                Any legal matters or disputes arising from recruitment activities shall be subject to the exclusive jurisdiction of the competent courts in Ernakulam/Cochin, Kerala, India.
+                Any legal matters or disputes arising from recruitment activities shall be subject to the exclusive jurisdiction of the competent courts in Ernakulam/Kochi, Keralam, India.
               </p>
             </>
           )}

@@ -241,7 +241,7 @@ export default function ApplicationModal({ isOpen, onClose, preselectedJob = nul
                 Application Successfully Registered!
               </h3>
               <p className="text-sm text-[#697477] max-w-md mx-auto">
-                Thank you, <strong className="text-[#171B20]">{formData.fullName}</strong>. Your profile for <strong className="text-[#168F88]">{formData.preferredJob}</strong> has been logged in our Cochin recruitment database.
+                Thank you, <strong className="text-[#171B20]">{formData.fullName}</strong>. Your profile for <strong className="text-[#168F88]">{formData.preferredJob}</strong> has been logged in our recruitment database.
               </p>
 
               <div className="p-4 rounded-2xl bg-[#F5FAF9] border border-[#E5ECEA] max-w-md mx-auto text-left space-y-2">
@@ -339,7 +339,7 @@ export default function ApplicationModal({ isOpen, onClose, preselectedJob = nul
                     name="currentLocation"
                     value={formData.currentLocation}
                     onChange={handleInputChange}
-                    placeholder="e.g. Kochi, Kerala"
+                    placeholder="e.g. Your City / State"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-[#E5ECEA] text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#168F88] transition-all"
                   />
                 </div>

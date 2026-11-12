@@ -261,12 +261,12 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
 
   return (
     <div ref={mainRef} className="min-h-screen bg-[#0B0F17]">
-      
+
       {/* ========================================================
           DARK HERO SECTION (MATCHING THE REFERENCE IMAGE)
       ======================================================== */}
       <section className="relative min-h-[110vh] md:min-h-[115vh] flex items-center pt-28 pb-44 md:pt-36 md:pb-56 overflow-hidden">
-        
+
         {/* Full-width High-end Photography Background */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <img
@@ -283,14 +283,14 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
         {/* Hero Content Container */}
         <div className="max-w-[1560px] 2xl:max-w-[1680px] w-full mx-auto px-4 sm:px-6 lg:px-10 relative z-10 my-auto">
           <div ref={heroContentRef} className="max-w-3xl space-y-6">
-            
+
             {/* Government approval logo and tagline */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <TrustBadge size="lg" />
+              <TrustBadge size="h-20 sm:h-24 md:h-28" showTagline />
             </motion.div>
 
             {/* Huge Clean Bold Headline (Style: "Digital Marketing Services") */}
@@ -301,11 +301,11 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white font-heading leading-[1.1] sm:leading-[1.08] break-words"
             >
               Your Global Career <br />
-              <span className="text-white">Starts Here.</span>
+              <span className="text-[#21B8C1]">Starts Here.</span>
             </motion.h1>
 
             {/* Action Buttons */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.25 }}
@@ -338,18 +338,18 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
       ======================================================== */}
       <section className="relative z-20 px-2.5 sm:px-6 lg:px-10 -mt-24 md:-mt-36 pb-20">
         <div className="max-w-[1560px] 2xl:max-w-[1680px] w-full mx-auto rounded-[24px] sm:rounded-[36px] md:rounded-[48px] lg:rounded-[52px] bg-white text-[#171B20] p-4 sm:p-8 md:p-12 lg:p-16 shadow-2xl shadow-black/30 border border-slate-100">
-          
+
           {/* ----------------------------------------------------
               SECTION 1: THE 3-COLUMN SERVICE EXPLORER
           ---------------------------------------------------- */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-stretch pb-14 border-b border-slate-200">
-            
+
             {/* Col 1: Vertical List of Services (Left) */}
             <div className="lg:col-span-3 space-y-3">
               <div className="text-[11px] font-bold uppercase tracking-widest text-[#697477] mb-3">
                 Specializations
               </div>
-              
+
               <div className="space-y-1">
                 {servicesList.map((service) => {
                   const isActive = service.id === activeServiceId;
@@ -359,11 +359,10 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                       type="button"
                       onClick={() => setActiveServiceId(service.id)}
                       onMouseEnter={() => setActiveServiceId(service.id)}
-                      className={`w-full text-left px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between group ${
-                        isActive 
-                          ? 'bg-[#F5FAF9] text-[#168F88] font-bold border-l-4 border-[#168F88]' 
+                      className={`w-full text-left px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between group ${isActive
+                          ? 'bg-[#F5FAF9] text-[#168F88] font-bold border-l-4 border-[#168F88]'
                           : 'text-[#697477] hover:text-[#171B20] hover:bg-slate-50'
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-2">
                         <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[#168F88]' : 'bg-slate-300 group-hover:bg-slate-400'}`} />
@@ -422,10 +421,10 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
 
             {/* Col 3: High-Contrast Dark Feature Card (Right) */}
             <div className="lg:col-span-4 rounded-3xl bg-[#0D151E] text-white p-6 sm:p-7 flex flex-col justify-between shadow-xl relative overflow-hidden group">
-              
+
               {/* Background watermark */}
               <div className="absolute -right-8 -bottom-8 opacity-10 pointer-events-none group-hover:scale-105 transition-transform duration-500">
-                <FingerprintGraphic className="w-48 h-48" color="#21B8C1" />
+                <img src="/images/meero-mark.png" alt="" aria-hidden="true" className="w-56 h-auto" />
               </div>
 
               <div className="relative z-10 space-y-3">
@@ -462,7 +461,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               SECTION 2: FEATURED OPPORTUNITIES (5 PHOTOGRAPHIC CARDS)
           ---------------------------------------------------- */}
           <div className="pt-14 pb-14 border-b border-slate-200">
-            
+
             {/* Gallery Section Header */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
               <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#171B20] font-heading">
@@ -610,11 +609,10 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                 return (
                   <div
                     key={faq.id}
-                    className={`gsap-faq-item rounded-2xl border transition-all duration-200 overflow-hidden ${
-                      isOpen 
-                        ? 'bg-[#F5FAF9] border-[#168F88]/40 shadow-sm' 
+                    className={`gsap-faq-item rounded-2xl border transition-all duration-200 overflow-hidden ${isOpen
+                        ? 'bg-[#F5FAF9] border-[#168F88]/40 shadow-sm'
                         : 'bg-white border-slate-200 hover:border-slate-300'
-                    }`}
+                      }`}
                   >
                     <button
                       type="button"
@@ -624,9 +622,8 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                       <span className="text-sm sm:text-base font-bold text-[#171B20] font-heading">
                         {faq.question}
                       </span>
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
-                        isOpen ? 'bg-[#168F88] text-white rotate-180' : 'bg-slate-100 text-slate-500'
-                      }`}>
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${isOpen ? 'bg-[#168F88] text-white rotate-180' : 'bg-slate-100 text-slate-500'
+                        }`}>
                         <ChevronDown className="w-4 h-4" />
                       </div>
                     </button>
@@ -647,7 +644,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
           ---------------------------------------------------- */}
           <div className="pt-14 pb-14 border-b border-slate-200">
             <div className="gsap-desk-banner rounded-2xl sm:rounded-3xl bg-[#0D151E] text-white p-6 sm:p-10 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 relative overflow-hidden">
-              
+
               {/* Subtle background decoration */}
               <div className="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
                 <FingerprintGraphic className="w-72 h-72" color="#21B8C1" />
@@ -659,10 +656,6 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                   Discuss Your Overseas Career <br className="hidden sm:inline" />
                   <span className="text-[#21B8C1]">Directly with Our Experts.</span>
                 </h3>
-
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
-                  Licensing exams, DataFlow verification, trade tests, and verified Gulf vacancies from our Cochin office.
-                </p>
               </div>
 
               {/* Right Column: Clean, Direct Action Buttons */}
@@ -694,13 +687,15 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
           ---------------------------------------------------- */}
           <div className="pt-10 sm:pt-14">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 bg-gradient-to-r from-[#F5FAF9] to-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#E5ECEA] overflow-hidden w-full max-w-full">
-              <div className="w-full min-w-0 space-y-3 text-center lg:text-left flex flex-col items-center lg:items-start">
-                <h4 className="text-xl sm:text-2xl font-bold text-[#171B20] font-heading break-words">
-                  Our Office in Ravipuram, Cochin, Kerala
-                </h4>
-                <p className="text-xs sm:text-sm text-[#697477] max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                  Led by Managing Director <strong>Abdul Latheef</strong>. Hosting direct client interview delegations, technical trade tests, and pre-departure briefings.
-                </p>
+              <div className="w-full min-w-0 text-center lg:text-left flex flex-col items-center lg:items-start space-y-1.5">
+                <div className="flex items-center gap-2 text-xl sm:text-2xl font-bold text-[#171B20] font-heading">
+                  <MapPin className="w-5 h-5 text-[#168F88] shrink-0" />
+                  <span>Our Location</span>
+                </div>
+                <div className="text-xs sm:text-sm text-[#697477] leading-relaxed">
+                  <p>{companyInfo.address.floor}, {companyInfo.address.building}, {companyInfo.address.landmark}</p>
+                  <p>Ravipuram, {companyInfo.address.city} – {companyInfo.address.postalCode}, {companyInfo.address.state}, India</p>
+                </div>
               </div>
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto shrink-0">
@@ -718,7 +713,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                   size="md"
                   className="w-full sm:w-auto justify-center"
                 >
-                  Visit Our Office
+                  Contact Us
                 </Button>
               </div>
             </div>
