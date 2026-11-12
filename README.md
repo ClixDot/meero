@@ -78,10 +78,10 @@ Create a `.env` file in the root directory to connect your custom backend API or
 
 ```env
 # Optional API Endpoint for Candidate CV Applications (multipart/form-data)
-VITE_API_ENDPOINT=https://api.meerohr.com/api/v1/applications
+NEXT_PUBLIC_API_ENDPOINT=https://api.meerohr.com/api/v1/applications
 
 # Optional API Endpoint for Contact Form Enquiries (application/json)
-VITE_CONTACT_API_ENDPOINT=https://api.meerohr.com/api/v1/inquiries
+NEXT_PUBLIC_CONTACT_API_ENDPOINT=https://api.meerohr.com/api/v1/inquiries
 ```
 
 *When no backend is configured, the forms validate inputs and safely log submissions locally with unique tracking reference IDs.*
