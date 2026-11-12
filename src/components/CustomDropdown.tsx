@@ -80,16 +80,16 @@ export default function CustomDropdown({
           disabled
             ? 'opacity-60 cursor-not-allowed bg-slate-50 border-slate-200 text-slate-400'
             : isOpen
-            ? 'border-[#168F88] ring-2 ring-[#168F88]/15 shadow-sm'
+            ? 'border-(--brand-teal) ring-2 ring-(--brand-teal)/15 shadow-sm'
             : 'border-[#E5ECEA] hover:border-slate-300 hover:bg-slate-50/50'
         }`}
       >
-        <span className={`truncate ${currentOption ? 'text-[#171B20]' : 'text-slate-400'}`}>
+        <span className={`truncate ${currentOption ? 'text-(--brand-text)' : 'text-slate-400'}`}>
           {displayLabel}
         </span>
         <ChevronDown
           className={`w-4 h-4 shrink-0 transition-transform duration-200 ${
-            isOpen ? 'rotate-180 text-[#168F88]' : 'text-[#697477]'
+            isOpen ? 'rotate-180 text-(--brand-teal)' : 'text-[#697477]'
           }`}
         />
       </button>
@@ -119,13 +119,13 @@ export default function CustomDropdown({
                     onClick={() => handleSelect(opt.value)}
                     className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-between gap-2 transition-all duration-150 cursor-pointer ${
                       isSelected
-                        ? 'bg-[#168F88]/10 text-[#168F88] font-bold'
-                        : 'text-[#171B20] hover:bg-[#F5FAF9] hover:text-[#168F88]'
+                        ? 'bg-(--brand-teal)/10 text-(--brand-teal) font-bold'
+                        : 'text-(--brand-text) hover:bg-(--brand-bg) hover:text-(--brand-teal)'
                     }`}
                   >
                     <span className="truncate">{opt.label}</span>
                     {isSelected && (
-                      <Check className="w-3.5 h-3.5 text-[#168F88] shrink-0" />
+                      <Check className="w-3.5 h-3.5 text-(--brand-teal) shrink-0" />
                     )}
                   </button>
                 );

@@ -13,8 +13,10 @@ export default function Logo({
   size = 'md',
   showLink = true,
   className = '',
-  imgClassName = ''
-}) {
+  imgClassName = '',
+  src = '/images/meero.png',
+  alt = 'MEERO Overseas HR Consultancy'
+}: any) {
   
   // Height classes by size (responsively scaled for all screen sizes)
   const sizeMap = {
@@ -27,13 +29,13 @@ export default function Logo({
   const heightClass = sizeMap[size] || size;
 
   // Use the official meero.png logo
-  const logoSrc = meeroLogo;
+  const logoSrc = src || meeroLogo;
 
   const Content = (
     <div className={`inline-flex items-center select-none ${className}`}>
       <img
         src={logoSrc}
-        alt="MEERO Overseas HR Consultancy"
+        alt={alt}
         className={`${heightClass} ${imgClassName} w-auto object-contain transition-all duration-300 ease-in-out group-hover:scale-[1.02]`}
         loading="eager"
       />

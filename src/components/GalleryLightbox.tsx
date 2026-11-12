@@ -125,7 +125,7 @@ export default function GalleryLightbox({ items, activeIndex, onChangeIndex, onC
       <div className="shrink-0 px-4 py-4 text-center text-white">
         <h2 className="text-sm sm:text-base font-bold font-heading">{item.title}</h2>
         <p className="mt-1 inline-flex items-center gap-1 text-xs text-slate-300">
-          <MapPin className="w-3.5 h-3.5 text-[#21B8C1] shrink-0" />
+          <MapPin className="w-3.5 h-3.5 text-(--brand-turq) shrink-0" />
           {item.location}
         </p>
       </div>

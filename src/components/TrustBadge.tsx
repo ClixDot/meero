@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { companyInfo } from '../data/companyInfo';
+import { useSite } from '../lib/cms/SiteContent';
 
 const heights = {
   sm: 'h-8 sm:h-9 md:h-10',
@@ -27,6 +27,7 @@ export default function TrustBadge({
   taglineText,
   className = '' 
 }: any) {
+  const companyInfo = useSite('company');
   const { approvalLogo, approvalLogoAlt, governmentApproval } = companyInfo.credentials;
   const heightClass = (boxed ? boxedHeights[size] : heights[size]) || heights[size] || size;
   const label = taglineText || governmentApproval || 'Govt. of India Approved Recruiting Agency';
@@ -45,18 +46,18 @@ export default function TrustBadge({
       <div className={`relative inline-flex flex-col items-center pt-2.5 ${className}`}>
         {/* Top Floating Pill Badge sitting on the border */}
         {badgeText && (
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 px-3 py-0.5 rounded-full bg-white text-[#0B0F17] text-[9px] sm:text-[10px] font-black uppercase tracking-widest shadow-md shadow-black/20 whitespace-nowrap">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 px-3 py-0.5 rounded-full bg-white text-(--brand-dark) text-[9px] sm:text-[10px] font-black uppercase tracking-widest shadow-md shadow-black/20 whitespace-nowrap">
             {badgeText}
           </div>
         )}
 
         {/* Compact Brand Card Container with Transparent Background */}
-        <div className="relative rounded-xl sm:rounded-2xl border-2 border-[#21B8C1]/80 hover:border-[#21B8C1] bg-transparent px-3.5 sm:px-5 pt-3 sm:pt-3.5 pb-2 sm:pb-2.5 transition-all flex flex-col items-center text-center gap-1.5 sm:gap-2">
+        <div className="relative rounded-xl sm:rounded-2xl border-2 border-(--brand-turq)/80 hover:border-(--brand-turq) bg-transparent px-3.5 sm:px-5 pt-3 sm:pt-3.5 pb-2 sm:pb-2.5 transition-all flex flex-col items-center text-center gap-1.5 sm:gap-2">
           {logoImg}
 
           {showTagline && (
-            <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 rounded-full bg-transparent text-white/95 border border-[#21B8C1]/40 text-[10px] sm:text-[11px] font-semibold tracking-wide">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#21B8C1] animate-pulse shrink-0" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 rounded-full bg-transparent text-white/95 border border-(--brand-turq)/40 text-[10px] sm:text-[11px] font-semibold tracking-wide">
+              <span className="w-1.5 h-1.5 rounded-full bg-(--brand-turq) animate-pulse shrink-0" />
               <span>{label}</span>
             </div>
           )}
@@ -76,8 +77,8 @@ export default function TrustBadge({
   return (
     <div className={`inline-flex flex-col items-start gap-2.5 sm:gap-3 ${className}`}>
       {logoImg}
-      <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-[#21B8C1]/10 text-white/95 border border-[#21B8C1]/30 backdrop-blur-sm text-xs sm:text-sm font-semibold tracking-wide shadow-sm">
-        <span className="w-1.5 h-1.5 rounded-full bg-[#21B8C1] animate-pulse shrink-0" />
+      <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-(--brand-turq)/10 text-white/95 border border-(--brand-turq)/30 backdrop-blur-sm text-xs sm:text-sm font-semibold tracking-wide shadow-sm">
+        <span className="w-1.5 h-1.5 rounded-full bg-(--brand-turq) animate-pulse shrink-0" />
         <span>{label}</span>
       </div>
     </div>

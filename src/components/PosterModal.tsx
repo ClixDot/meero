@@ -41,14 +41,14 @@ export default function PosterModal({ job, onClose, onApply }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="shrink-0 flex items-center justify-between gap-3 px-4 py-3 border-b border-[#E5ECEA]">
-          <h2 id="poster-modal-title" className="text-sm font-bold text-[#171B20] font-heading truncate">
+          <h2 id="poster-modal-title" className="text-sm font-bold text-(--brand-text) font-heading truncate">
             {job.title}
           </h2>
           <button
             ref={closeButtonRef}
             type="button"
             onClick={onClose}
-            className="shrink-0 p-2 rounded-full text-[#697477] hover:text-[#171B20] hover:bg-slate-100 transition-colors"
+            className="shrink-0 p-2 rounded-full text-[#697477] hover:text-(--brand-text) hover:bg-slate-100 transition-colors"
             aria-label="Close poster"
           >
             <X className="w-5 h-5" />
@@ -76,7 +76,7 @@ export default function PosterModal({ job, onClose, onApply }) {
               href={job.poster}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#168F88] hover:text-[#0f6c67]"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-(--brand-teal) hover:text-[#0f6c67]"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               Open full size

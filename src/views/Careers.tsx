@@ -13,21 +13,21 @@ import Button from '../components/Button';
 import JobCard from '../components/JobCard';
 import CustomDropdown from '../components/CustomDropdown';
 
-import { 
-  sampleJobs, 
-  destinationCountries, 
-  industriesList
-} from '../data/jobs';
-import { companyInfo } from '../data/companyInfo';
-
-const driveUpdatesChatUrl = `https://wa.me/${companyInfo.contact.whatsappNumber}?text=${encodeURIComponent('Hello Meero HR Consultancy, please share updates on upcoming overseas drives.')}`;
+import { useSite, useVisible } from '../lib/cms/SiteContent';
 
 export default function Careers({
   onOpenApplyModal,
   onOpenJobDetails,
-  onViewPoster,
-  whatsappChannelUrl = companyInfo.contact.whatsappChannelUrl
+  onViewPoster
 }) {
+  const page = useSite('careersPage');
+  const companyInfo = useSite('company');
+  const sampleJobs = useVisible('jobs');
+  const servicesList = useVisible('services');
+  const whatsappChannelUrl = companyInfo.contact.whatsappChannelUrl;
+  const driveUpdatesChatUrl = `https://wa.me/${companyInfo.contact.whatsappNumber}?text=${encodeURIComponent(page.drives.chatMessage)}`;
+  const destinationCountries = useMemo(() => ['All Countries', ...page.countries], [page.countries]);
+  const industriesList = useMemo(() => ['All Industries', ...servicesList.map((service) => service.title)], [servicesList]);
   // Home page destination cards link here with ?country=<name>
   const [searchParams] = useSearchParams();
   const countryParam = searchParams?.get('country')?.toLowerCase();
@@ -70,7 +70,7 @@ export default function Careers({
       }
       return 0;
     });
-  }, [searchTerm, selectedCountry, selectedIndustry, sortBy]);
+  }, [sampleJobs, searchTerm, selectedCountry, selectedIndustry, sortBy]);
 
   const handleResetFilters = () => {
     setSearchTerm('');
@@ -80,7 +80,7 @@ export default function Careers({
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F17]">
+    <div className="min-h-screen bg-(--brand-dark)">
       
       {/* ========================================================
           DARK HERO BANNER
@@ -88,11 +88,11 @@ export default function Careers({
       <section className="relative pt-28 pb-32 md:pt-36 md:pb-40 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=2000&q=80"
-            alt="International Career Strategy"
+            src={page.hero.image}
+            alt={page.hero.imageAlt}
             className="w-full h-full object-cover filter brightness-[0.35] contrast-[1.1]"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F17]/95 via-[#0B0F17]/75 to-[#0B0F17]/50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-(--brand-dark)/95 via-(--brand-dark)/75 to-(--brand-dark)/50" />
         </div>
 
         <div className="max-w-[1560px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
@@ -104,8 +104,8 @@ export default function Careers({
               transition={{ duration: 0.6 }}
               className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white font-heading leading-[1.1] sm:leading-tight break-words"
             >
-              Find the Opportunity <br />
-              <span className="text-[#21B8C1]">That Moves You Forward.</span>
+              {page.hero.title} <br />
+              <span className="text-(--brand-turq)">{page.hero.highlight}</span>
             </motion.h1>
 
           </div>
@@ -116,10 +116,10 @@ export default function Careers({
           OVERLAPPING WHITE SHEET
       ======================================================== */}
       <section className="relative z-20 px-2.5 sm:px-6 lg:px-10 -mt-20 md:-mt-28 pb-20">
-        <div className="max-w-[1560px] 2xl:max-w-[1680px] w-full mx-auto rounded-[24px] sm:rounded-[36px] md:rounded-[48px] lg:rounded-[52px] bg-white text-[#171B20] p-4 sm:p-8 md:p-12 lg:p-16 shadow-2xl shadow-black/30 border border-slate-100 space-y-8">
+        <div className="max-w-[1560px] 2xl:max-w-[1680px] w-full mx-auto rounded-[24px] sm:rounded-[36px] md:rounded-[48px] lg:rounded-[52px] bg-white text-(--brand-text) p-4 sm:p-8 md:p-12 lg:p-16 shadow-2xl shadow-black/30 border border-slate-100 space-y-8">
           
           {/* Search & Filter Controls */}
-          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#F5FAF9] border border-[#E5ECEA] space-y-4">
+          <div className="p-4 sm:p-6 rounded-2xl sm:rounded-3xl bg-(--brand-bg) border border-[#E5ECEA] space-y-4">
             
             <div className="relative">
               <Search className="w-5 h-5 text-[#697477] absolute left-4 top-1/2 -translate-y-1/2" />
@@ -127,14 +127,14 @@ export default function Careers({
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search vacancies by title, keyword, specialty, or qualification..."
-                className="w-full pl-11 sm:pl-12 pr-12 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl bg-white border border-[#E5ECEA] text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#168F88] shadow-xs"
+                placeholder={page.searchPlaceholder}
+                className="w-full pl-11 sm:pl-12 pr-12 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl bg-white border border-[#E5ECEA] text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-(--brand-teal) shadow-xs"
               />
               {searchTerm && (
                 <button
                   type="button"
                   onClick={() => setSearchTerm('')}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#697477] hover:text-[#171B20]"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#697477] hover:text-(--brand-text)"
                 >
                   Clear
                 </button>
@@ -186,13 +186,13 @@ export default function Careers({
 
             <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs text-[#697477] border-t border-[#E5ECEA]">
               <div>
-                Showing <strong className="text-[#171B20]">{filteredJobs.length}</strong> available openings
+                Showing <strong className="text-(--brand-text)">{filteredJobs.length}</strong> available openings
               </div>
               {(searchTerm || selectedCountry !== 'All Countries' || selectedIndustry !== 'All Industries') && (
                 <button
                   type="button"
                   onClick={handleResetFilters}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#168F88] hover:text-[#0f6c67] self-start sm:self-auto"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-(--brand-teal) hover:text-[#0f6c67] self-start sm:self-auto"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Reset all filters
@@ -216,10 +216,10 @@ export default function Careers({
               ))}
             </div>
           ) : (
-            <div className="p-8 sm:p-12 text-center rounded-2xl sm:rounded-3xl bg-[#F5FAF9] border border-[#E5ECEA] max-w-2xl mx-auto space-y-4">
-              <h3 className="text-lg sm:text-xl font-bold text-[#171B20]">No matching vacancies found</h3>
+            <div className="p-8 sm:p-12 text-center rounded-2xl sm:rounded-3xl bg-(--brand-bg) border border-[#E5ECEA] max-w-2xl mx-auto space-y-4">
+              <h3 className="text-lg sm:text-xl font-bold text-(--brand-text)">{page.emptyTitle}</h3>
               <p className="text-xs sm:text-sm text-[#697477]">
-                Try adjusting your search criteria, or register your profile in our general candidate pool.
+                {page.emptyText}
               </p>
               <Button onClick={handleResetFilters} variant="outline" size="sm">
                 Clear Filters
@@ -228,13 +228,14 @@ export default function Careers({
           )}
 
           {/* Talent Pool Banner */}
+          {page.drives.visible && (
           <div className="pt-8 border-t border-slate-200">
             <div className="rounded-2xl sm:rounded-3xl bg-[#0D151E] text-white p-6 sm:p-10 text-center space-y-3 shadow-xl">
               <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading">
-                Looking for Upcoming Overseas Drives?
+                {page.drives.heading}
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
-                Client delegations visit our recruitment center regularly. Follow new drives on WhatsApp, or submit your profile to be pre-screened for upcoming vacancies.
+                {page.drives.text}
               </p>
               <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
                 <a
@@ -244,18 +245,19 @@ export default function Careers({
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold bg-[#25D366] text-[#0D151E] hover:bg-[#20ba5a] hover:scale-105 active:scale-95 transition-all shadow-md"
                 >
                   <MessageCircle className="w-4 h-4 shrink-0" />
-                  {whatsappChannelUrl ? 'Join Our WhatsApp Channel' : 'Get Drive Updates on WhatsApp'}
+                  {whatsappChannelUrl ? page.drives.channelLabel : page.drives.chatLabel}
                 </a>
                 <button
                   type="button"
                   onClick={() => onOpenApplyModal && onOpenApplyModal()}
                   className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold bg-white text-[#0D151E] hover:bg-slate-100 hover:scale-105 active:scale-95 transition-all shadow-md"
                 >
-                  Register Candidate Profile
+                  {page.drives.registerLabel}
                 </button>
               </div>
             </div>
           </div>
+          )}
 
         </div>
       </section>

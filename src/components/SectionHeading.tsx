@@ -18,23 +18,23 @@ export default function SectionHeading({
       {eyebrow && (
         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase mb-3 ${
           light 
-            ? 'bg-teal-900/60 text-[#21B8C1] border border-teal-500/30' 
-            : 'bg-[#168F88]/10 text-[#168F88] border border-[#168F88]/20'
+            ? 'bg-teal-900/60 text-(--brand-turq) border border-teal-500/30' 
+            : 'bg-(--brand-teal)/10 text-(--brand-teal) border border-(--brand-teal)/20'
         }`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#168F88] animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-(--brand-teal) animate-pulse" />
           {eyebrow}
         </div>
       )}
 
       {title && (
         <h2 className={`text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight font-heading leading-tight ${
-          light ? 'text-white' : 'text-[#171B20]'
+          light ? 'text-white' : 'text-(--brand-text)'
         }`}>
           {title}
           {highlight && (
-            <span className="text-[#168F88] ml-2 relative inline-block">
+            <span className="text-(--brand-teal) ml-2 relative inline-block">
               {highlight}
-              <span className="absolute bottom-1 left-0 w-full h-1 bg-[#21B8C1]/30 rounded-full -z-0" />
+              <span className="absolute bottom-1 left-0 w-full h-1 bg-(--brand-turq)/30 rounded-full -z-0" />
             </span>
           )}
         </h2>

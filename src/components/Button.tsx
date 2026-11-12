@@ -28,13 +28,13 @@ export default function Button({
   }[size] || "px-5 py-2.5 text-sm gap-2";
 
   const variantStyles = {
-    primary: "bg-[#168F88] hover:bg-[#0f6c67] text-white shadow-md shadow-[#168F88]/20 focus:ring-[#168F88]",
-    secondary: "bg-[#21B8C1] hover:bg-[#1aa4ac] text-white shadow-md shadow-[#21B8C1]/20 focus:ring-[#21B8C1]",
-    outline: "border-2 border-[#168F88] text-[#168F88] hover:bg-[#168F88]/10 focus:ring-[#168F88]",
-    ghost: "text-[#171B20] hover:bg-[#F5FAF9] hover:text-[#168F88] focus:ring-slate-200",
-    white: "bg-white text-[#168F88] hover:bg-slate-50 shadow-md focus:ring-white",
+    primary: "bg-(--brand-teal) hover:bg-[#0f6c67] text-white shadow-md shadow-(--brand-teal)/20 focus:ring-(--brand-teal)",
+    secondary: "bg-(--brand-turq) hover:bg-[#1aa4ac] text-white shadow-md shadow-(--brand-turq)/20 focus:ring-(--brand-turq)",
+    outline: "border-2 border-(--brand-teal) text-(--brand-teal) hover:bg-(--brand-teal)/10 focus:ring-(--brand-teal)",
+    ghost: "text-(--brand-text) hover:bg-(--brand-bg) hover:text-(--brand-teal) focus:ring-slate-200",
+    white: "bg-white text-(--brand-teal) hover:bg-slate-50 shadow-md focus:ring-white",
     whatsapp: "bg-[#25D366] hover:bg-[#20ba5a] text-white shadow-md shadow-[#25D366]/25 focus:ring-[#25D366]"
-  }[variant] || "bg-[#168F88] text-white";
+  }[variant] || "bg-(--brand-teal) text-white";
 
   const content = (
     <>

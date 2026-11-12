@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import AppShell from '../components/AppShell';
 
 const title = 'MEERO Overseas HR Consultancy | Trusted Global Recruitment & Career Guidance';
 const description =
@@ -41,8 +40,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="bg-white text-[#171B20] antialiased selection:bg-[#168F88]/15 selection:text-[#168F88]">
-        <AppShell>{children}</AppShell>
+      <body className="bg-white text-(--brand-text) antialiased selection:bg-(--brand-teal)/15 selection:text-(--brand-teal)">
+        {children}
       </body>
     </html>
   );

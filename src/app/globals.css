@@ -17,6 +17,15 @@
 }
 
 :root {
+  /* Brand tokens – overridden at runtime by CMS Design & Branding settings */
+  --brand-teal: #168F88;
+  --brand-turq: #21B8C1;
+  --brand-text: #171B20;
+  --brand-bg: #F5FAF9;
+  --brand-lavender: #8B80F9;
+  --brand-page: #FFFFFF;
+  --brand-dark: #0B0F17;
+  --cms-heading-zoom: 1;
   --primary-teal: #168F88;
   --primary-teal-dark: #0e6761;
   --secondary-turq: #21B8C1;
@@ -35,8 +44,8 @@ html {
 
 body {
   font-family: var(--font-sans);
-  color: var(--text-main);
-  background-color: var(--bg-primary);
+  color: var(--brand-text);
+  background-color: var(--brand-page);
   overflow-x: hidden;
   width: 100%;
   max-width: 100vw;
@@ -121,3 +130,16 @@ body::-webkit-scrollbar {
 .animate-float {
   animation: floatGentle 5s ease-in-out infinite;
 }
+/* CMS heading scale (Design & Branding). Applies to public headings only. */
+.font-heading:is(h1, h2, h3, h4) {
+  zoom: var(--cms-heading-zoom);
+}
+
+/* CMS heading scale (Design & Branding). Applies to public headings only. */
+.font-heading:is(h1, h2, h3, h4) {
+  zoom: var(--cms-heading-zoom);
+}
+
+/* Utility used by the admin UI */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

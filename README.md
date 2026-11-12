@@ -85,3 +85,23 @@ NEXT_PUBLIC_CONTACT_API_ENDPOINT=https://api.meerohr.com/api/v1/inquiries
 ```
 
 *When no backend is configured, the forms validate inputs and safely log submissions locally with unique tracking reference IDs.*
+
+## Admin dashboard & CMS (`/admin`)
+
+Phase 1 – local persistence. Open `/admin` and sign in. The first account is
+`admin@meerohr.com` / `Meero@2026`; change this password right after signing in.
+
+- **Storage:** content, media, applications, enquiries and admin accounts are saved
+  in the browser's IndexedDB (`src/lib/services/local.ts`). They exist only in that
+  browser profile. Other visitors' browsers see the built-in content from `src/data`.
+- **Security:** admin sign-in is checked client-side only. Do not treat it as
+  protection until the server-side auth adapter is added.
+- **Publishing:** every editor has *Save draft* and *Publish*. The public site renders
+  published content only. Add `?cmsPreview=1` to a public URL to see drafts.
+- **Phase 2 (MongoDB + Cloudinary):** implement the interfaces in
+  `src/lib/services/types.ts` and swap the adapters in `src/lib/services/index.ts`.
+  The UI does not change.
+
+Structure: `src/admin/` (UI, editors, schemas), `src/app/admin/` (routes),
+`src/lib/cms/` (defaults, IndexedDB, public content provider), `src/lib/services/`
+(service contracts + adapters).

@@ -110,7 +110,7 @@ export default function FingerprintGraphic({
       {/* Floating Degree Orb */}
       {showDegree && (
         <div 
-          className="absolute -top-1 -right-1 w-5 h-5 rounded-full border-[3px] border-[#21B8C1] bg-white shadow-sm"
+          className="absolute -top-1 -right-1 w-5 h-5 rounded-full border-[3px] border-(--brand-turq) bg-white shadow-sm"
           style={{ borderColor: secondaryColor }}
         />
       )}

@@ -73,7 +73,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <AppContext.Provider value={{ openApplyModal: handleOpenApplyModal, openJobDetails: handleOpenJobDetails, viewPoster: setPosterJob }}>
-    <div className="flex flex-col min-h-screen bg-white text-[#171B20]">
+    <div className="flex flex-col min-h-screen bg-white text-(--brand-text)">
       <ScrollToTop />
 
       {/* Global Glass Header */}

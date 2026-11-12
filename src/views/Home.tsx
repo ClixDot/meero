@@ -23,22 +23,26 @@ import Button from '../components/Button';
 import FingerprintGraphic from '../components/FingerprintGraphic';
 import TrustBadge from '../components/TrustBadge';
 
-import { companyInfo } from '../data/companyInfo';
-import { servicesList, recruitmentSteps } from '../data/services';
-import { sampleJobs } from '../data/jobs';
-import { faqList } from '../data/destinations';
+import { useSite, useVisible } from '../lib/cms/SiteContent';
 
 export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
+  const home = useSite('home');
+  const companyInfo = useSite('company');
+  const servicesList = useVisible('services');
+  const recruitmentSteps = useVisible('steps');
+  const faqList = useVisible('faqs');
+  const sampleJobs = useSite('jobs');
+
   // GSAP animation container and element refs
   const mainRef = useRef<any>(null);
   const heroImageRef = useRef<any>(null);
   const heroContentRef = useRef<any>(null);
 
   // Active selected service in the 3-column explorer
-  const [activeServiceId, setActiveServiceId] = useState(servicesList[0].id);
+  const [activeServiceId, setActiveServiceId] = useState(servicesList[0]?.id);
 
   // Active accordion FAQ item
-  const [openFaqId, setOpenFaqId] = useState('faq-1');
+  const [openFaqId, setOpenFaqId] = useState<any>('faq-1');
 
   const toggleFaq = (id) => {
     setOpenFaqId(prev => prev === id ? null : id);
@@ -217,52 +221,14 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
     };
   }, []);
 
-  // 5 Featured photographic roles for the cards gallery
-  const galleryRoles = [
-    {
-      id: "job-001",
-      title: "Registered Staff Nurse",
-      destination: "Abu Dhabi / Dubai, UAE",
-      sector: "Healthcare (DHA/HAAD)",
-      image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=600&q=80",
-      jobRef: sampleJobs[0]
-    },
-    {
-      id: "job-002",
-      title: "Senior MEP Project Engineer",
-      destination: "Riyadh, Saudi Arabia",
-      sector: "Engineering & EPC",
-      image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
-      jobRef: sampleJobs[1]
-    },
-    {
-      id: "job-003",
-      title: "Civil QA/QC Inspector",
-      destination: "Doha, Qatar",
-      sector: "Civil Infrastructure",
-      image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=600&q=80",
-      jobRef: sampleJobs[2]
-    },
-    {
-      id: "job-004",
-      title: "Executive Sous Chef",
-      destination: "Muscat, Oman",
-      sector: "5-Star Hospitality",
-      image: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=600&q=80",
-      jobRef: sampleJobs[3]
-    },
-    {
-      id: "job-007",
-      title: "European Healthcare Nurse",
-      destination: "Bavaria, Germany",
-      sector: "Germany (Fast-Track)",
-      image: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80",
-      jobRef: sampleJobs[6]
-    }
-  ];
+  // Featured photographic role cards (Admin → Home → Opportunities)
+  const galleryRoles = home.opportunities.cards.map((card) => ({
+    ...card,
+    jobRef: sampleJobs.find((job) => job.id === card.jobId) || null
+  }));
 
   return (
-    <div ref={mainRef} className="min-h-screen bg-[#0B0F17]">
+    <div ref={mainRef} className="min-h-screen bg-(--brand-dark)">
 
       {/* ========================================================
           DARK HERO SECTION (MATCHING THE REFERENCE IMAGE)
@@ -273,13 +239,13 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
         <div className="absolute inset-0 z-0 overflow-hidden">
           <img
             ref={heroImageRef}
-            src="/images/hero-bg.jpg"
-            alt="International HR team collaboration and talent recruitment"
+            src={home.hero.image}
+            alt={home.hero.imageAlt}
             className="w-full h-full object-cover object-center filter brightness-[0.48] contrast-[1.05]"
           />
           {/* Subtle gradient vignette */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F17]/95 via-[#0B0F17]/70 to-[#0B0F17]/35" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F17] via-transparent to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-(--brand-dark)/95 via-(--brand-dark)/70 to-(--brand-dark)/35" />
+          <div className="absolute inset-0 bg-gradient-to-t from-(--brand-dark) via-transparent to-black/30" />
         </div>
 
         {/* Hero Content Container */}
@@ -292,7 +258,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <TrustBadge size="h-20 sm:h-24 md:h-28" showTagline />
+              {home.hero.showTrustBadge && <TrustBadge size="h-20 sm:h-24 md:h-28" showTagline />}
             </motion.div>
 
             {/* Huge Clean Bold Headline (Style: "Digital Marketing Services") */}
@@ -302,8 +268,8 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               transition={{ duration: 0.6, delay: 0.15 }}
               className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white font-heading leading-[1.1] sm:leading-[1.08] break-words"
             >
-              Your Global Career <br />
-              <span className="text-[#21B8C1]">Starts Here.</span>
+              {home.hero.title} <br />
+              <span className="text-(--brand-turq)">{home.hero.highlight}</span>
             </motion.h1>
 
             {/* Action Buttons */}
@@ -316,17 +282,17 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               <button
                 type="button"
                 onClick={() => onOpenApplyModal && onOpenApplyModal()}
-                className="w-full sm:w-auto justify-center px-6 py-3 rounded-full text-xs sm:text-sm font-bold bg-white text-[#0B0F17] hover:bg-slate-100 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-white/10 flex items-center gap-2"
+                className="w-full sm:w-auto justify-center px-6 py-3 rounded-full text-xs sm:text-sm font-bold bg-white text-(--brand-dark) hover:bg-slate-100 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-white/10 flex items-center gap-2"
               >
-                <span>Free Profile Registration</span>
+                <span>{home.hero.primaryLabel}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
               <Link
-                to="/contact"
+                to={home.hero.secondaryLink || '/contact'}
                 className="w-full sm:w-auto text-center justify-center px-6 py-3 rounded-full text-xs sm:text-sm font-semibold bg-white/10 text-white hover:bg-white/20 border border-white/20 backdrop-blur-md transition-all"
               >
-                Contact Desk
+                {home.hero.secondaryLabel}
               </Link>
             </motion.div>
 
@@ -339,17 +305,18 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
           SIGNATURE FLOATING WHITE SHEET (MATCHING THE REFERENCE IMAGE)
       ======================================================== */}
       <section className="relative z-20 px-2.5 sm:px-6 lg:px-10 -mt-24 md:-mt-36 pb-20">
-        <div className="max-w-[1560px] 2xl:max-w-[1680px] w-full mx-auto rounded-[24px] sm:rounded-[36px] md:rounded-[48px] lg:rounded-[52px] bg-white text-[#171B20] p-4 sm:p-8 md:p-12 lg:p-16 shadow-2xl shadow-black/30 border border-slate-100">
+        <div className="max-w-[1560px] 2xl:max-w-[1680px] w-full mx-auto rounded-[24px] sm:rounded-[36px] md:rounded-[48px] lg:rounded-[52px] bg-white text-(--brand-text) p-4 sm:p-8 md:p-12 lg:p-16 shadow-2xl shadow-black/30 border border-slate-100">
 
           {/* ----------------------------------------------------
               SECTION 1: THE 3-COLUMN SERVICE EXPLORER
           ---------------------------------------------------- */}
+          {home.explorer.visible && activeService && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-stretch pb-14 border-b border-slate-200">
 
             {/* Col 1: Vertical List of Services (Left) */}
             <div className="lg:col-span-3 space-y-3">
               <div className="text-[11px] font-bold uppercase tracking-widest text-[#697477] mb-3">
-                Specializations
+                {home.explorer.label}
               </div>
 
               <div className="space-y-1">
@@ -362,15 +329,15 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                       onClick={() => setActiveServiceId(service.id)}
                       onMouseEnter={() => setActiveServiceId(service.id)}
                       className={`w-full text-left px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between group ${isActive
-                          ? 'bg-[#F5FAF9] text-[#168F88] font-bold border-l-4 border-[#168F88]'
-                          : 'text-[#697477] hover:text-[#171B20] hover:bg-slate-50'
+                          ? 'bg-(--brand-bg) text-(--brand-teal) font-bold border-l-4 border-(--brand-teal)'
+                          : 'text-[#697477] hover:text-(--brand-text) hover:bg-slate-50'
                         }`}
                     >
                       <div className="flex items-center gap-2">
-                        <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[#168F88]' : 'bg-slate-300 group-hover:bg-slate-400'}`} />
+                        <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-(--brand-teal)' : 'bg-slate-300 group-hover:bg-slate-400'}`} />
                         <span className="truncate">{service.title}</span>
                       </div>
-                      <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isActive ? 'translate-x-0.5 text-[#168F88]' : 'opacity-0 group-hover:opacity-100 text-slate-400'}`} />
+                      <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isActive ? 'translate-x-0.5 text-(--brand-teal)' : 'opacity-0 group-hover:opacity-100 text-slate-400'}`} />
                     </button>
                   );
                 })}
@@ -378,7 +345,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
             </div>
 
             {/* Col 2: Active Service Details (Middle) */}
-            <div className="lg:col-span-5 flex flex-col justify-between p-5 sm:p-7 rounded-3xl bg-[#F5FAF9]/80 border border-[#E5ECEA]">
+            <div className="lg:col-span-5 flex flex-col justify-between p-5 sm:p-7 rounded-3xl bg-(--brand-bg)/80 border border-[#E5ECEA]">
               <div className="space-y-3.5">
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -389,7 +356,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                     transition={{ duration: 0.2 }}
                     className="space-y-3"
                   >
-                    <h3 className="text-xl sm:text-2xl font-extrabold text-[#171B20] font-heading leading-snug">
+                    <h3 className="text-xl sm:text-2xl font-extrabold text-(--brand-text) font-heading leading-snug">
                       {activeService.title}
                     </h3>
 
@@ -400,8 +367,8 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                     {/* Concise Highlights */}
                     <div className="pt-1.5 space-y-1.5">
                       {activeService.highlights.map((hl, i) => (
-                        <div key={i} className="flex items-center gap-2 text-xs text-[#171B20]">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#168F88] shrink-0" />
+                        <div key={i} className="flex items-center gap-2 text-xs text-(--brand-text)">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-(--brand-teal) shrink-0" />
                           <span>{hl}</span>
                         </div>
                       ))}
@@ -412,10 +379,10 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
 
               <div className="pt-5">
                 <Link
-                  to="/services"
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold bg-[#171B20] text-white hover:bg-[#168F88] transition-colors shadow-sm"
+                  to={home.explorer.exploreLink || '/services'}
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold bg-(--brand-text) text-white hover:bg-(--brand-teal) transition-colors shadow-sm"
                 >
-                  <span>Explore Services</span>
+                  <span>{home.explorer.exploreLabel}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -430,17 +397,17 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               </div>
 
               <div className="relative z-10 space-y-3">
-                <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-[#21B8C1]">
+                <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-(--brand-turq)">
                   <Sparkles className="w-4 h-4" />
                 </div>
 
                 <h3 className="text-xl sm:text-2xl font-extrabold font-heading text-white leading-tight">
-                  Let&apos;s build your <br />
-                  <span className="text-[#21B8C1]">Global Career!</span>
+                  {home.explorer.cardTitle} <br />
+                  <span className="text-(--brand-turq)">{home.explorer.cardHighlight}</span>
                 </h3>
 
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light">
-                  Free profile registration, verified client demand letters, and dedicated career guidance across the GCC &amp; Europe.
+                  {home.explorer.cardText}
                 </p>
               </div>
 
@@ -450,7 +417,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                   onClick={() => onOpenApplyModal && onOpenApplyModal()}
                   className="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-[#0D151E] hover:bg-slate-100 hover:scale-105 active:scale-95 transition-all shadow-md flex items-center gap-2 whitespace-nowrap shrink-0"
                 >
-                  <span>Talk with Recruiter</span>
+                  <span>{home.explorer.cardButtonLabel}</span>
                   <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                 </button>
               </div>
@@ -458,23 +425,25 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
             </div>
 
           </div>
+          )}
 
           {/* ----------------------------------------------------
               SECTION 2: FEATURED OPPORTUNITIES (5 PHOTOGRAPHIC CARDS)
           ---------------------------------------------------- */}
+          {home.opportunities.visible && (
           <div className="pt-14 pb-14 border-b border-slate-200">
 
             {/* Gallery Section Header */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#171B20] font-heading">
-                Active Overseas Opportunities
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-(--brand-text) font-heading">
+                {home.opportunities.heading}
               </h3>
 
               <Link
-                to="/careers"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-[#171B20] text-white hover:bg-[#168F88] hover:scale-105 active:scale-95 transition-all shadow-sm group"
+                to={home.opportunities.buttonLink || '/careers'}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-(--brand-text) text-white hover:bg-(--brand-teal) hover:scale-105 active:scale-95 transition-all shadow-sm group"
               >
-                <span>Browse All Vacancies</span>
+                <span>{home.opportunities.buttonLabel}</span>
                 <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
@@ -484,8 +453,8 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               {galleryRoles.map((role) => (
                 <div
                   key={role.id}
-                  onClick={() => onOpenJobDetails && onOpenJobDetails(role.jobRef)}
-                  className="gsap-gallery-card group bg-white rounded-2xl border border-slate-200 hover:border-[#168F88]/50 hover:shadow-xl transition-all duration-300 p-3 flex flex-col justify-between cursor-pointer"
+                  onClick={() => role.jobRef && onOpenJobDetails && onOpenJobDetails(role.jobRef)}
+                  className="gsap-gallery-card group bg-white rounded-2xl border border-slate-200 hover:border-(--brand-teal)/50 hover:shadow-xl transition-all duration-300 p-3 flex flex-col justify-between cursor-pointer"
                 >
                   <div>
                     {/* Rounded Photo Header */}
@@ -503,20 +472,20 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                     </div>
 
                     {/* Job Title & Location */}
-                    <h4 className="text-sm font-bold text-[#171B20] font-heading group-hover:text-[#168F88] transition-colors leading-snug line-clamp-2">
+                    <h4 className="text-sm font-bold text-(--brand-text) font-heading group-hover:text-(--brand-teal) transition-colors leading-snug line-clamp-2">
                       {role.title}
                     </h4>
 
                     <div className="flex items-center gap-1 text-[11px] text-[#697477] mt-1">
-                      <MapPin className="w-3 h-3 text-[#168F88] shrink-0" />
+                      <MapPin className="w-3 h-3 text-(--brand-teal) shrink-0" />
                       <span className="truncate">{role.destination}</span>
                     </div>
                   </div>
 
                   {/* Card Bottom Row */}
                   <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                    <span className="text-[#168F88] font-semibold">View Details</span>
-                    <div className="w-6 h-6 rounded-full bg-[#F5FAF9] group-hover:bg-[#168F88] group-hover:text-white flex items-center justify-center transition-colors">
+                    <span className="text-(--brand-teal) font-semibold">View Details</span>
+                    <div className="w-6 h-6 rounded-full bg-(--brand-bg) group-hover:bg-(--brand-teal) group-hover:text-white flex items-center justify-center transition-colors">
                       <ArrowRight className="w-3 h-3" />
                     </div>
                   </div>
@@ -525,28 +494,30 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
             </div>
 
           </div>
+          )}
 
           {/* ----------------------------------------------------
               SECTION 3: ETHICAL RECRUITMENT GUARANTEES (INSPIRED BY ROOHI)
           ---------------------------------------------------- */}
+          {home.guarantees.visible && (
           <div className="pt-14 pb-14 border-b border-slate-200">
             <div className="text-center max-w-2xl mx-auto mb-10">
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#171B20] font-heading">
-                The Recruiter That Values Your Trust
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-(--brand-text) font-heading">
+                {home.guarantees.heading}
               </h3>
               <p className="text-xs sm:text-sm text-[#697477] mt-2">
-                Honest guidance, transparent fee policies, and legal protection under Indian Emigration Act standards.
+                {home.guarantees.subheading}
               </p>
             </div>
 
             <div className="gsap-guarantee-grid grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {companyInfo.guarantees.map((item, idx) => (
-                <div key={idx} className="gsap-guarantee-card p-6 rounded-2xl bg-[#F5FAF9] border border-[#E5ECEA] flex flex-col justify-between">
+              {home.guarantees.items.map((item, idx) => (
+                <div key={idx} className="gsap-guarantee-card p-6 rounded-2xl bg-(--brand-bg) border border-[#E5ECEA] flex flex-col justify-between">
                   <div>
-                    <div className="w-10 h-10 rounded-xl bg-white text-[#168F88] flex items-center justify-center font-bold text-sm shadow-xs mb-4">
-                      0{idx + 1}
+                    <div className="w-10 h-10 rounded-xl bg-white text-(--brand-teal) flex items-center justify-center font-bold text-sm shadow-xs mb-4">
+                      {String(idx + 1).padStart(2, '0')}
                     </div>
-                    <h4 className="text-base font-bold text-[#171B20] font-heading mb-2">
+                    <h4 className="text-base font-bold text-(--brand-text) font-heading mb-2">
                       {item.title}
                     </h4>
                     <p className="text-xs text-[#697477] leading-relaxed">
@@ -557,30 +528,32 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               ))}
             </div>
           </div>
+          )}
 
           {/* ----------------------------------------------------
               SECTION 4: HOW IT WORKS (4-STEP TIMELINE)
           ---------------------------------------------------- */}
+          {home.process.visible && (
           <div className="pt-14 pb-14 border-b border-slate-200">
             <div className="text-center max-w-2xl mx-auto mb-10">
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#171B20] font-heading">
-                Our Recruitment Process
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-(--brand-text) font-heading">
+                {home.process.heading}
               </h3>
               <p className="text-xs sm:text-sm text-[#697477] mt-2">
-                Every candidate is kept fully informed and supported throughout every milestone.
+                {home.process.subheading}
               </p>
             </div>
 
             <div className="gsap-step-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {recruitmentSteps.map((step) => (
-                <div key={step.step} className="gsap-step-card p-6 rounded-2xl bg-[#F5FAF9] border border-[#E5ECEA] flex flex-col justify-between">
+                <div key={step.step} className="gsap-step-card p-6 rounded-2xl bg-(--brand-bg) border border-[#E5ECEA] flex flex-col justify-between">
                   <div>
                     <div className="mb-4">
-                      <span className="text-3xl font-black font-heading text-[#168F88]">
+                      <span className="text-3xl font-black font-heading text-(--brand-teal)">
                         {step.step}
                       </span>
                     </div>
-                    <h4 className="text-base font-bold text-[#171B20] font-heading mb-2">
+                    <h4 className="text-base font-bold text-(--brand-text) font-heading mb-2">
                       {step.title}
                     </h4>
                     <p className="text-xs text-[#697477] leading-relaxed">
@@ -591,17 +564,19 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               ))}
             </div>
           </div>
+          )}
 
           {/* ----------------------------------------------------
               SECTION: FREQUENTLY ASKED QUESTIONS (FAQ) (INSPIRED BY ROOHI)
           ---------------------------------------------------- */}
+          {home.faq.visible && (
           <div className="pt-14 pb-14 border-b border-slate-200">
             <div className="text-center max-w-2xl mx-auto mb-10">
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#171B20] font-heading">
-                Frequently Asked Questions
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-(--brand-text) font-heading">
+                {home.faq.heading}
               </h3>
               <p className="text-xs sm:text-sm text-[#697477] mt-2">
-                Clear answers regarding profile registration, licensing, trade tests, and legal deployment.
+                {home.faq.subheading}
               </p>
             </div>
 
@@ -612,7 +587,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                   <div
                     key={faq.id}
                     className={`gsap-faq-item rounded-2xl border transition-all duration-200 overflow-hidden ${isOpen
-                        ? 'bg-[#F5FAF9] border-[#168F88]/40 shadow-sm'
+                        ? 'bg-(--brand-bg) border-(--brand-teal)/40 shadow-sm'
                         : 'bg-white border-slate-200 hover:border-slate-300'
                       }`}
                   >
@@ -621,10 +596,10 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                       onClick={() => toggleFaq(faq.id)}
                       className="w-full text-left px-5 sm:px-6 py-4 flex items-center justify-between gap-4"
                     >
-                      <span className="text-sm sm:text-base font-bold text-[#171B20] font-heading">
+                      <span className="text-sm sm:text-base font-bold text-(--brand-text) font-heading">
                         {faq.question}
                       </span>
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${isOpen ? 'bg-[#168F88] text-white rotate-180' : 'bg-slate-100 text-slate-500'
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${isOpen ? 'bg-(--brand-teal) text-white rotate-180' : 'bg-slate-100 text-slate-500'
                         }`}>
                         <ChevronDown className="w-4 h-4" />
                       </div>
@@ -640,10 +615,12 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               })}
             </div>
           </div>
+          )}
 
           {/* ----------------------------------------------------
               SECTION: CAREER DESK
           ---------------------------------------------------- */}
+          {home.careerDesk.visible && (
           <div className="pt-14 pb-14 border-b border-slate-200">
             <div className="gsap-desk-banner rounded-2xl sm:rounded-3xl bg-[#0D151E] text-white p-6 sm:p-10 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 relative overflow-hidden">
 
@@ -655,8 +632,8 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               {/* Left Column: Heading & Simple Subtitle */}
               <div className="relative z-10 max-w-xl space-y-3 text-center lg:text-left">
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white font-heading leading-tight break-words">
-                  Discuss Your Overseas Career <br className="hidden sm:inline" />
-                  <span className="text-[#21B8C1]">Directly with Our Experts.</span>
+                  {home.careerDesk.title} <br className="hidden sm:inline" />
+                  <span className="text-(--brand-turq)">{home.careerDesk.highlight}</span>
                 </h3>
               </div>
 
@@ -666,7 +643,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                   href={companyInfo.contact.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-4 sm:px-6 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold bg-[#168F88] text-white hover:bg-[#137d77] hover:scale-105 active:scale-95 transition-all shadow-md text-center whitespace-nowrap shrink-0"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-4 sm:px-6 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold bg-(--brand-teal) text-white hover:bg-[#137d77] hover:scale-105 active:scale-95 transition-all shadow-md text-center whitespace-nowrap shrink-0"
                 >
                   <MessageCircle className="w-4 h-4 shrink-0" />
                   <span className="whitespace-nowrap">WhatsApp: {companyInfo.contact.officeMobile}</span>
@@ -676,23 +653,25 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                   href={`tel:+${companyInfo.contact.cleanOfficeMobile}`}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-4 sm:px-6 py-3 sm:py-3.5 rounded-full text-xs sm:text-sm font-semibold bg-white/10 text-white hover:bg-white/20 border border-white/15 hover:scale-105 active:scale-95 transition-all text-center whitespace-nowrap shrink-0"
                 >
-                  <Phone className="w-4 h-4 text-[#21B8C1] shrink-0" />
+                  <Phone className="w-4 h-4 text-(--brand-turq) shrink-0" />
                   <span className="whitespace-nowrap">Call: {companyInfo.contact.officeMobile}</span>
                 </a>
               </div>
 
             </div>
           </div>
+          )}
 
           {/* ----------------------------------------------------
               SECTION 5: VERIFIED CREDENTIALS & OFFICE
           ---------------------------------------------------- */}
+          {home.location.visible && (
           <div className="pt-10 sm:pt-14">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 bg-gradient-to-r from-[#F5FAF9] to-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#E5ECEA] overflow-hidden w-full max-w-full">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 bg-gradient-to-r from-(--brand-bg) to-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#E5ECEA] overflow-hidden w-full max-w-full">
               <div className="w-full min-w-0 text-center lg:text-left flex flex-col items-center lg:items-start space-y-1.5">
-                <div className="flex items-center gap-2 text-xl sm:text-2xl font-bold text-[#171B20] font-heading">
-                  <MapPin className="w-5 h-5 text-[#168F88] shrink-0" />
-                  <span>Our Location</span>
+                <div className="flex items-center gap-2 text-xl sm:text-2xl font-bold text-(--brand-text) font-heading">
+                  <MapPin className="w-5 h-5 text-(--brand-teal) shrink-0" />
+                  <span>{home.location.heading}</span>
                 </div>
                 <div className="text-xs sm:text-sm text-[#697477] leading-relaxed">
                   <p>{companyInfo.address.floor}, {companyInfo.address.building}, {companyInfo.address.landmark}</p>
@@ -707,7 +686,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                   size="md"
                   className="w-full sm:w-auto justify-center"
                 >
-                  Submit Candidate Profile
+                  {home.location.primaryLabel}
                 </Button>
                 <Button
                   to="/contact"
@@ -715,11 +694,12 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                   size="md"
                   className="w-full sm:w-auto justify-center"
                 >
-                  Contact Us
+                  {home.location.secondaryLabel}
                 </Button>
               </div>
             </div>
           </div>
+          )}
 
         </div>
       </section>

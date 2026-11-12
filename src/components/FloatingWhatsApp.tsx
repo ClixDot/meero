@@ -2,17 +2,21 @@
 
 import React, { useState } from 'react';
 import { MessageCircle, X } from 'lucide-react';
-import { companyInfo } from '../data/companyInfo';
+import { useSite } from '../lib/cms/SiteContent';
 
 export default function FloatingWhatsApp() {
+  const companyInfo = useSite('company');
+  const general = useSite('general');
   const [showTooltip, setShowTooltip] = useState(true);
+
+  if (!general.floatingWhatsapp.visible) return null;
 
   return (
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex items-end gap-3 select-none">
       {/* Tooltip / Prompt */}
       {showTooltip && (
-        <div className="hidden sm:flex items-center gap-2 bg-white text-[#171B20] text-xs font-semibold px-4 py-2.5 rounded-2xl shadow-xl border border-[#E5ECEA] animate-bounce duration-1000">
-          <span>Need career advice? Chat on WhatsApp</span>
+        <div className="hidden sm:flex items-center gap-2 bg-white text-(--brand-text) text-xs font-semibold px-4 py-2.5 rounded-2xl shadow-xl border border-[#E5ECEA] animate-bounce duration-1000">
+          <span>{general.floatingWhatsapp.tooltip}</span>
           <button 
             type="button" 
             onClick={() => setShowTooltip(false)}
