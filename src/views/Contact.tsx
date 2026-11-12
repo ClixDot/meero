@@ -31,6 +31,8 @@ export default function Contact() {
             src={page.hero.image}
             alt={page.hero.imageAlt}
             className="w-full h-full object-cover filter brightness-[0.35] contrast-[1.1]"
+            fetchPriority="high"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-(--brand-dark)/95 via-(--brand-dark)/75 to-(--brand-dark)/50" />
         </div>

@@ -31,16 +31,17 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://images.unsplash.com" />
         <link
           href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className="bg-white text-(--brand-text) antialiased selection:bg-(--brand-teal)/15 selection:text-(--brand-teal)">
+      <body suppressHydrationWarning className="bg-white text-(--brand-text) antialiased selection:bg-(--brand-teal)/15 selection:text-(--brand-teal)">
         {children}
       </body>
     </html>

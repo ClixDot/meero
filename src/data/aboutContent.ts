@@ -7,7 +7,7 @@ export const aboutContent = {
   hero: {
     title: "People First.",
     highlight: "Opportunities Without Borders.",
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=2000&q=80",
+    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=75",
     imageAlt: "International HR team"
   },
   story: {

@@ -12,7 +12,6 @@ import PolicyModal from './PolicyModal';
 import ScrollToTop from './ScrollToTop';
 
 
-import useLenis from '../hooks/useLenis';
 
 interface AppContextValue {
   openApplyModal: (job?: any) => void;
@@ -29,8 +28,6 @@ export function useApp(): AppContextValue {
 }
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
-  // Initialize smooth scrolling with reduced-motion support
-  useLenis();
 
   // Application Modal state
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);

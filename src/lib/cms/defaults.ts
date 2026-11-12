@@ -88,7 +88,7 @@ export const defaultContent = {
     hero: {
       title: 'Comprehensive',
       highlight: 'Recruitment Solutions.',
-      image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2000&q=80',
+      image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=75',
       imageAlt: 'International Business Skyscraper',
     },
     cardPrimaryLabel: 'View Openings',
@@ -107,7 +107,7 @@ export const defaultContent = {
     hero: {
       title: 'Find the Opportunity',
       highlight: 'That Moves You Forward.',
-      image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=2000&q=80',
+      image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1600&q=75',
       imageAlt: 'International Career Strategy',
     },
     searchPlaceholder: 'Search vacancies by title, keyword, specialty, or qualification...',
@@ -130,7 +130,7 @@ export const defaultContent = {
     hero: {
       title: "Let's Talk About",
       highlight: 'Your Next Opportunity.',
-      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2000&q=80',
+      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=75',
       imageAlt: 'Corporate Office',
     },
     introHeading: 'Connect with Our Team',
@@ -150,7 +150,7 @@ export const defaultContent = {
     hero: {
       title: 'Our Recruitment Drives',
       highlight: '& Events',
-      image: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=2000&q=80',
+      image: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1600&q=75',
       imageAlt: '',
     },
     categories: clone(galleryCategories),

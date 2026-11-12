@@ -60,7 +60,6 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
       if (heroImageRef.current) {
         gsap.to(heroImageRef.current, {
           yPercent: 18,
-          scale: 1.05,
           ease: 'none',
           scrollTrigger: {
             trigger: heroImageRef.current,
@@ -241,7 +240,9 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
             ref={heroImageRef}
             src={home.hero.image}
             alt={home.hero.imageAlt}
-            className="w-full h-full object-cover object-center filter brightness-[0.48] contrast-[1.05]"
+            className="w-full h-full object-cover object-center filter brightness-[0.48] contrast-[1.05] will-change-transform"
+            fetchPriority="high"
+            decoding="async"
           />
           {/* Subtle gradient vignette */}
           <div className="absolute inset-0 bg-gradient-to-r from-(--brand-dark)/95 via-(--brand-dark)/70 to-(--brand-dark)/35" />
@@ -250,7 +251,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
 
         {/* Hero Content Container */}
         <div className="max-w-[1560px] 2xl:max-w-[1680px] w-full mx-auto px-4 sm:px-6 lg:px-10 relative z-10 my-auto">
-          <div ref={heroContentRef} className="max-w-3xl space-y-6">
+          <div ref={heroContentRef} className="max-w-3xl space-y-6 will-change-[transform,opacity]">
 
             {/* Government approval logo and tagline */}
             <motion.div

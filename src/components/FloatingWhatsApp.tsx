@@ -15,7 +15,7 @@ export default function FloatingWhatsApp() {
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex items-end gap-3 select-none">
       {/* Tooltip / Prompt */}
       {showTooltip && (
-        <div className="hidden sm:flex items-center gap-2 bg-white text-(--brand-text) text-xs font-semibold px-4 py-2.5 rounded-2xl shadow-xl border border-[#E5ECEA] animate-bounce duration-1000">
+        <div className="hidden sm:flex items-center gap-2 bg-white text-(--brand-text) text-xs font-semibold px-4 py-2.5 rounded-2xl shadow-xl border border-[#E5ECEA] animate-[bounce_1s_ease-in-out_3]">
           <span>{general.floatingWhatsapp.tooltip}</span>
           <button 
             type="button" 

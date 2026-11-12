@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { useSearchParams } from '../lib/router';
+import React, { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
   Search,
@@ -28,14 +27,18 @@ export default function Careers({
   const driveUpdatesChatUrl = `https://wa.me/${companyInfo.contact.whatsappNumber}?text=${encodeURIComponent(page.drives.chatMessage)}`;
   const destinationCountries = useMemo(() => ['All Countries', ...page.countries], [page.countries]);
   const industriesList = useMemo(() => ['All Industries', ...servicesList.map((service) => service.title)], [servicesList]);
-  // Home page destination cards link here with ?country=<name>
-  const [searchParams] = useSearchParams();
-  const countryParam = searchParams?.get('country')?.toLowerCase();
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState(() => (
-    (countryParam && destinationCountries.find((country) => country.toLowerCase().includes(countryParam))) || 'All Countries'
-  ));
+  const [selectedCountry, setSelectedCountry] = useState('All Countries');
+
+  // Home page destination cards link here with ?country=<name>
+  useEffect(() => {
+    const countryParam = new URLSearchParams(window.location.search).get('country')?.toLowerCase();
+    if (!countryParam) return;
+    const match = destinationCountries.find((country) => country.toLowerCase().includes(countryParam));
+    if (match) setSelectedCountry(match);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [selectedIndustry, setSelectedIndustry] = useState('All Industries');
   const [sortBy, setSortBy] = useState('latest');
 
@@ -91,6 +94,8 @@ export default function Careers({
             src={page.hero.image}
             alt={page.hero.imageAlt}
             className="w-full h-full object-cover filter brightness-[0.35] contrast-[1.1]"
+            fetchPriority="high"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-(--brand-dark)/95 via-(--brand-dark)/75 to-(--brand-dark)/50" />
         </div>

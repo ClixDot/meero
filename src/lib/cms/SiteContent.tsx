@@ -118,7 +118,10 @@ export function SiteContentProvider({ children }: { children: React.ReactNode })
       try {
         const loaded = await Promise.all(keys.map(async (k) => [k, await resolveDeep(await services.content.getLive(k, preview))] as const));
         if (cancelled) return;
-        setData((prev) => ({ ...prev, ...Object.fromEntries(loaded) }));
+        setData((prev) => {
+          const changed = loaded.filter(([k, v]) => JSON.stringify(v) !== JSON.stringify(prev[k]));
+          return changed.length ? { ...prev, ...Object.fromEntries(changed) } : prev;
+        });
       } catch (err) {
         // Local storage unavailable (private mode / blocked): keep built-in content.
         console.warn('[cms] Using built-in content:', err);
