@@ -115,7 +115,7 @@ export function ApplicationsManager() {
         ))}
       </div>
 
-      <Card>
+      <Card data-tour="applications-list">
         <div className="flex flex-col md:flex-row gap-2.5 p-4 sm:p-5 border-b border-[#EDF2F1]">
           <div className="relative flex-1">
             <Search className="w-4 h-4 text-[#A3ACAE] absolute left-3 top-1/2 -translate-y-1/2" />
@@ -159,15 +159,15 @@ export function ApplicationsManager() {
                         <td className="px-3 py-3 max-w-[260px]"><p className="truncate">{a.preferredJob || 'General pool'}</p><p className="text-xs text-[#8A9496] truncate">{a.qualification}</p></td>
                         <td className="px-3 py-3 whitespace-nowrap">{a.experienceYears} yrs</td>
                         <td className="px-3 py-3" onClick={(e) => e.stopPropagation()}>
-                          <select
+                          <Select
+                            size="sm"
                             value={a.status}
                             disabled={!canEdit}
                             aria-label={`Status for ${a.fullName}`}
                             onChange={async (e) => { await services.applications.update(a.id, { status: e.target.value as ApplicationStatus }); toast.success('Status updated'); }}
-                            className="text-xs font-semibold rounded-full border border-[#E0E7E5] bg-white px-2.5 h-8 focus:outline-none focus:ring-2 focus:ring-[#168F88]/30"
-                          >
-                            {appStatuses.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
-                          </select>
+                            className="w-36 rounded-full font-semibold"
+                            options={appStatuses}
+                          />
                         </td>
                         <td className="px-3 py-3 text-xs text-[#6B7678] whitespace-nowrap">{timeAgo(a.submittedAt)}</td>
                         <td className="px-5 py-3 text-right">{a.hasCv && <FileText className="w-4 h-4 text-[#168F88] inline" aria-label="CV attached" />}</td>
@@ -296,7 +296,7 @@ export function EnquiriesManager() {
               [['Name', 'Email', 'Phone', 'Message', 'Status', 'Received'], ...filtered.map((e) => [e.name, e.email, e.phone, e.message, e.status, formatDate(e.createdAt, true)])].map((r) => r.map(csvCell).join(',')).join('\n'), 'text/csv')}>Export CSV</Button>
           </>
         } />
-      <Card>
+      <Card data-tour="enquiries-list">
         <div className="flex flex-col md:flex-row gap-2.5 p-4 sm:p-5 border-b border-[#EDF2F1]">
           <div className="relative flex-1">
             <Search className="w-4 h-4 text-[#A3ACAE] absolute left-3 top-1/2 -translate-y-1/2" />

@@ -10,7 +10,7 @@ export type Field =
   | (Base & { type: 'range'; min: number; max: number; step?: number; suffix?: string })
   | (Base & { type: 'color' })
   | (Base & { type: 'toggle'; description?: string })
-  | (Base & { type: 'select'; options: Option[] | ((ctx: FormContext) => Option[]) })
+  | (Base & { type: 'select'; options: Option[] | ((ctx: FormContext) => Option[]); /** Options are Lucide icon names: show each icon. */ iconOptions?: boolean })
   | (Base & { type: 'image' | 'video' | 'file'; altKey?: string })
   | (Base & { type: 'strings'; itemLabel?: string; placeholder?: string; multiline?: boolean })
   | (Base & { type: 'list'; itemLabel: string; itemTitle: (item: any, index: number) => string; fields: Field[]; newItem: () => any; minItems?: number })

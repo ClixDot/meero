@@ -15,7 +15,7 @@ const clone = <T,>(v: T): T => JSON.parse(JSON.stringify(v));
 export const defaultContent = {
   home: {
     hero: {
-      image: '/images/hero-bg.jpg',
+      image: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/hero-bg.jpg',
       imageAlt: 'International HR team collaboration and talent recruitment',
       showTrustBadge: true,
       title: 'Your Global Career',
@@ -166,7 +166,7 @@ export const defaultContent = {
   steps: recruitmentSteps.map((s) => ({ ...clone(s), id: `step-${s.step}`, visible: true })),
 
   headerFooter: {
-    logo: '/images/meero.png',
+    logo: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero.png',
     logoAlt: 'MEERO Overseas HR Consultancy',
     nav: [
       { id: 'nav-home', name: 'Home', path: '/', visible: true },
@@ -195,7 +195,7 @@ export const defaultContent = {
   seo: {
     siteName: 'MEERO Overseas HR Consultancy',
     canonicalBase: 'https://www.meerohr.com',
-    defaultOgImage: '/images/meero-badge.jpg',
+    defaultOgImage: 'https://res.cloudinary.com/inu9dzib/image/upload/meero/images/meero-badge.jpg',
     pages: [
       { id: 'seo-home', path: '/', title: 'MEERO Overseas HR Consultancy | Trusted Global Recruitment & Career Guidance', description: 'Connecting talent with international career opportunities. Govt of India approved recruiting agency based in Cochin, Kerala.', keywords: 'Meero Overseas HR Consultancy, overseas recruitment Kerala, Kochi recruitment agency, Gulf jobs', ogImage: '', canonical: '' },
       { id: 'seo-about', path: '/about', title: 'About Us | MEERO Overseas HR Consultancy', description: 'Licensed overseas manpower recruitment consultancy under the Ministry of External Affairs, Government of India.', keywords: 'about Meero HR, licensed recruitment agency Kerala', ogImage: '', canonical: '' },

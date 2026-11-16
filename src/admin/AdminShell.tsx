@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
-  Bell, ChevronRight, ChevronsLeft, ChevronsRight, ExternalLink, FileUser, Inbox, KeyRound, LogOut, Menu, Search, X,
+  Bell, ChevronRight, Compass, LifeBuoy, PlayCircle, ChevronsLeft, ChevronsRight, ExternalLink, FileUser, Inbox, KeyRound, LogOut, Menu, Search, X,
   ClipboardList, FolderOpen, CornerDownLeft,
 } from 'lucide-react';
 import { services, type AdminUser, type ActivityEntry } from '../lib/services';
@@ -14,16 +14,18 @@ import { AdminProvider, useAdmin } from './context';
 import { ToastProvider } from './ui/toast';
 import { Badge, cx, Spinner, timeAgo, useClickOutside, IconButton } from './ui/kit';
 import { allNavItems, findNav, hasRole, navGroups } from './nav';
+import { OnboardingProvider, useOnboarding } from './onboarding/OnboardingProvider';
 
 /* ---------------------------------------------------------------- */
 function Canvas({ children }: { children: React.ReactNode }) {
   return (
-    <div className="admin-root relative min-h-dvh bg-[#F2F6F5] text-[#171B20] font-sans overflow-x-hidden">
-      <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 -left-32 w-[520px] h-[520px] rounded-full bg-[#21B8C1]/14 blur-[110px]" />
-        <div className="absolute top-1/3 -right-40 w-[560px] h-[560px] rounded-full bg-[#8B80F9]/12 blur-[120px]" />
-        <div className="absolute -bottom-40 left-1/3 w-[480px] h-[480px] rounded-full bg-[#168F88]/10 blur-[110px]" />
-      </div>
+    <div className="admin-root relative min-h-dvh bg-[#F2F6F5] text-[#171B20] font-sans overflow-x-clip">
+      {/* Same soft glow as before, painted with gradients: no live blur filters to recompute on every frame. */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0"
+        style={{ background: 'radial-gradient(520px 520px at 8% 4%, rgba(33,184,193,0.13), transparent 70%), radial-gradient(600px 600px at 102% 45%, rgba(139,128,249,0.11), transparent 70%), radial-gradient(520px 520px at 45% 108%, rgba(22,143,136,0.09), transparent 70%)' }}
+      />
       <div className="relative">{children}</div>
     </div>
   );
@@ -34,7 +36,10 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const router = useRouter();
   const isLogin = pathname === '/admin/login';
   const [user, setUser] = useState<AdminUser | null | undefined>(undefined);
+  const pathRef = useRef(pathname);
+  pathRef.current = pathname;
 
+  // Check the session when the shell mounts (or after leaving the login page) – not on every page switch.
   useEffect(() => {
     if (isLogin) return;
     let alive = true;
@@ -42,11 +47,11 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       .then((u) => {
         if (!alive) return;
         setUser(u);
-        if (!u) router.replace(`/admin/login?next=${encodeURIComponent(pathname)}`);
+        if (!u) router.replace(`/admin/login?next=${encodeURIComponent(pathRef.current)}`);
       })
       .catch(() => alive && setUser(null));
     return () => { alive = false; };
-  }, [isLogin, pathname, router]);
+  }, [isLogin, router]);
 
   if (isLogin) {
     return <ToastProvider><Canvas><Suspense fallback={null}>{children}</Suspense></Canvas></ToastProvider>;
@@ -67,7 +72,9 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     <ToastProvider>
       <AdminProvider user={user}>
         <Canvas>
-          <Frame>{children}</Frame>
+          <OnboardingProvider>
+            <Frame>{children}</Frame>
+          </OnboardingProvider>
         </Canvas>
       </AdminProvider>
     </ToastProvider>
@@ -84,6 +91,19 @@ function Frame({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try { setCollapsed(localStorage.getItem('meero-admin-collapsed') === '1'); } catch { /* ignore */ }
   }, []);
+
+  // Preload every admin page once the dashboard is idle, so switching pages doesn't wait on the network.
+  const router = useRouter();
+  useEffect(() => {
+    const run = () => allNavItems.forEach((i) => router.prefetch(i.href));
+    const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number; cancelIdleCallback?: (id: number) => void };
+    if (w.requestIdleCallback) {
+      const id = w.requestIdleCallback(run, { timeout: 3000 });
+      return () => w.cancelIdleCallback?.(id);
+    }
+    const t = setTimeout(run, 1500);
+    return () => clearTimeout(t);
+  }, [router]);
   const toggleCollapsed = () => {
     setCollapsed((c) => {
       try { localStorage.setItem('meero-admin-collapsed', c ? '0' : '1'); } catch { /* ignore */ }
@@ -95,7 +115,10 @@ function Frame({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-dvh">
       {/* Desktop / tablet sidebar */}
-      <aside className={cx('hidden md:block shrink-0 sticky top-0 h-dvh p-3 lg:p-4 transition-[width] duration-300', collapsed ? 'w-[92px]' : 'w-[92px] lg:w-[272px]')}>
+      {/* Fixed (not sticky): html/body use overflow-x:hidden, which breaks position:sticky.
+          The spacer keeps the sidebar's width in the flex layout. */}
+      <div aria-hidden className={cx('hidden md:block shrink-0 transition-[width] duration-300', collapsed ? 'w-[92px]' : 'w-[92px] lg:w-[272px]')} />
+      <aside className={cx('hidden md:block fixed left-0 top-0 z-40 h-dvh p-3 lg:p-4 transition-[width] duration-300', collapsed ? 'w-[92px]' : 'w-[92px] lg:w-[272px]')}>
         <Sidebar collapsed={collapsed} onToggle={toggleCollapsed} />
       </aside>
 
@@ -139,11 +162,14 @@ function Frame({ children }: { children: React.ReactNode }) {
 /* ---------------------------------------------------------------- */
 function NavLink({ href, children, className, title, onClick }: { href: string; children: React.ReactNode; className?: string; title?: string; onClick?: () => void }) {
   const { navigate } = useAdmin();
+  const router = useRouter();
   return (
     <a
       href={href}
       title={title}
       className={className}
+      onMouseEnter={() => router.prefetch(href)}
+      onFocus={() => router.prefetch(href)}
       onClick={(e) => {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
         e.preventDefault();
@@ -166,12 +192,12 @@ function Sidebar({ collapsed, onToggle, onClose, forceExpanded }: { collapsed: b
   const badgeFor = (href: string) => href === '/admin/applications' ? unread.applications : href === '/admin/enquiries' ? unread.enquiries : 0;
 
   return (
-    <div className={cx('h-full flex flex-col rounded-[26px] bg-white/80 backdrop-blur-xl border border-white shadow-[0_20px_50px_-28px_rgba(23,27,32,0.35)] overflow-hidden')}>
+    <div className={cx('h-full flex flex-col rounded-[26px] bg-white/85 border border-white shadow-[0_20px_50px_-28px_rgba(23,27,32,0.35)] overflow-hidden')}>
       {/* Brand */}
       <div className="flex items-center justify-between gap-2 px-4 pt-5 pb-4">
         <Link href="/admin" className="flex items-center gap-2.5 min-w-0">
           <span className="w-10 h-10 rounded-2xl bg-[#0B0F17] flex items-center justify-center shrink-0 shadow-md">
-            <img src="/images/meero-mark.png" alt="" className="w-7 h-7 object-contain" />
+            <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-mark.png" alt="" className="w-7 h-7 object-contain" />
           </span>
           {showLabels && (
             <span className={cx('min-w-0', !forceExpanded && 'hidden lg:block')}>
@@ -186,7 +212,7 @@ function Sidebar({ collapsed, onToggle, onClose, forceExpanded }: { collapsed: b
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto no-scrollbar px-3 pb-3 space-y-4" aria-label="Admin">
+      <nav className="flex-1 overflow-y-auto no-scrollbar px-3 pb-3 space-y-4" aria-label="Admin" data-tour="sidebar-navigation">
         {navGroups.map((group) => (
           <div key={group.title}>
             {showLabels ? (
@@ -236,7 +262,7 @@ function Sidebar({ collapsed, onToggle, onClose, forceExpanded }: { collapsed: b
       {showLabels && (
         <div className={cx('p-3 [@media(max-height:940px)]:hidden', !forceExpanded && 'hidden lg:block')}>
           <div className="relative overflow-hidden rounded-[20px] bg-[#0B0F17] text-white p-4">
-            <img src="/images/meero-mark.png" alt="" aria-hidden className="absolute -right-6 -bottom-6 w-24 opacity-15" />
+            <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-mark.png" alt="" aria-hidden className="absolute -right-6 -bottom-6 w-24 opacity-15" />
             <p className="text-sm font-bold font-heading">View live website</p>
             <p className="text-[11px] text-slate-400 mt-0.5 leading-snug">Published changes appear instantly.</p>
             <a href="/" target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full bg-[#21B8C1] text-[#0B0F17] text-xs font-bold hover:brightness-110">
@@ -267,8 +293,8 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
 
   return (
     <header className="sticky top-0 z-40 px-4 sm:px-6 lg:px-8 pt-3 pb-3">
-      <div className="max-w-[1480px] mx-auto flex items-center gap-3 rounded-[22px] bg-white/70 backdrop-blur-xl border border-white px-3 sm:px-4 h-16 shadow-[0_10px_30px_-22px_rgba(23,27,32,0.4)]">
-        <IconButton icon={Menu} label="Open menu" onClick={onMenu} className="md:hidden shrink-0" />
+      <div className="max-w-[1480px] mx-auto flex items-center gap-3 rounded-[22px] bg-white/90 border border-white px-3 sm:px-4 h-16 shadow-[0_10px_30px_-22px_rgba(23,27,32,0.4)]">
+        <IconButton icon={Menu} label="Open menu" data-tour="mobile-menu" onClick={onMenu} className="md:hidden shrink-0" />
         <nav aria-label="Breadcrumb" className="min-w-0 hidden sm:block">
           <ol className="flex items-center gap-1.5 text-xs text-[#8A9496] font-medium">
             {crumbs.map((c, i) => (
@@ -351,7 +377,7 @@ function GlobalSearch() {
   };
 
   return (
-    <div ref={boxRef} className="relative">
+    <div ref={boxRef} className="relative" data-tour="global-search">
       <div className={cx('flex items-center gap-2 h-10 rounded-full border bg-white/90 transition-all', open ? 'w-[min(78vw,380px)] border-[#168F88]/50 ring-4 ring-[#168F88]/10 px-3.5' : 'w-10 sm:w-[240px] border-[#E3EAE8] px-2.5 sm:px-3.5')}>
         <Search className="w-[18px] h-[18px] text-[#8A9496] shrink-0" onClick={() => { setOpen(true); inputRef.current?.focus(); }} />
         <input
@@ -481,6 +507,7 @@ function Notifications() {
 /* ---------------------------------------------------------------- */
 function ProfileMenu() {
   const { user, navigate } = useAdmin();
+  const tour = useOnboarding();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -494,7 +521,7 @@ function ProfileMenu() {
 
   return (
     <div ref={ref} className="relative">
-      <button type="button" onClick={() => setOpen((o) => !o)} className="flex items-center gap-2.5 h-10 pl-1 pr-1 sm:pr-3 rounded-full border border-[#E3EAE8] bg-white/90 hover:border-[#168F88]/40" aria-haspopup="menu" aria-expanded={open}>
+      <button type="button" onClick={() => setOpen((o) => !o)} className="flex items-center gap-2.5 h-10 pl-1 pr-1 sm:pr-3 rounded-full border border-[#E3EAE8] bg-white/90 hover:border-[#168F88]/40" aria-haspopup="menu" aria-expanded={open} data-tour="help-menu">
         <span className="w-8 h-8 rounded-full bg-gradient-to-br from-[#168F88] to-[#8B80F9] text-white text-xs font-bold flex items-center justify-center">{initials}</span>
         <span className="hidden lg:block text-left leading-tight">
           <span className="block text-xs font-bold text-[#171B20] max-w-[120px] truncate">{user.name}</span>
@@ -515,6 +542,18 @@ function ProfileMenu() {
             </div>
             <div className="h-px bg-[#EDF2F1] my-1" />
             <button role="menuitem" type="button" onClick={() => { setOpen(false); navigate('/admin/users?me=1'); }} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm hover:bg-slate-50"><KeyRound className="w-4 h-4 text-[#8A9496]" /> Change password</button>
+            {tour && (
+              <>
+                <div className="h-px bg-[#EDF2F1] my-1" />
+                <p className="px-3 pt-1.5 pb-1 text-[10px] font-bold uppercase tracking-widest text-[#A3ACAE]">Help &amp; support</p>
+                <button role="menuitem" type="button" onClick={() => { setOpen(false); tour.startTour(); }} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm hover:bg-slate-50"><Compass className="w-4 h-4 text-[#168F88]" /> Take a dashboard tour</button>
+                {tour.resumeIndex !== null && (
+                  <button role="menuitem" type="button" onClick={() => { setOpen(false); tour.resumeTour(); }} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm hover:bg-slate-50"><PlayCircle className="w-4 h-4 text-[#8A9496]" /> Continue tour <span className="ml-auto text-[11px] text-[#A3ACAE]">{tour.resumeIndex + 1}/{tour.steps.length}</span></button>
+                )}
+                <button role="menuitem" type="button" onClick={() => { setOpen(false); tour.openWelcome(); }} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm hover:bg-slate-50"><LifeBuoy className="w-4 h-4 text-[#8A9496]" /> Show welcome guide</button>
+                <div className="h-px bg-[#EDF2F1] my-1" />
+              </>
+            )}
             <a role="menuitem" href="/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm hover:bg-slate-50"><ExternalLink className="w-4 h-4 text-[#8A9496]" /> View website</a>
             <button role="menuitem" type="button" onClick={signOut} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-[#E5484D] hover:bg-red-50"><LogOut className="w-4 h-4" /> Sign out</button>
           </motion.div>

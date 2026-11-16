@@ -2,9 +2,20 @@
 
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowDown, ArrowUp, ChevronDown, Copy, Eye, EyeOff, GripVertical, ImageIcon, Plus, Trash2, Film, FileText, X } from 'lucide-react';
-import { Button, Card, cx, FieldShell, Input, Select, Textarea, Toggle, Badge } from '../ui/kit';
-import { MediaPicker, MediaThumb } from './media';
+import { ArrowDown, ArrowUp, ChevronDown, Copy, Eye, EyeOff, GripVertical, ImageIcon, Plus, Trash2, Film, FileText, X, FolderOpen, Link2, UploadCloud,
+  Truck, PackageOpen, Store, UtensilsCrossed, Building2, HardHat, Fuel, Stethoscope, Factory } from 'lucide-react';
+import { Button, Card, cx, FieldShell, Input, Select, Spinner, Textarea, Toggle, Badge, type SelectOption } from '../ui/kit';
+
+/** Icons offered to the website's service cards (mirrors iconMap in views/Services.tsx). */
+const optionIcons: Record<string, React.ElementType> = { Truck, PackageOpen, Store, UtensilsCrossed, Building2, HardHat, Fuel, Stethoscope, Factory };
+/** "UtensilsCrossed" -> "Utensils crossed", "Building2" -> "Building" */
+const humanize = (name: string) => {
+  const words = name.replace(/\d+$/, '').replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase();
+  return words.charAt(0).toUpperCase() + words.slice(1);
+};
+import { acceptFor, MediaPicker, MediaThumb, UploadButton } from './media';
+import { useToast } from '../ui/toast';
+import { services } from '../../lib/services';
 import { getIn, setIn, type Errors, type Field, type FormContext, newId } from './fields';
 
 /* ---------------- Sorting helpers (drag & drop + buttons) ---------------- */
@@ -43,26 +54,96 @@ function MediaField({ field, value, onChange, alt, onAltChange, error, disabled 
   field: Extract<Field, { type: 'image' | 'video' | 'file' }>; value: string; onChange: (v: string) => void; alt?: string; onAltChange?: (v: string) => void; error?: string; disabled?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [showUrl, setShowUrl] = useState(false);
+  const [url, setUrl] = useState('');
+  const [urlError, setUrlError] = useState('');
+  const [dragOver, setDragOver] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const toast = useToast();
   const Icon = field.type === 'video' ? Film : field.type === 'file' ? FileText : ImageIcon;
+  const noun = field.type === 'file' ? 'file' : field.type;
+  const isLibrary = value.startsWith('media:');
+
+  const applyUrl = () => {
+    const v = url.trim();
+    if (!/^(https?:\/\/|\/)/i.test(v)) { setUrlError('Enter a full URL (https://…) or a site path starting with /.'); return; }
+    onChange(v);
+    setShowUrl(false);
+    setUrlError('');
+  };
+
+  // Drop a file from the computer straight onto the field.
+  const uploadFile = async (file: File) => {
+    const accept = acceptFor(field.type);
+    const okType = field.type === 'file' || file.type.startsWith(`${field.type}/`) || accept.split(',').some((a) => a.trim() === file.type);
+    if (!okType) { toast.error('Wrong file type', `Choose ${noun === 'image' ? 'an image' : `a ${noun}`} file.`); return; }
+    setUploading(true);
+    try {
+      const item = await services.media.upload(file, {});
+      onChange(services.media.refFor(item));
+      if (onAltChange && !alt && item.alt) onAltChange(item.alt);
+      toast.success('Uploaded', 'Saved to the media library and added here.');
+    } catch (err) {
+      toast.error('Upload failed', err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <FieldShell label={field.label} help={field.help} error={error} required={field.required}>
-      <div className={cx('flex flex-col sm:flex-row gap-3 p-3 rounded-2xl border bg-white', error ? 'border-[#E5484D]' : 'border-[#E0E7E5]')}>
+      <div
+        onDragOver={(e) => { if (disabled || !e.dataTransfer.types.includes('Files')) return; e.preventDefault(); e.stopPropagation(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => { if (disabled || !e.dataTransfer.files.length) return; e.preventDefault(); e.stopPropagation(); setDragOver(false); uploadFile(e.dataTransfer.files[0]); }}
+        className={cx('relative flex flex-col sm:flex-row gap-3 p-3 rounded-2xl border bg-white transition-colors', error ? 'border-[#E5484D]' : dragOver ? 'border-[#168F88] border-dashed bg-[#168F88]/5' : 'border-[#E0E7E5]')}
+      >
         <button type="button" disabled={disabled} onClick={() => setOpen(true)} className="relative w-full sm:w-40 aspect-[16/10] rounded-xl overflow-hidden shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#168F88]">
           <MediaThumb refValue={value} kind={field.type === 'file' ? undefined : field.type} className="w-full h-full" alt={alt} />
           <span className="absolute inset-0 bg-black/45 text-white text-xs font-semibold flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
             <Icon className="w-4 h-4" /> {value ? 'Replace' : 'Choose'}
           </span>
+          {uploading && <span className="absolute inset-0 bg-white/80 flex items-center justify-center"><Spinner className="w-5 h-5" /></span>}
         </button>
         <div className="flex-1 min-w-0 space-y-2">
-          <p className="text-xs text-[#8A9496] truncate" title={value}>{value ? (value.startsWith('media:') ? 'Media library file' : value) : 'Nothing selected'}</p>
+          <p className="text-xs text-[#8A9496] truncate flex items-center gap-1.5" title={value}>
+            {value ? (isLibrary ? <><FolderOpen className="w-3.5 h-3.5 shrink-0" /> From media library</> : <><Link2 className="w-3.5 h-3.5 shrink-0" /> {value}</>) : `No ${noun} yet – upload one, pick from the library, or paste a URL.`}
+          </p>
           {onAltChange && field.type === 'image' && (
             <Input value={alt ?? ''} onChange={(e) => onAltChange(e.target.value)} placeholder="Alt text – describe the image for screen readers & SEO" disabled={disabled} />
           )}
+          {showUrl && (
+            <div className="space-y-1.5">
+              <div className="flex gap-2">
+                <Input
+                  autoFocus
+                  value={url}
+                  onChange={(e) => { setUrl(e.target.value); setUrlError(''); }}
+                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); applyUrl(); } if (e.key === 'Escape') setShowUrl(false); }}
+                  placeholder={`https://… or /images/… (${noun} URL)`}
+                  invalid={!!urlError}
+                  disabled={disabled}
+                  aria-label={`${field.label} URL`}
+                />
+                <Button size="sm" onClick={applyUrl} disabled={disabled || !url.trim()} className="h-10">Use URL</Button>
+              </div>
+              {urlError && <p className="text-xs text-[#E5484D]">{urlError}</p>}
+            </div>
+          )}
           <div className="flex flex-wrap gap-2">
-            <Button size="sm" variant="soft" icon={Icon} onClick={() => setOpen(true)} disabled={disabled}>{value ? 'Replace' : `Choose ${field.type}`}</Button>
+            <UploadButton size="sm" variant="soft" accept={acceptFor(field.type)} label="Upload from computer" disabled={disabled}
+              onUploaded={(items) => { const item = items[0]; onChange(services.media.refFor(item)); if (onAltChange && !alt && item.alt) onAltChange(item.alt); }} />
+            <Button size="sm" variant="secondary" icon={FolderOpen} onClick={() => setOpen(true)} disabled={disabled}>Media library</Button>
+            <Button size="sm" variant={showUrl ? 'soft' : 'ghost'} icon={Link2} onClick={() => { setShowUrl((s) => !s); setUrl(isLibrary ? '' : value); setUrlError(''); }} disabled={disabled}>Paste URL</Button>
             {value && !field.required && <Button size="sm" variant="ghost" icon={X} onClick={() => onChange('')} disabled={disabled}>Remove</Button>}
           </div>
+          <p className="hidden sm:block text-[11px] text-[#A3ACAE]">Tip: drag a file from your computer onto this box.</p>
         </div>
+        {dragOver && (
+          <div className="pointer-events-none absolute inset-0 rounded-2xl flex items-center justify-center bg-[#168F88]/10 text-[#127a74] text-sm font-semibold gap-2">
+            <UploadCloud className="w-5 h-5" /> Drop to upload
+          </div>
+        )}
       </div>
       <MediaPicker open={open} onClose={() => setOpen(false)} kind={field.type} current={value} onSelect={(ref, item) => { onChange(ref); if (item?.alt && onAltChange && !alt) onAltChange(item.alt); }} />
     </FieldShell>
@@ -183,7 +264,14 @@ export function FieldsGrid({ fields, value, onChange, errors, prefix = '', ctx =
           case 'select': {
             const opts = typeof f.options === 'function' ? f.options(ctx) : f.options;
             const values = opts.map((o) => (typeof o === 'string' ? o : o.value));
-            const all = v && !values.includes(v) ? [...opts, { value: v, label: `${v} (not in list)` }] : opts;
+            let all: SelectOption[] = v && !values.includes(v) ? [...opts, { value: v, label: `${v} (not in list)` }] : opts;
+            if (f.iconOptions) {
+              all = all.map((o) => {
+                const val = typeof o === 'string' ? o : o.value;
+                const I = optionIcons[val];
+                return { value: val, label: I ? humanize(val) : typeof o === 'string' ? o : o.label, icon: I ? <I /> : undefined };
+              });
+            }
             return (
               <FieldShell key={f.key} className={span} label={f.label} help={f.help} error={err} required={f.required} htmlFor={id}>
                 <Select id={id} value={v ?? ''} onChange={(e) => set(e.target.value)} invalid={!!err} disabled={disabled} options={[...(f.required ? [] : [{ value: '', label: '— None —' }]), ...all]} />
@@ -232,36 +320,67 @@ export function FieldsGrid({ fields, value, onChange, errors, prefix = '', ctx =
 }
 
 /* ---------------- Section card ---------------- */
-export function GroupSection({ field, value, onChange, errors, prefix, ctx, disabled, nested }: {
+export function GroupSection({ field, value, onChange, errors, prefix, ctx, disabled, nested, open: openProp, onOpenChange, index }: {
   field: Extract<Field, { type: 'group' }>; value: any; onChange: (v: any) => void; errors: Errors; prefix: string; ctx: FormContext; disabled?: boolean; nested?: boolean;
+  /** Controlled open state (top-level accordion). Uncontrolled sections start open. */
+  open?: boolean; onOpenChange?: (open: boolean) => void;
+  /** Position in the page, shown as a step number. */
+  index?: number;
 }) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [localOpen, setLocalOpen] = useState(true);
+  const open = openProp ?? localOpen;
+  const toggle = () => (onOpenChange ? onOpenChange(!open) : setLocalOpen((o) => !o));
   const vk = field.visibilityKey;
   const hidden = vk ? value?.[vk] === false : false;
   const fields = vk ? field.fields.filter((f) => f.key !== vk) : field.fields;
   const hasError = Object.keys(errors).some((k) => k.startsWith(`${prefix}.`));
   const Wrapper: React.ElementType = nested ? 'div' : Card;
   return (
-    <Wrapper id={`section-${prefix}`} className={cx(nested ? 'rounded-2xl border border-[#E6ECEB] bg-[#FBFDFD]' : '', 'scroll-mt-28')}>
-      <div className={cx('flex flex-wrap items-center justify-between gap-3', nested ? 'px-4 pt-3.5' : 'px-5 sm:px-6 pt-5')}>
-        <button type="button" onClick={() => setCollapsed((c) => !c)} className="flex items-center gap-2 min-w-0 text-left" aria-expanded={!collapsed}>
-          <ChevronDown className={cx('w-4 h-4 text-[#8A9496] transition-transform', collapsed && '-rotate-90')} />
-          <span className="min-w-0">
-            <span className="flex items-center gap-2">
-              <span className={cx('font-bold font-heading text-[#171B20]', nested ? 'text-sm' : 'text-[15px]')}>{field.label}</span>
-              {hidden && <Badge tone="slate">Hidden on site</Badge>}
+    <Wrapper
+      id={`section-${prefix}`}
+      className={cx(
+        'scroll-mt-28 transition-shadow',
+        nested ? 'rounded-2xl border border-[#E6ECEB] bg-[#FBFDFD]' : 'overflow-hidden',
+        !nested && open && 'ring-1 ring-[#168F88]/25',
+        !nested && hasError && 'ring-1 ring-[#E5484D]/50',
+      )}
+    >
+      <div className={cx('flex items-center gap-3', nested ? 'px-4 py-3' : 'px-4 sm:px-5 py-4')}>
+        <button type="button" onClick={toggle} className="flex-1 min-w-0 flex items-center gap-3 text-left rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#168F88]/40" aria-expanded={open}>
+          {index !== undefined && !nested && (
+            <span className={cx('w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold shrink-0 transition-colors', hasError ? 'bg-red-50 text-[#E5484D]' : open ? 'bg-[#168F88] text-white' : 'bg-[#168F88]/10 text-[#168F88]')}>
+              {index + 1}
+            </span>
+          )}
+          <span className="min-w-0 flex-1">
+            <span className="flex items-center gap-2 flex-wrap">
+              <span className={cx('font-bold font-heading', nested ? 'text-sm' : 'text-[15px]', hidden ? 'text-[#8A9496]' : 'text-[#171B20]')}>{field.label}</span>
               {hasError && <Badge tone="red">Fix errors</Badge>}
             </span>
-            {field.description && <span className="block text-xs text-[#8A9496] mt-0.5">{field.description}</span>}
+            {field.description && <span className={cx('block text-xs text-[#7A8587] mt-0.5', !open && 'truncate')}>{field.description}</span>}
           </span>
         </button>
-        {vk && <Toggle size="sm" checked={!hidden} onChange={(on) => onChange({ ...value, [vk]: on })} label="Show on website" disabled={disabled} />}
+        {vk && (
+          <span className="shrink-0">
+            <Toggle size="sm" checked={!hidden} onChange={(on) => onChange({ ...value, [vk]: on })} label={hidden ? 'Hidden' : 'Shown on site'} disabled={disabled} />
+          </span>
+        )}
+        <button type="button" onClick={toggle} className="p-2 -mr-1 rounded-xl text-[#8A9496] hover:bg-slate-100 shrink-0" aria-label={open ? `Close ${field.label}` : `Open ${field.label}`}>
+          <ChevronDown className={cx('w-4 h-4 transition-transform', open && 'rotate-180')} />
+        </button>
       </div>
       <AnimatePresence initial={false}>
-        {!collapsed && (
+        {open && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
-            <div className={cx(nested ? 'px-4 pb-4 pt-3' : 'px-5 sm:px-6 pb-6 pt-4', hidden && 'opacity-60')}>
-              <FieldsGrid fields={fields} value={value} onChange={onChange} errors={errors} prefix={prefix} ctx={ctx} disabled={disabled} />
+            <div className={cx(nested ? 'px-4 pb-4 pt-1' : 'px-5 sm:px-6 pb-6 pt-5 border-t border-[#EEF3F2]')}>
+              {hidden && (
+                <div className="mb-4 flex items-center gap-2 rounded-xl bg-slate-50 border border-slate-200 px-3 py-2 text-xs text-slate-600">
+                  <EyeOff className="w-3.5 h-3.5 shrink-0" /> Visitors don’t see this section. Turn on “Shown on site” to show it.
+                </div>
+              )}
+              <div className={cx(hidden && 'opacity-60')}>
+                <FieldsGrid fields={fields} value={value} onChange={onChange} errors={errors} prefix={prefix} ctx={ctx} disabled={disabled} />
+              </div>
             </div>
           </motion.div>
         )}

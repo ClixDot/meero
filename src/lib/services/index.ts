@@ -1,6 +1,6 @@
 /**
  * Service registry. Swap the adapters here to move from local IndexedDB to
- * MongoDB / Cloudinary – nothing else in the app imports an adapter directly.
+ * other backends – nothing else in the app imports an adapter directly.
  */
 import {
   localApplications,
@@ -10,6 +10,7 @@ import {
   localEnquiries,
   localMedia,
   localSettings,
+  localOnboarding,
 } from './local';
 import type {
   ApplicationsService,
@@ -19,6 +20,7 @@ import type {
   EnquiriesService,
   MediaService,
   SettingsService,
+  OnboardingService,
 } from './types';
 
 export const services: {
@@ -29,6 +31,7 @@ export const services: {
   applications: ApplicationsService;
   enquiries: EnquiriesService;
   settings: SettingsService;
+  onboarding: OnboardingService;
 } = {
   auth: localAuth,
   content: localContent,
@@ -37,9 +40,10 @@ export const services: {
   applications: localApplications,
   enquiries: localEnquiries,
   settings: localSettings,
+  onboarding: localOnboarding,
 };
 
 /** Human-readable name of the active persistence backend (shown in the admin). */
-export const STORAGE_BACKEND = 'This browser (IndexedDB)';
+export const STORAGE_BACKEND = 'MongoDB Atlas + Cloudinary';
 
 export * from './types';

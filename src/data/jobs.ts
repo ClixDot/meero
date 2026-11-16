@@ -5,7 +5,7 @@ import { servicesList } from "./services";
 export const sampleJobs = [
   {
     id: "job-001",
-    poster: "/images/posters/job-001.jpg",
+    poster: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/posters/job-001.jpg",
     title: "Registered Staff Nurse (ICU / Emergency / CCU)",
     destinationCountry: "United Arab Emirates",
     location: "Abu Dhabi / Dubai, UAE",
@@ -43,7 +43,7 @@ export const sampleJobs = [
   },
   {
     id: "job-002",
-    poster: "/images/posters/job-002.jpg",
+    poster: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/posters/job-002.jpg",
     title: "Senior MEP Project Engineer (High-Rise & Infrastructure)",
     destinationCountry: "Kingdom of Saudi Arabia",
     location: "Riyadh & Dammam, Saudi Arabia",
@@ -81,7 +81,7 @@ export const sampleJobs = [
   },
   {
     id: "job-003",
-    poster: "/images/posters/job-003.jpg",
+    poster: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/posters/job-003.jpg",
     title: "Civil Infrastructure QA/QC Inspector",
     destinationCountry: "Qatar",
     location: "Doha, Qatar",
@@ -119,7 +119,7 @@ export const sampleJobs = [
   },
   {
     id: "job-004",
-    poster: "/images/posters/job-004.jpg",
+    poster: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/posters/job-004.jpg",
     title: "Executive Sous Chef (Continental & Mediterranean)",
     destinationCountry: "Oman",
     location: "Muscat, Oman",
@@ -157,7 +157,7 @@ export const sampleJobs = [
   },
   {
     id: "job-005",
-    poster: "/images/posters/job-005.jpg",
+    poster: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/posters/job-005.jpg",
     title: "Certified 6G TIG & ARC Welders (Refinery Project)",
     destinationCountry: "Kingdom of Saudi Arabia",
     location: "Jubail / Yanbu, Saudi Arabia",
@@ -195,7 +195,7 @@ export const sampleJobs = [
   },
   {
     id: "job-006",
-    poster: "/images/posters/job-006.jpg",
+    poster: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/posters/job-006.jpg",
     title: "Warehouse Logistics Operations Supervisor",
     destinationCountry: "Kuwait",
     location: "Shuwaikh / Al Ahmadi, Kuwait",
@@ -233,7 +233,7 @@ export const sampleJobs = [
   },
   {
     id: "job-007",
-    poster: "/images/posters/job-007.jpg",
+    poster: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/posters/job-007.jpg",
     title: "Registered Nurses - European Pathway (Germany)",
     destinationCountry: "Germany",
     location: "Bavaria & North Rhine-Westphalia, Germany",
@@ -271,7 +271,7 @@ export const sampleJobs = [
   },
   {
     id: "job-008",
-    poster: "/images/posters/job-008.jpg",
+    poster: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/posters/job-008.jpg",
     title: "HVAC Commissioning & Maintenance Technicians",
     destinationCountry: "United Arab Emirates",
     location: "Dubai & Sharjah, UAE",

@@ -8,7 +8,7 @@
 import React, { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { AlertTriangle, Loader2, X } from 'lucide-react';
+import { AlertTriangle, Check, ChevronDown, Loader2, X } from 'lucide-react';
 
 export const cx = (...c: Array<string | false | null | undefined>) => c.filter(Boolean).join(' ');
 
@@ -70,7 +70,7 @@ export function IconButton({
 /* ---------------- Surfaces ---------------- */
 export function Card({ className, children, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cx('rounded-[22px] bg-white/80 backdrop-blur-xl border border-white shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_12px_32px_-18px_rgba(23,27,32,0.18)]', className)} {...rest}>
+    <div className={cx('soft-card rounded-[22px]', className)} {...rest}>
       {children}
     </div>
   );
@@ -173,11 +173,215 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTML
   },
 );
 
-export function Select({ className, invalid, options, ...rest }: React.SelectHTMLAttributes<HTMLSelectElement> & { invalid?: boolean; options: Array<string | { value: string; label: string }> }) {
+/* ---------------- Select (branded listbox) ---------------- */
+export type SelectOption = string | { value: string; label: string; icon?: React.ReactNode; hint?: string };
+
+/**
+ * Drop-in replacement for a native <select>: same `value` / `onChange(e.target.value)` contract,
+ * but a branded popover list. The list is portalled so cards with overflow-hidden never clip it.
+ */
+export function Select({ id, value, onChange, options, invalid, disabled, className, placeholder = 'Select…', size = 'md', 'aria-label': ariaLabel }: {
+  id?: string;
+  value?: string | number | null;
+  onChange?: (e: { target: { value: string } }) => void;
+  options: SelectOption[];
+  invalid?: boolean;
+  disabled?: boolean;
+  className?: string;
+  placeholder?: string;
+  size?: 'sm' | 'md';
+  'aria-label'?: string;
+}) {
+  const opts = React.useMemo(() => options.map((o) => (typeof o === 'string' ? { value: o, label: o } : o)) as Array<{ value: string; label: string; icon?: React.ReactNode; hint?: string }>, [options]);
+  const current = String(value ?? '');
+  const selected = opts.find((o) => o.value === current);
+  const [open, setOpen] = React.useState(false);
+  const [active, setActive] = React.useState(0);
+  const [query, setQuery] = React.useState('');
+  const [pos, setPos] = React.useState<{ top: number; left: number; width: number; up: boolean; maxH: number } | null>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const typeahead = useRef({ text: '', at: 0 });
+  const listId = useId();
+  const searchable = opts.length > 10;
+
+  const shown = React.useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return q ? opts.filter((o) => o.label.toLowerCase().includes(q)) : opts;
+  }, [opts, query]);
+
+  const place = React.useCallback(() => {
+    const r = triggerRef.current?.getBoundingClientRect();
+    if (!r) return;
+    const below = window.innerHeight - r.bottom - 12;
+    const above = r.top - 12;
+    const up = below < 240 && above > below;
+    setPos({ top: up ? r.top - 6 : r.bottom + 6, left: r.left, width: r.width, up, maxH: Math.min(320, Math.max(160, up ? above : below)) });
+  }, []);
+
+  const openList = () => {
+    if (disabled) return;
+    place();
+    setQuery('');
+    setActive(Math.max(0, opts.findIndex((o) => o.value === current)));
+    setOpen(true);
+  };
+  const close = (focusTrigger = true) => {
+    setOpen(false);
+    if (focusTrigger) triggerRef.current?.focus();
+  };
+  const choose = (v: string) => {
+    if (v !== current) onChange?.({ target: { value: v } });
+    close();
+  };
+
+  // Keep the panel attached while the page or a parent scrolls; close on outside press.
+  useEffect(() => {
+    if (!open) return;
+    const onMove = () => place();
+    const onDown = (e: MouseEvent | TouchEvent) => {
+      const t = e.target as Node;
+      if (triggerRef.current?.contains(t) || panelRef.current?.contains(t)) return;
+      close(false);
+    };
+    window.addEventListener('scroll', onMove, true);
+    window.addEventListener('resize', onMove);
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('touchstart', onDown);
+    return () => {
+      window.removeEventListener('scroll', onMove, true);
+      window.removeEventListener('resize', onMove);
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('touchstart', onDown);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, place]);
+
+  // Keep the highlighted option in view.
+  useEffect(() => {
+    if (!open) return;
+    listRef.current?.querySelector<HTMLElement>(`[data-index="${active}"]`)?.scrollIntoView({ block: 'nearest' });
+  }, [active, open]);
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (!open) {
+      if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) { e.preventDefault(); openList(); }
+      return;
+    }
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); return; }
+    if (e.key === 'Tab') { close(false); return; }
+    if (e.key === 'ArrowDown') { e.preventDefault(); setActive((a) => Math.min(shown.length - 1, a + 1)); return; }
+    if (e.key === 'ArrowUp') { e.preventDefault(); setActive((a) => Math.max(0, a - 1)); return; }
+    if (e.key === 'Home') { e.preventDefault(); setActive(0); return; }
+    if (e.key === 'End') { e.preventDefault(); setActive(shown.length - 1); return; }
+    if (e.key === 'Enter') { e.preventDefault(); const o = shown[active]; if (o) choose(o.value); return; }
+    // Type-to-jump when there is no search box.
+    if (!searchable && e.key.length === 1 && !e.metaKey && !e.ctrlKey) {
+      const now = Date.now();
+      const t = typeahead.current;
+      t.text = now - t.at > 700 ? e.key.toLowerCase() : t.text + e.key.toLowerCase();
+      t.at = now;
+      const i = shown.findIndex((o) => o.label.toLowerCase().startsWith(t.text));
+      if (i >= 0) setActive(i);
+    }
+  };
+
+  const h = size === 'sm' ? 'h-9 text-[13px]' : 'h-10 text-sm';
+
   return (
-    <select className={cx(inputBase, 'h-10 pl-3.5 pr-9 appearance-none bg-[url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27 fill=%27%237A8587%27%3E%3Cpath d=%27M5.5 7.5l4.5 4.5 4.5-4.5%27 stroke=%27%237A8587%27 stroke-width=%271.6%27 fill=%27none%27 stroke-linecap=%27round%27/%3E%3C/svg%3E")] bg-[length:18px] bg-[right_10px_center] bg-no-repeat', invalid ? 'border-[#E5484D]' : 'border-[#E0E7E5]', className)} {...rest}>
-      {options.map((o) => typeof o === 'string' ? <option key={o} value={o}>{o}</option> : <option key={o.value} value={o.value}>{o.label}</option>)}
-    </select>
+    <>
+      <button
+        ref={triggerRef}
+        id={id}
+        type="button"
+        role="combobox"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? listId : undefined}
+        aria-label={ariaLabel}
+        aria-invalid={invalid || undefined}
+        disabled={disabled}
+        onClick={() => (open ? close() : openList())}
+        onKeyDown={onKeyDown}
+        className={cx(
+          'group w-full flex items-center gap-2.5 rounded-xl bg-white border pl-3.5 pr-2.5 text-left text-[#171B20] transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-[#168F88]/12 focus-visible:border-[#168F88] disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed',
+          h,
+          invalid ? 'border-[#E5484D]' : open ? 'border-[#168F88] ring-4 ring-[#168F88]/12' : 'border-[#E0E7E5] hover:border-[#168F88]/45',
+          className,
+        )}
+      >
+        {selected?.icon && <span className="shrink-0 text-[#168F88] [&>svg]:w-4 [&>svg]:h-4">{selected.icon}</span>}
+        <span className={cx('flex-1 min-w-0 truncate', !selected && 'text-[#A3ACAE]')}>{selected ? selected.label : current || placeholder}</span>
+        <span className={cx('shrink-0 w-6 h-6 rounded-lg inline-flex items-center justify-center transition-colors', open ? 'bg-[#168F88]/10 text-[#168F88]' : 'text-[#7A8587] group-hover:text-[#168F88]')}>
+          <ChevronDown className={cx('w-4 h-4 transition-transform duration-200', open && 'rotate-180')} />
+        </span>
+      </button>
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {open && pos && (
+            <motion.div
+              ref={panelRef}
+              data-lenis-prevent
+              initial={{ opacity: 0, y: pos.up ? 4 : -4, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: pos.up ? 4 : -4, scale: 0.98 }}
+              transition={{ duration: 0.14, ease: [0.16, 1, 0.3, 1] }}
+              style={{ position: 'fixed', left: pos.left, width: Math.max(pos.width, 180), ...(pos.up ? { bottom: window.innerHeight - pos.top } : { top: pos.top }), transformOrigin: pos.up ? 'bottom' : 'top' }}
+              className="z-[120] rounded-2xl bg-white border border-[#E3EAE8] shadow-[0_24px_48px_-20px_rgba(23,27,32,0.35),0_2px_6px_-2px_rgba(23,27,32,0.08)] overflow-hidden"
+            >
+              {searchable && (
+                <div className="p-2 border-b border-[#EEF3F2]">
+                  <input
+                    autoFocus
+                    value={query}
+                    onChange={(e) => { setQuery(e.target.value); setActive(0); }}
+                    onKeyDown={onKeyDown}
+                    placeholder="Search…"
+                    aria-label="Search options"
+                    className="w-full h-9 px-3 rounded-xl bg-[#F4F8F7] text-sm placeholder:text-[#A3ACAE] focus:outline-none focus:ring-2 focus:ring-[#168F88]/25"
+                  />
+                </div>
+              )}
+              <ul ref={listRef} id={listId} role="listbox" tabIndex={-1} onKeyDown={onKeyDown} className="p-1.5 overflow-y-auto overscroll-contain" style={{ maxHeight: pos.maxH - (searchable ? 54 : 0) }}>
+                {shown.length === 0 && <li className="px-3 py-6 text-center text-xs text-[#8A9496]">No matches</li>}
+                {shown.map((o, i) => {
+                  const isSel = o.value === current;
+                  const isAct = i === active;
+                  return (
+                    <li
+                      key={o.value || `__empty-${i}`}
+                      data-index={i}
+                      role="option"
+                      aria-selected={isSel}
+                      onMouseEnter={() => setActive(i)}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => choose(o.value)}
+                      className={cx(
+                        'flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm cursor-pointer select-none transition-colors',
+                        isAct ? 'bg-[#168F88]/8' : '',
+                        isSel ? 'text-[#127a74] font-semibold' : 'text-[#2B3134]',
+                        !o.value && !isSel && 'text-[#8A9496]',
+                      )}
+                    >
+                      {o.icon && (
+                        <span className={cx('w-7 h-7 rounded-lg inline-flex items-center justify-center shrink-0 [&>svg]:w-4 [&>svg]:h-4', isSel ? 'bg-[#168F88] text-white' : 'bg-[#168F88]/10 text-[#168F88]')}>{o.icon}</span>
+                      )}
+                      <span className="flex-1 min-w-0">
+                        <span className="block truncate">{o.label}</span>
+                        {o.hint && <span className="block text-[11px] text-[#8A9496] truncate font-normal">{o.hint}</span>}
+                      </span>
+                      {isSel && <Check className="w-4 h-4 text-[#168F88] shrink-0" />}
+                    </li>
+                  );
+                })}
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
+    </>
   );
 }
 

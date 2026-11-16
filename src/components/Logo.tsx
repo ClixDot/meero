@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link } from '../lib/router';
-const meeroLogo = '/images/meero.png';
+const meeroLogo = 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero.png';
 
 /**
  * Meero Official Brand Logo Component
@@ -14,7 +14,7 @@ export default function Logo({
   showLink = true,
   className = '',
   imgClassName = '',
-  src = '/images/meero.png',
+  src = 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero.png',
   alt = 'MEERO Overseas HR Consultancy'
 }: any) {
   

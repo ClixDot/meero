@@ -1,11 +1,9 @@
 /**
- * Local (browser) adapters for every CMS service, persisted in IndexedDB.
- *
- * IMPORTANT: this is a development / staging adapter. Data lives only in the
- * current browser profile and admin auth is enforced client-side only.
- * Phase 2 replaces these with server-side MongoDB + Cloudinary adapters.
+ * CMS service adapters. Data is stored in MongoDB Atlas through the /api routes (see ../cms/idb.ts),
+ * media in Cloudinary, and admin auth is enforced server-side.
  */
 import { kv, blobs, emit, uid, clearAll } from '../cms/idb';
+import { uploadToCloudinary, deleteFromCloudinary } from './cloudinary';
 import {
   contentKeys,
   contentLabels,
@@ -31,6 +29,8 @@ import type {
   MediaService,
   MediaUsage,
   SettingsService,
+  OnboardingService,
+  OnboardingState,
 } from './types';
 import { sampleApplications, sampleEnquiries } from './sampleData';
 
@@ -49,138 +49,62 @@ async function log(action: string, target: string, href?: string) {
 }
 
 /* ======================================================================
-   Auth
+   Auth (server-side: password hashing, signed httpOnly session cookie, roles – see /api/auth)
    ====================================================================== */
-type StoredUser = AdminUser & { hash: string; salt: string };
-type Session = { userId: string; expiresAt: number };
-
 export const DEFAULT_ADMIN = { email: 'admin@meerohr.com', password: 'Meero@2026' };
 
-const toHex = (buf: ArrayBuffer) => Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
-
-async function hashPassword(password: string, salt: string): Promise<string> {
-  if (!globalThis.crypto?.subtle) {
-    throw new Error('Secure context required: open the admin over https:// or http://localhost.');
+async function authCall<T = Record<string, never>>(body: Record<string, unknown>): Promise<T> {
+  let res: Response;
+  try {
+    res = await fetch('/api/auth', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  } catch {
+    throw new Error('Could not reach the server. Check your connection and try again.');
   }
-  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
-  const bits = await crypto.subtle.deriveBits(
-    { name: 'PBKDF2', hash: 'SHA-256', salt: new TextEncoder().encode(salt), iterations: 120_000 },
-    key,
-    256,
-  );
-  return toHex(bits);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Something went wrong. Please try again.');
+  return data as T;
 }
-
-const publicUser = ({ hash: _h, salt: _s, ...u }: StoredUser): AdminUser => u;
-
-async function getUsers(): Promise<StoredUser[]> {
-  let users = await kv.get<StoredUser[]>('auth:users');
-  if (!users || users.length === 0) {
-    const salt = uid('salt');
-    users = [{
-      id: uid('usr'),
-      name: 'MEERO Admin',
-      email: DEFAULT_ADMIN.email,
-      role: 'owner',
-      active: true,
-      createdAt: now(),
-      usingDefaultPassword: true,
-      salt,
-      hash: await hashPassword(DEFAULT_ADMIN.password, salt),
-    }];
-    await kv.set('auth:users', users);
-  }
-  return users;
-}
-
-function validatePassword(pw: string) {
-  if (pw.length < 8) throw new Error('Password must be at least 8 characters.');
-  if (!/[A-Za-z]/.test(pw) || !/\d/.test(pw)) throw new Error('Password must contain letters and numbers.');
-}
-
-const validEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 
 export const localAuth: AuthService = {
   async login(email, password, remember) {
-    const users = await getUsers();
-    const user = users.find((u) => u.email.toLowerCase() === email.trim().toLowerCase());
-    if (!user || (await hashPassword(password, user.salt)) !== user.hash) {
-      throw new Error('Incorrect email or password.');
-    }
-    if (!user.active) throw new Error('This account is deactivated. Ask an owner to re-enable it.');
-    user.lastLoginAt = now();
-    await kv.set('auth:users', users);
-    const ttl = remember ? 30 * 24 * 3600e3 : 12 * 3600e3;
-    await kv.set<Session>('auth:session', { userId: user.id, expiresAt: Date.now() + ttl });
+    const { user } = await authCall<{ user: AdminUser }>({ op: 'login', email, password, remember });
     actorName = user.name;
     await log('signed in', 'Admin dashboard');
-    return publicUser(user);
+    return user;
   },
   async logout() {
-    await log('signed out', 'Admin dashboard');
-    await kv.del('auth:session');
+    await log('signed out', 'Admin dashboard').catch(() => undefined);
+    await authCall({ op: 'logout' });
     actorName = 'System';
   },
   async currentUser() {
-    const session = await kv.get<Session>('auth:session');
-    if (!session || session.expiresAt < Date.now()) return null;
-    const user = (await getUsers()).find((u) => u.id === session.userId && u.active);
-    if (!user) return null;
-    actorName = user.name;
-    return publicUser(user);
+    const { user } = await authCall<{ user: AdminUser | null }>({ op: 'me' });
+    if (user) actorName = user.name;
+    return user;
+  },
+  async defaultLoginHint() {
+    return process.env.NODE_ENV !== 'production' && (await authCall<{ show: boolean }>({ op: 'hint' })).show;
   },
   async listUsers() {
-    return (await getUsers()).map(publicUser);
+    return (await authCall<{ users: AdminUser[] }>({ op: 'listUsers' })).users;
   },
-  async createUser({ name, email, role, password }) {
-    const users = await getUsers();
-    if (!name.trim()) throw new Error('Name is required.');
-    if (!validEmail(email)) throw new Error('Enter a valid email address.');
-    if (users.some((u) => u.email.toLowerCase() === email.toLowerCase())) throw new Error('A user with this email already exists.');
-    validatePassword(password);
-    const salt = uid('salt');
-    const user: StoredUser = { id: uid('usr'), name: name.trim(), email: email.trim(), role, active: true, createdAt: now(), salt, hash: await hashPassword(password, salt) };
-    users.push(user);
-    await kv.set('auth:users', users);
+  async createUser(input) {
+    const { user } = await authCall<{ user: AdminUser }>({ op: 'createUser', ...input });
     await log('added admin user', user.name, '/admin/users');
-    return publicUser(user);
+    return user;
   },
   async updateUser(id, patch) {
-    const users = await getUsers();
-    const user = users.find((u) => u.id === id);
-    if (!user) throw new Error('User not found.');
-    if (patch.email !== undefined) {
-      if (!validEmail(patch.email)) throw new Error('Enter a valid email address.');
-      if (users.some((u) => u.id !== id && u.email.toLowerCase() === patch.email!.toLowerCase())) throw new Error('Another user already uses this email.');
-    }
-    const owners = users.filter((u) => u.role === 'owner' && u.active);
-    const losesOwner = user.role === 'owner' && ((patch.role && patch.role !== 'owner') || patch.active === false);
-    if (losesOwner && owners.length <= 1) throw new Error('At least one active owner is required.');
-    Object.assign(user, patch);
-    await kv.set('auth:users', users);
+    const { user } = await authCall<{ user: AdminUser }>({ op: 'updateUser', id, patch });
     await log('updated admin user', user.name, '/admin/users');
-    return publicUser(user);
+    return user;
   },
   async setPassword(id, password) {
-    validatePassword(password);
-    const users = await getUsers();
-    const user = users.find((u) => u.id === id);
-    if (!user) throw new Error('User not found.');
-    user.salt = uid('salt');
-    user.hash = await hashPassword(password, user.salt);
-    user.usingDefaultPassword = false;
-    await kv.set('auth:users', users);
-    await log('changed password for', user.name, '/admin/users');
+    await authCall({ op: 'setPassword', id, password });
+    await log('changed a password', 'Admin users', '/admin/users');
   },
   async deleteUser(id) {
-    const users = await getUsers();
-    const user = users.find((u) => u.id === id);
-    if (!user) return;
-    if (user.role === 'owner' && users.filter((u) => u.role === 'owner').length <= 1) throw new Error('You cannot delete the last owner.');
-    const session = await kv.get<Session>('auth:session');
-    if (session?.userId === id) throw new Error('You cannot delete the account you are signed in with.');
-    await kv.set('auth:users', users.filter((u) => u.id !== id));
-    await log('removed admin user', user.name, '/admin/users');
+    await authCall({ op: 'deleteUser', id });
+    await log('removed an admin user', 'Admin users', '/admin/users');
   },
 };
 
@@ -279,15 +203,15 @@ const MEDIA_PREFIX = 'media:';
 const kindOf = (mime: string): MediaKind => (mime.startsWith('image/') ? 'image' : mime.startsWith('video/') ? 'video' : 'document');
 
 const seedAssets: Array<{ url: string; name: string; alt: string; folder: string }> = [
-  { url: '/images/meero.png', name: 'MEERO logo (white)', alt: 'MEERO Overseas HR Consultancy', folder: 'Brand' },
-  { url: '/images/meero-mark.png', name: 'MEERO fingerprint mark', alt: '', folder: 'Brand' },
-  { url: '/images/meero-logo.png', name: 'MEERO logo', alt: 'MEERO Overseas HR Consultancy', folder: 'Brand' },
-  { url: '/images/meero-logo-dark.png', name: 'MEERO logo (dark)', alt: 'MEERO Overseas HR Consultancy', folder: 'Brand' },
-  { url: '/images/meero-badge.jpg', name: 'MEERO badge', alt: 'MEERO badge', folder: 'Brand' },
-  { url: '/images/credentials/mea-logo-white.png', name: 'Ministry of External Affairs logo', alt: 'Ministry of External Affairs, Government of India', folder: 'Brand' },
-  { url: '/images/hero-bg.jpg', name: 'Home hero background', alt: 'International HR team collaboration', folder: 'Backgrounds' },
-  { url: '/images/business-card.jpg', name: 'Business card', alt: 'MEERO business card', folder: 'Brand' },
-  ...['001', '002', '003', '004', '005', '006', '007', '008'].map((n) => ({ url: `/images/posters/job-${n}.jpg`, name: `Hiring poster job-${n}`, alt: `Hiring poster for job ${n}`, folder: 'Posters' })),
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero.png', name: 'MEERO logo (white)', alt: 'MEERO Overseas HR Consultancy', folder: 'Brand' },
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-mark.png', name: 'MEERO fingerprint mark', alt: '', folder: 'Brand' },
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-logo.png', name: 'MEERO logo', alt: 'MEERO Overseas HR Consultancy', folder: 'Brand' },
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-logo-dark.png', name: 'MEERO logo (dark)', alt: 'MEERO Overseas HR Consultancy', folder: 'Brand' },
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-badge.jpg', name: 'MEERO badge', alt: 'MEERO badge', folder: 'Brand' },
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/credentials/mea-logo-white.png', name: 'Ministry of External Affairs logo', alt: 'Ministry of External Affairs, Government of India', folder: 'Brand' },
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/hero-bg.jpg', name: 'Home hero background', alt: 'International HR team collaboration', folder: 'Backgrounds' },
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/business-card.jpg', name: 'Business card', alt: 'MEERO business card', folder: 'Brand' },
+  ...['001', '002', '003', '004', '005', '006', '007', '008'].map((n) => ({ url: `https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/posters/job-${n}.jpg`, name: `Hiring poster job-${n}`, alt: `Hiring poster for job ${n}`, folder: 'Posters' })),
 ];
 
 async function getMediaIndex(): Promise<MediaItem[]> {
@@ -303,17 +227,6 @@ async function getMediaIndex(): Promise<MediaItem[]> {
 }
 
 const urlCache = new Map<string, string>();
-
-function imageSize(file: Blob): Promise<{ width?: number; height?: number }> {
-  if (!file.type.startsWith('image/')) return Promise.resolve({});
-  return new Promise((resolve) => {
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => { resolve({ width: img.naturalWidth, height: img.naturalHeight }); URL.revokeObjectURL(url); };
-    img.onerror = () => { resolve({}); URL.revokeObjectURL(url); };
-    img.src = url;
-  });
-}
 
 const MAX_UPLOAD = 50 * 1024 * 1024;
 const ALLOWED = /^(image\/(png|jpe?g|webp|gif|svg\+xml|avif)|video\/(mp4|webm|quicktime)|application\/pdf|application\/msword|application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document)$/;
@@ -336,15 +249,15 @@ function findRefs(value: unknown, needles: string[], path: string, out: string[]
 export const localMedia: MediaService = {
   list: getMediaIndex,
   refFor(item) {
-    return item.source === 'linked' && item.url ? item.url : `${MEDIA_PREFIX}${item.id}`;
+    return item.url ? item.url : `${MEDIA_PREFIX}${item.id}`;
   },
   async upload(file, opts = {}) {
     checkFile(file);
-    const id = uid('med');
-    await blobs.set(`media/${id}`, file);
+    const asset = await uploadToCloudinary(file, { onProgress: opts.onProgress });
     const item: MediaItem = {
-      id, name: file.name, kind: kindOf(file.type), mime: file.type, size: file.size, alt: opts.alt ?? '',
-      folder: opts.folder ?? 'Uploads', source: 'upload', createdAt: now(), updatedAt: now(), ...(await imageSize(file)),
+      id: uid('med'), name: file.name, kind: kindOf(file.type), mime: file.type, size: asset.bytes ?? file.size, alt: opts.alt ?? '',
+      folder: opts.folder ?? 'Uploads', source: 'upload', url: asset.url, publicId: asset.publicId, resourceType: asset.resourceType,
+      width: asset.width, height: asset.height, createdAt: now(), updatedAt: now(),
     };
     const list = await getMediaIndex();
     list.unshift(item);
@@ -367,7 +280,7 @@ export const localMedia: MediaService = {
     await log('linked', item.name, '/admin/media');
     return item;
   },
-  async replace(id, file) {
+  async replace(id, file, opts = {}) {
     checkFile(file);
     const list = await getMediaIndex();
     const item = list.find((m) => m.id === id);
@@ -375,10 +288,17 @@ export const localMedia: MediaService = {
     if (item.source === 'linked') {
       throw new Error('Linked site assets cannot be overwritten in the browser. Upload a new file and select it instead.');
     }
-    await blobs.set(`media/${id}`, file);
-    const old = urlCache.get(id);
-    if (old) { URL.revokeObjectURL(old); urlCache.delete(id); }
-    Object.assign(item, { mime: file.type, kind: kindOf(file.type), size: file.size, updatedAt: now(), width: undefined, height: undefined }, await imageSize(file));
+    // Same Cloudinary asset id → every page using it picks up the new file. Legacy browser-stored items get a fresh cloud asset.
+    const asset = await uploadToCloudinary(file, { publicId: item.publicId, onProgress: opts.onProgress });
+    if (!item.publicId) {
+      await blobs.del(`media/${id}`);
+      const old = urlCache.get(id);
+      if (old) { URL.revokeObjectURL(old); urlCache.delete(id); }
+    }
+    Object.assign(item, {
+      mime: file.type, kind: kindOf(file.type), size: asset.bytes ?? file.size, updatedAt: now(),
+      url: asset.url, publicId: asset.publicId, resourceType: asset.resourceType, width: asset.width, height: asset.height,
+    });
     await kv.set('media:index', list);
     emit({ type: 'media' });
     await log('replaced', item.name, '/admin/media');
@@ -397,7 +317,10 @@ export const localMedia: MediaService = {
     const list = await getMediaIndex();
     const item = list.find((m) => m.id === id);
     if (!item) return;
-    if (item.source === 'upload') await blobs.del(`media/${id}`);
+    if (item.source === 'upload') {
+      if (item.publicId) await deleteFromCloudinary(item.publicId, item.resourceType ?? 'image');
+      else await blobs.del(`media/${id}`);
+    }
     await kv.set('media:index', list.filter((m) => m.id !== id));
     emit({ type: 'media' });
     await log('deleted', item.name, '/admin/media');
@@ -445,10 +368,7 @@ export const localCareers: CareersService = {
    Applications & enquiries
    ====================================================================== */
 async function ensureSamples() {
-  if (await kv.get('records:seeded')) return;
-  await kv.set('applications', sampleApplications());
-  await kv.set('enquiries', sampleEnquiries());
-  await kv.set('records:seeded', true);
+  // Intentionally empty: real submissions only. Demo data can be loaded from Settings.
 }
 
 async function listOf<T>(key: 'applications' | 'enquiries'): Promise<T[]> {
@@ -466,24 +386,18 @@ export const localApplications: ApplicationsService = {
     return (await listOf<Application>('applications')).sort((a, b) => b.submittedAt.localeCompare(a.submittedAt));
   },
   async isDuplicate(email, preferredJob) {
-    const list = await listOf<Application>('applications');
-    const cutoff = Date.now() - 7 * 24 * 3600e3;
-    return list.some((a) => !a.sample && a.email.toLowerCase() === email.toLowerCase() && a.preferredJob === preferredJob && Date.parse(a.submittedAt) > cutoff);
+    return kv.isDuplicate(email, preferredJob);
   },
   async create(input, cv) {
-    const list = await listOf<Application>('applications');
     const id = uid('app');
     if (cv) await blobs.set(`cv/${id}`, cv);
+    const stamp = now();
     const app: Application = {
       ...input, id, code: `MEERO-APP-${Math.floor(100000 + Math.random() * 900000)}`, status: 'new', notes: [], read: false,
-      hasCv: !!cv, cvFileName: cv?.name, cvSize: cv?.size, submittedAt: now(), updatedAt: now(),
+      hasCv: !!cv, cvFileName: cv?.name, cvSize: cv?.size, submittedAt: stamp, updatedAt: stamp,
     };
-    list.push(app);
-    await saveList('applications', list);
-    const prev = actorName; actorName = app.fullName;
-    await log('submitted an application for', app.preferredJob || 'General pool', '/admin/applications');
-    actorName = prev;
-    return app;
+    // The server validates, stores atomically and writes the activity entry (visitors cannot read or edit records).
+    return kv.append('applications', app);
   },
   async update(id, patch) {
     const list = await listOf<Application>('applications');
@@ -523,14 +437,9 @@ export const localEnquiries: EnquiriesService = {
     return (await listOf<Enquiry>('enquiries')).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   },
   async create(input) {
-    const list = await listOf<Enquiry>('enquiries');
-    const enq: Enquiry = { ...input, id: uid('enq'), status: 'new', notes: [], read: false, createdAt: now(), updatedAt: now() };
-    list.push(enq);
-    await saveList('enquiries', list);
-    const prev = actorName; actorName = enq.name;
-    await log('sent an enquiry', 'Contact form', '/admin/enquiries');
-    actorName = prev;
-    return enq;
+    const stamp = now();
+    const enq: Enquiry = { ...input, id: uid('enq'), status: 'new', notes: [], read: false, createdAt: stamp, updatedAt: stamp };
+    return kv.append('enquiries', enq);
   },
   async update(id, patch) {
     const list = await listOf<Enquiry>('enquiries');
@@ -601,10 +510,42 @@ export const localSettings: SettingsService = {
     emit({ type: 'records' });
   },
   async storageEstimate() {
-    if (!navigator.storage?.estimate) return null;
-    const { usage = 0, quota = 0 } = await navigator.storage.estimate();
-    return { usage, quota };
+    return null; // data lives in MongoDB Atlas, not in the browser
   },
 };
 
 export type { AdminRole };
+
+/* ---------------- Onboarding ----------------
+ * One record per admin under `onboarding:<userId>`. The adapter resolves the admin from the
+ * active session itself, so a caller can never read or write another admin's progress.
+ * A server adapter must do the same check against the authenticated user.
+ */
+export const ONBOARDING_VERSION = '1.0.0';
+
+const onboardingDefault = (userId: string): OnboardingState => ({
+  userId, version: ONBOARDING_VERSION, status: 'not_started', currentStepId: null, completedSteps: [],
+  hideWelcome: false, welcomeSeenForLogin: null, startedAt: null, completedAt: null, updatedAt: null,
+});
+
+async function sessionUserId(): Promise<string> {
+  const user = await localAuth.currentUser();
+  if (!user) throw new Error('Not signed in.');
+  return user.id;
+}
+
+export const localOnboarding: OnboardingService = {
+  async get() {
+    const userId = await sessionUserId();
+    const saved = await kv.get<OnboardingState>(`onboarding:${userId}`);
+    return saved && saved.userId === userId ? { ...onboardingDefault(userId), ...saved } : onboardingDefault(userId);
+  },
+  async update(patch) {
+    const userId = await sessionUserId();
+    const current = await localOnboarding.get();
+    // userId is not patchable: the record always belongs to the session's admin.
+    const next: OnboardingState = { ...current, ...patch, userId, updatedAt: now() };
+    await kv.set(`onboarding:${userId}`, next);
+    return next;
+  },
+};

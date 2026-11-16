@@ -35,42 +35,42 @@ export const destinationMarkets = [
   {
     country: "Saudi Arabia",
     shortName: "Saudi Arabia",
-    flagUrl: "/images/flags/sa.png",
+    flagUrl: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/flags/sa.png",
     keyCities: "Riyadh · Jeddah · Dammam",
     sectors: ["Healthcare", "Engineering", "Skilled Trades"]
   },
   {
     country: "United Arab Emirates",
     shortName: "UAE",
-    flagUrl: "/images/flags/ae.png",
+    flagUrl: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/flags/ae.png",
     keyCities: "Dubai · Abu Dhabi · Sharjah",
     sectors: ["Healthcare", "Hospitality", "Engineering"]
   },
   {
     country: "Qatar",
     shortName: "Qatar",
-    flagUrl: "/images/flags/qa.png",
+    flagUrl: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/flags/qa.png",
     keyCities: "Doha · Lusail · Al Wakrah",
     sectors: ["Healthcare", "Infrastructure", "Facility Mgmt"]
   },
   {
     country: "Oman",
     shortName: "Oman",
-    flagUrl: "/images/flags/om.png",
+    flagUrl: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/flags/om.png",
     keyCities: "Muscat · Salalah · Sohar",
     sectors: ["Healthcare", "Hospitality", "Skilled Trades"]
   },
   {
     country: "Kuwait",
     shortName: "Kuwait",
-    flagUrl: "/images/flags/kw.png",
+    flagUrl: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/flags/kw.png",
     keyCities: "Kuwait City · Ahmadi · Shuwaikh",
     sectors: ["Logistics", "Oil & Gas", "Skilled Trades"]
   },
   {
     country: "Germany",
     shortName: "Germany",
-    flagUrl: "/images/flags/de.png",
+    flagUrl: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/flags/de.png",
     keyCities: "Bavaria · Berlin · North Rhine",
     sectors: ["Nursing", "Specialist Healthcare"]
   }

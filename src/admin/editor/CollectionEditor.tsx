@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  CloudUpload, Copy, Eye, EyeOff, GripVertical, LayoutGrid, List, MoreHorizontal, Pencil, Plus, RotateCcw, Save, Search, Trash2, Undo2, Inbox,
+  ChevronLeft, ChevronRight, CloudUpload, Copy, Eye, EyeOff, GripVertical, ImageIcon, LayoutGrid, List, MoreHorizontal, Pencil, Plus, RotateCcw, Save, Search, Trash2, Undo2, Inbox,
 } from 'lucide-react';
 import { services, type ContentDocMeta } from '../../lib/services';
 import type { ContentKey } from '../../lib/cms/defaults';
@@ -21,8 +21,12 @@ export type CollectionKey = Extract<ContentKey, 'services' | 'jobs' | 'gallery' 
 
 export default function CollectionEditor({
   contentKey, title, description, itemLabel, fields, itemTitle, itemSubtitle, imageKey, newItem, searchKeys,
-  filter, previewPath, ctx = {}, gridView = false, idPrefix = 'item', embedded = false,
+  filter, previewPath, ctx = {}, gridView = false, idPrefix = 'item', embedded = false, cardMeta, cardTag,
 }: {
+  /** Grid cards: icon + text detail rows (falls back to itemSubtitle). */
+  cardMeta?: (item: any) => Array<{ icon: React.ElementType; text: string }>;
+  /** Grid cards: small label next to the status badge. */
+  cardTag?: (item: any) => string | undefined;
   contentKey: CollectionKey;
   title: string;
   description?: string;
@@ -195,7 +199,7 @@ export default function CollectionEditor({
       {meta?.updatedAt && <p className="text-xs text-[#8A9496] -mt-2 mb-4">Last saved {timeAgo(meta.updatedAt)}{meta.updatedBy && ` by ${meta.updatedBy}`}{meta.publishedAt && ` · Published ${timeAgo(meta.publishedAt)}`}</p>}
 
       <div className={cx('grid gap-5', showPreview && previewPath ? 'xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]' : 'grid-cols-1')}>
-        <Card className="min-w-0">
+        <Card className="min-w-0" data-tour="collection-list">
           {/* Toolbar */}
           <div className="flex flex-col md:flex-row md:items-center gap-2.5 p-4 sm:p-5 border-b border-[#EDF2F1]">
             <div className="relative flex-1 min-w-0">
@@ -232,33 +236,78 @@ export default function CollectionEditor({
             <EmptyState icon={Inbox} title={filtering ? 'Nothing matches your filters' : `No ${title.toLowerCase()} yet`} text={filtering ? 'Try a different search or clear the filters.' : `Add your first ${itemLabel.toLowerCase()}.`}
               action={filtering ? <Button variant="secondary" onClick={() => { setQ(''); setFilterVal(''); setVisibility(''); }}>Clear filters</Button> : undefined} />
           ) : view === 'grid' ? (
-            <div className="p-4 sm:p-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-              {shown.map(({ item, index }) => (
-                <div key={item.id} {...(!filtering && canEdit ? handlers(index) : {})}
-                  className={cx('group relative rounded-2xl border bg-white overflow-hidden transition-all', overIndex === index && dragIndex !== index ? 'ring-2 ring-[#168F88]' : 'border-[#EDF2F1]', dragIndex === index && 'opacity-50', item.visible === false && 'opacity-70')}>
-                  <button type="button" onClick={() => { setEditErrors({}); setEditing({ index, draft: structuredClone(item), isNew: false }); }} className="block w-full text-left">
-                    <div className="relative aspect-[4/3]">
-                      <MediaThumb refValue={imageKey ? item[imageKey] : undefined} className="w-full h-full" alt={item.alt} />
-                      <span className="absolute top-2 left-2">{item.visible === false ? <Badge tone="slate">Hidden</Badge> : <Badge tone="green">Published</Badge>}</span>
-                    </div>
-                    <div className="p-3">
-                      <p className="text-sm font-semibold truncate">{itemTitle(item)}</p>
-                      {itemSubtitle && <p className="text-xs text-[#8A9496] truncate">{itemSubtitle(item)}</p>}
-                    </div>
-                  </button>
-                  <div className="flex items-center justify-between px-2 pb-2">
-                    <div className="flex">
-                      {!filtering && <span className="p-1.5 text-[#C2C9CB] cursor-grab hidden sm:block" aria-hidden><GripVertical className="w-4 h-4" /></span>}
-                      <button type="button" disabled={!canEdit || filtering || index === 0} onClick={() => setItems(move(items, index, index - 1))} className="p-1.5 rounded-lg text-[#8A9496] hover:bg-slate-100 disabled:opacity-30 text-xs font-bold" aria-label="Move earlier">←</button>
-                      <button type="button" disabled={!canEdit || filtering || index === items.length - 1} onClick={() => setItems(move(items, index, index + 1))} className="p-1.5 rounded-lg text-[#8A9496] hover:bg-slate-100 disabled:opacity-30 text-xs font-bold" aria-label="Move later">→</button>
-                    </div>
-                    <div className="flex">
-                      <button type="button" disabled={!canEdit} onClick={() => toggleVisible(index)} className="p-1.5 rounded-lg text-[#8A9496] hover:bg-slate-100" aria-label={item.visible === false ? 'Publish' : 'Unpublish'} title={item.visible === false ? 'Publish' : 'Unpublish'}>{item.visible === false ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}</button>
-                      <button type="button" disabled={!canEdit} onClick={() => setToDelete(index)} className="p-1.5 rounded-lg text-[#8A9496] hover:text-[#E5484D] hover:bg-red-50" aria-label="Delete"><Trash2 className="w-4 h-4" /></button>
+            <div className="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 min-[85rem]:grid-cols-4 gap-4 sm:gap-5">
+              {shown.map(({ item, index }) => {
+                const hidden = item.visible === false;
+                const openEdit = () => { setEditErrors({}); setEditing({ index, draft: structuredClone(item), isNew: false }); };
+                const meta = cardMeta?.(item).filter((m) => m.text) ?? [];
+                const iconBtn = 'w-7 h-8 shrink-0 inline-flex items-center justify-center rounded-lg transition-colors disabled:opacity-30 disabled:pointer-events-none';
+                return (
+                  <div key={item.id} {...(!filtering && canEdit ? handlers(index) : {})}
+                    className={cx(
+                      '@container group relative flex flex-col rounded-[20px] border bg-white overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-22px_rgba(23,27,32,0.35)]',
+                      overIndex === index && dragIndex !== index ? 'border-[#168F88] ring-2 ring-[#168F88]/30' : 'border-[#E8EEED] hover:border-[#168F88]/30',
+                      dragIndex === index && 'opacity-50',
+                    )}>
+                    {/* Image */}
+                    <button type="button" onClick={openEdit} className="relative block aspect-[4/3] overflow-hidden bg-[#0B0F17] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#168F88]" aria-label={`Edit ${itemTitle(item) || itemLabel}`}>
+                      {imageKey && item[imageKey] ? (
+                        // object-top keeps the poster's heading ("NOW HIRING", title) in view.
+                        <MediaThumb refValue={item[imageKey]} className={cx('w-full h-full object-top transition-transform duration-300 group-hover:scale-[1.03]', hidden && 'grayscale-[60%]')} alt={item.alt} />
+                      ) : (
+                        // No image yet: poster-style placeholder in brand colours.
+                        <div className="relative w-full h-full p-4 flex flex-col text-white">
+                          <span aria-hidden className="absolute -right-10 -bottom-10 w-36 h-36 rounded-full border-[10px] border-dashed border-[#168F88]/25" />
+                          <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#21B8C1]">Now hiring</span>
+                          <span className="mt-1.5 text-[15px] font-bold font-heading leading-snug line-clamp-3">{itemTitle(item) || 'Untitled'}</span>
+                          {meta[0] && <span className="mt-1.5 text-xs text-[#21B8C1] truncate">{meta[0].text}</span>}
+                          <span className="mt-auto self-start inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-semibold text-white/80"><ImageIcon className="w-3 h-3" /> No image</span>
+                        </div>
+                      )}
+                      <span className="absolute top-2.5 right-2.5 min-w-7 h-7 px-2 rounded-full bg-black/55 backdrop-blur text-white text-[11px] font-bold inline-flex items-center justify-center" title="Position on the website">#{index + 1}</span>
+                    </button>
+
+                    {/* Body */}
+                    <button type="button" onClick={openEdit} className="flex-1 flex flex-col text-left px-4 pt-3.5 pb-3 focus:outline-none" tabIndex={-1}>
+                      <span className="flex items-center gap-1.5 flex-wrap">
+                        {hidden ? <Badge tone="slate" dot>Hidden</Badge> : <Badge tone="green" dot>Published</Badge>}
+                        {cardTag?.(item) && <Badge tone="teal">{cardTag(item)}</Badge>}
+                      </span>
+                      <span className={cx('mt-2 text-[15px] font-bold font-heading leading-snug line-clamp-2', hidden ? 'text-[#8A9496]' : 'text-[#171B20]')}>{itemTitle(item) || <i>Untitled</i>}</span>
+                      {meta.length > 0 ? (
+                        <span className="mt-2.5 space-y-1.5">
+                          {meta.map((m, k) => {
+                            const MIcon = m.icon;
+                            return (
+                              <span key={k} className="flex items-center gap-2 text-xs text-[#5E696B] min-w-0">
+                                <MIcon className="w-3.5 h-3.5 text-[#168F88] shrink-0" />
+                                <span className="truncate">{m.text}</span>
+                              </span>
+                            );
+                          })}
+                        </span>
+                      ) : itemSubtitle ? (
+                        <span className="mt-1 text-xs text-[#8A9496] line-clamp-2">{itemSubtitle(item)}</span>
+                      ) : null}
+                    </button>
+
+                    {/* Actions */}
+                    {/* Whole card is draggable to reorder; arrows are the keyboard / precise option. */}
+                    <div className="flex items-center justify-between gap-1.5 px-2.5 py-2.5 border-t border-[#EEF3F2] cursor-grab active:cursor-grabbing">
+                      <div className="flex items-center rounded-xl bg-[#F4F8F7] p-0.5" title={filtering ? 'Clear search & filters to reorder' : 'Reorder'}>
+                        <button type="button" disabled={!canEdit || filtering || index === 0} onClick={() => setItems(move(items, index, index - 1))} className={cx(iconBtn, 'w-7 text-[#5E696B] hover:bg-white hover:text-[#168F88]')} aria-label="Move earlier" title="Move earlier"><ChevronLeft className="w-4 h-4" /></button>
+                        <button type="button" disabled={!canEdit || filtering || index === items.length - 1} onClick={() => setItems(move(items, index, index + 1))} className={cx(iconBtn, 'w-7 text-[#5E696B] hover:bg-white hover:text-[#168F88]')} aria-label="Move later" title="Move later"><ChevronRight className="w-4 h-4" /></button>
+                      </div>
+                      <div className="flex items-center gap-0.5">
+                        <button type="button" disabled={!canEdit} onClick={() => toggleVisible(index)} className={cx(iconBtn, hidden ? 'text-[#A3ACAE] hover:bg-slate-100' : 'text-emerald-600 hover:bg-emerald-50')} aria-label={hidden ? 'Publish' : 'Unpublish'} title={hidden ? 'Publish on website' : 'Hide from website'}>{hidden ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}</button>
+                        <button type="button" disabled={!canEdit} onClick={() => duplicate(index)} className={cx(iconBtn, 'hidden @[230px]:inline-flex text-[#7A8587] hover:bg-slate-100 hover:text-[#171B20]')} aria-label="Duplicate" title="Duplicate"><Copy className="w-4 h-4" /></button>
+                        <button type="button" disabled={!canEdit} onClick={() => setToDelete(index)} className={cx(iconBtn, 'text-[#7A8587] hover:bg-red-50 hover:text-[#E5484D]')} aria-label="Delete" title="Delete"><Trash2 className="w-4 h-4" /></button>
+                        <button type="button" onClick={openEdit} className={cx(iconBtn, 'w-8 ml-1 bg-[#168F88]/10 text-[#127a74] hover:bg-[#168F88] hover:text-white')} aria-label="Edit" title="Edit"><Pencil className="w-4 h-4" /></button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <ul className="divide-y divide-[#F2F5F4]">

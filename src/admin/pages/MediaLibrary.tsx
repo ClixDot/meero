@@ -22,6 +22,7 @@ export default function MediaLibrary() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [uploading, setUploading] = useState(0);
+  const [uploadPct, setUploadPct] = useState(0);
   const [linkOpen, setLinkOpen] = useState(false);
 
   useEffect(() => { const id = params?.get('open'); if (id) setOpenId(id); }, [params]);
@@ -36,12 +37,13 @@ export default function MediaLibrary() {
     if (!canEdit) return;
     const list = Array.from(files);
     setUploading(list.length);
+    setUploadPct(0);
     let ok = 0;
-    for (const f of list) {
-      try { await services.media.upload(f); ok++; } catch (err) { toast.error(`Could not upload ${f.name}`, err); }
+    for (const [i, f] of list.entries()) {
+      try { await services.media.upload(f, { onProgress: (p) => setUploadPct(Math.round(((i + p / 100) / list.length) * 100)) }); ok++; } catch (err) { toast.error(`Could not upload ${f.name}`, err); }
       setUploading((n) => n - 1);
     }
-    if (ok) toast.success(`${ok} file${ok > 1 ? 's' : ''} uploaded`, 'Stored in this browser until cloud storage is connected.');
+    if (ok) toast.success(`${ok} file${ok > 1 ? 's' : ''} uploaded`, 'Saved to cloud storage and ready to use on the site.');
   };
 
   return (
@@ -76,7 +78,7 @@ export default function MediaLibrary() {
         ))}
       </div>
 
-      <Card>
+      <Card data-tour="media-library">
         <div className="flex flex-col md:flex-row gap-2.5 p-4 sm:p-5 border-b border-[#EDF2F1]">
           <div className="relative flex-1">
             <Search className="w-4 h-4 text-[#A3ACAE] absolute left-3 top-1/2 -translate-y-1/2" />
@@ -85,7 +87,14 @@ export default function MediaLibrary() {
           <Select value={kind} onChange={(e) => setKind(e.target.value)} className="md:w-40" aria-label="Type" options={[{ value: '', label: 'All types' }, { value: 'image', label: 'Images' }, { value: 'video', label: 'Videos' }, { value: 'document', label: 'Documents' }]} />
           <Select value={folder} onChange={(e) => setFolder(e.target.value)} className="md:w-44" aria-label="Folder" options={[{ value: '', label: 'All folders' }, ...folders]} />
         </div>
-        {uploading > 0 && <div className="px-5 py-2.5 text-xs font-semibold text-[#168F88] bg-[#168F88]/6">Uploading {uploading} file{uploading > 1 ? 's' : ''}…</div>}
+        {uploading > 0 && (
+          <div className="px-5 py-2.5 bg-[#168F88]/6" role="status" aria-live="polite">
+            <div className="flex justify-between text-xs font-semibold text-[#168F88] mb-1.5">
+              <span>Uploading {uploading} file{uploading > 1 ? 's' : ''} to cloud storage…</span><span>{uploadPct}%</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-[#168F88]/15 overflow-hidden"><div className="h-full bg-[#168F88] transition-[width] duration-200" style={{ width: `${uploadPct}%` }} /></div>
+          </div>
+        )}
         {!items ? (
           <div className="p-5 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">{Array.from({ length: 12 }).map((_, i) => <Skeleton key={i} className="aspect-square" />)}</div>
         ) : filtered.length === 0 ? (

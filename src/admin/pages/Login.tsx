@@ -26,9 +26,9 @@ export default function Login() {
 
   useEffect(() => {
     services.auth.currentUser().then((u) => { if (u) router.replace(next()); }).catch(() => {});
-    services.auth.listUsers()
-      .then((users) => setShowDefault(users.some((u) => u.email === DEFAULT_ADMIN.email && u.usingDefaultPassword)))
-      .catch((e) => setError(e instanceof Error ? e.message : 'Local storage is unavailable in this browser.'));
+    services.auth.defaultLoginHint()
+      .then(setShowDefault)
+      .catch((e) => setError(e instanceof Error ? e.message : 'Could not reach the server.'));
   }, [router]);
 
   const submit = async (e: React.FormEvent) => {
@@ -49,11 +49,11 @@ export default function Login() {
     <div className="min-h-dvh grid lg:grid-cols-[1.05fr_1fr]">
       {/* Brand panel */}
       <div className="hidden lg:flex relative overflow-hidden m-4 rounded-[32px] bg-[#0B0F17] text-white p-12 flex-col justify-between">
-        <img src="/images/hero-bg.jpg" alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-25" />
+        <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/hero-bg.jpg" alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-25" />
         <div className="absolute inset-0 bg-gradient-to-br from-[#0B0F17] via-[#0B0F17]/85 to-[#168F88]/40" />
-        <img src="/images/meero-mark.png" alt="" aria-hidden className="absolute -right-24 -bottom-24 w-[420px] opacity-20" />
+        <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-mark.png" alt="" aria-hidden className="absolute -right-24 -bottom-24 w-[420px] opacity-20" />
         <div className="relative">
-          <img src="/images/meero.png" alt="MEERO Overseas HR Consultancy" className="h-16 w-auto" />
+          <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero.png" alt="MEERO Overseas HR Consultancy" className="h-16 w-auto" />
         </div>
         <div className="relative max-w-md">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#21B8C1]">Content Studio</p>
@@ -69,7 +69,7 @@ export default function Login() {
       <div className="flex items-center justify-center px-4 py-10 sm:px-8">
         <motion.div initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }} className="w-full max-w-[420px]">
           <div className="lg:hidden flex justify-center mb-8">
-            <span className="inline-flex items-center gap-3 rounded-2xl bg-[#0B0F17] px-5 py-3"><img src="/images/meero.png" alt="MEERO" className="h-9 w-auto" /></span>
+            <span className="inline-flex items-center gap-3 rounded-2xl bg-[#0B0F17] px-5 py-3"><img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero.png" alt="MEERO" className="h-9 w-auto" /></span>
           </div>
           <div className="rounded-[28px] bg-white/85 backdrop-blur-xl border border-white shadow-[0_30px_60px_-30px_rgba(23,27,32,0.35)] p-6 sm:p-8">
             <h2 className="text-2xl font-extrabold font-heading tracking-tight">Welcome back</h2>

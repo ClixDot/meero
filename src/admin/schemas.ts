@@ -170,7 +170,7 @@ export const servicesPageSchema: Field[] = [
 export const serviceFields: Field[] = [
   { type: 'text', key: 'title', label: 'Service name', required: true, maxLength: 60 },
   { type: 'textarea', key: 'description', label: 'Description', rows: 3, required: true, maxLength: 320 },
-  { type: 'select', key: 'icon', label: 'Icon', required: true, options: serviceIcons, half: true },
+  { type: 'select', key: 'icon', label: 'Icon', required: true, options: serviceIcons, iconOptions: true, half: true },
   { type: 'text', key: 'id', label: 'Anchor ID', help: 'Used in links like /services#logistics-transport. Letters, numbers and dashes.', half: true, required: true },
   { type: 'image', key: 'image', label: 'Image', required: true },
   { type: 'strings', key: 'highlights', label: 'Highlights', itemLabel: 'Highlight' },

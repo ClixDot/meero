@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { CloudUpload, ExternalLink, RotateCcw, Trash2 } from 'lucide-react';
+import { Briefcase, CloudUpload, ExternalLink, MapPin, RotateCcw, Trash2, Wallet } from 'lucide-react';
 import CollectionEditor from '../editor/CollectionEditor';
 import { useCmsCtx } from '../editor/useCmsCtx';
 import { StatusBadge } from '../editor/DocEditor';
@@ -31,6 +31,14 @@ export function JobsEditor() {
       filter={{ key: 'destinationCountry', label: 'Countries', options: (c) => c.countries ?? [] }}
       ctx={ctx}
       previewPath="/careers"
+      imageKey="poster"
+      gridView
+      cardTag={(j) => j.employmentType}
+      cardMeta={(j) => [
+        { icon: MapPin, text: j.location || j.destinationCountry },
+        { icon: Briefcase, text: j.industry },
+        { icon: Wallet, text: j.salaryNote },
+      ]}
     />
   );
 }

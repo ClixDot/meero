@@ -394,7 +394,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
 
               {/* Background watermark */}
               <div className="absolute -right-8 -bottom-8 opacity-10 pointer-events-none group-hover:scale-105 transition-transform duration-500">
-                <img src="/images/meero-mark.png" alt="" aria-hidden="true" className="w-56 h-auto" />
+                <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-mark.png" alt="" aria-hidden="true" className="w-56 h-auto" />
               </div>
 
               <div className="relative z-10 space-y-3">

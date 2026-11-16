@@ -42,36 +42,39 @@ export function useMediaList() {
   return { items, reload: load };
 }
 
-export function UploadButton({ accept, onUploaded, multiple, label = 'Upload', variant = 'primary', folder }: {
-  accept?: string; onUploaded?: (items: MediaItem[]) => void; multiple?: boolean; label?: string; variant?: 'primary' | 'secondary' | 'soft'; folder?: string;
+export function UploadButton({ accept, onUploaded, multiple, label = 'Upload', variant = 'primary', folder, size, disabled }: {
+  accept?: string; onUploaded?: (items: MediaItem[]) => void; multiple?: boolean; label?: string; variant?: 'primary' | 'secondary' | 'soft'; folder?: string; size?: 'sm' | 'md'; disabled?: boolean;
 }) {
   const ref = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState(0);
   const toast = useToast();
   const handle = async (files: FileList | null) => {
     if (!files?.length) return;
+    const list = Array.from(files);
     setBusy(true);
+    setProgress(0);
     const done: MediaItem[] = [];
-    for (const f of Array.from(files)) {
-      try { done.push(await services.media.upload(f, { folder })); }
-      catch (err) { toast.error('Upload failed', err); }
+    for (const [i, f] of list.entries()) {
+      try { done.push(await services.media.upload(f, { folder, onProgress: (p) => setProgress(Math.round(((i + p / 100) / list.length) * 100)) })); }
+      catch (err) { toast.error(`Could not upload ${f.name}`, err); }
     }
     setBusy(false);
     if (ref.current) ref.current.value = '';
     if (done.length) {
-      toast.success(done.length === 1 ? 'File saved to the media library' : `${done.length} files saved to the media library`, 'Stored in this browser until cloud storage is connected.');
+      toast.success(done.length === 1 ? 'Uploaded to the media library' : `${done.length} files uploaded to the media library`, 'Saved to cloud storage and ready to use on the site.');
       onUploaded?.(done);
     }
   };
   return (
     <>
       <input ref={ref} type="file" className="hidden" accept={accept} multiple={multiple} onChange={(e) => handle(e.target.files)} />
-      <Button variant={variant} icon={UploadCloud} loading={busy} onClick={() => ref.current?.click()}>{label}</Button>
+      <Button variant={variant} size={size} icon={UploadCloud} loading={busy} disabled={disabled} onClick={() => ref.current?.click()}>{busy ? `Uploading ${progress}%` : label}</Button>
     </>
   );
 }
 
-const acceptFor = (kind: 'image' | 'video' | 'file') => kind === 'image' ? 'image/*' : kind === 'video' ? 'video/mp4,video/webm,video/quicktime' : 'image/*,video/*,application/pdf,.doc,.docx';
+export const acceptFor = (kind: 'image' | 'video' | 'file') => kind === 'image' ? 'image/*' : kind === 'video' ? 'video/mp4,video/webm,video/quicktime' : 'image/*,video/*,application/pdf,.doc,.docx';
 
 /** Modal to pick (or upload / link) a media item. */
 export function MediaPicker({ open, onClose, onSelect, kind = 'image', current }: {

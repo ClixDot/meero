@@ -1,86 +1,90 @@
 /**
- * Minimal IndexedDB wrapper used by the local persistence adapters.
- * Two object stores:
- *   kv    – JSON documents (content, records, users, settings)
- *   blobs – binary files (media library uploads, candidate CVs)
+ * Client for the CMS storage API (MongoDB Atlas behind /api/store and /api/blob).
+ *   kv    - JSON documents (content, records, settings)
+ *   blobs - binary files (candidate CVs)
  *
- * This is the only module that touches IndexedDB. Replacing the local adapters
- * with MongoDB / Cloudinary implementations never requires changing callers.
+ * This is the only client module that talks to the storage backend. The server decides who may read or write
+ * each key (visitors: published content + form submissions only; admins: by role), so nothing here is trusted.
  */
 
-const DB_NAME = 'meero-cms';
-const DB_VERSION = 1;
-
-let dbPromise: Promise<IDBDatabase> | null = null;
-
-function openDb(): Promise<IDBDatabase> {
-  if (typeof indexedDB === 'undefined') {
-    return Promise.reject(new Error('IndexedDB is not available in this browser.'));
+async function api(url: string, init?: RequestInit): Promise<Response> {
+  let res: Response;
+  try {
+    res = await fetch(url, { credentials: 'same-origin', cache: 'no-store', ...init });
+  } catch {
+    throw new Error('Could not reach the server. Check your connection and try again.');
   }
-  if (!dbPromise) {
-    dbPromise = new Promise((resolve, reject) => {
-      const req = indexedDB.open(DB_NAME, DB_VERSION);
-      req.onupgradeneeded = () => {
-        const db = req.result;
-        if (!db.objectStoreNames.contains('kv')) db.createObjectStore('kv');
-        if (!db.objectStoreNames.contains('blobs')) db.createObjectStore('blobs');
-      };
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => {
-        dbPromise = null;
-        reject(req.error ?? new Error('Could not open the local database.'));
-      };
-    });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || (res.status === 401 ? 'Your session has expired. Please sign in again.' : 'Something went wrong. Please try again.'));
   }
-  return dbPromise;
+  return res;
 }
 
-type StoreName = 'kv' | 'blobs';
+const jsonInit = (method: string, body: unknown): RequestInit => ({ method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
 
-async function run<T>(store: StoreName, mode: IDBTransactionMode, fn: (s: IDBObjectStore) => IDBRequest<T>): Promise<T> {
-  const db = await openDb();
-  return new Promise<T>((resolve, reject) => {
-    const tx = db.transaction(store, mode);
-    const req = fn(tx.objectStore(store));
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error ?? new Error('Local database request failed.'));
-    tx.onabort = () => reject(tx.error ?? new Error('Local database transaction aborted (storage may be full).'));
-  });
+/** Site content is fetched once per burst (one request for every content document) instead of once per key. */
+let contentCache: { at: number; data: Promise<Record<string, unknown>> } | null = null;
+const CONTENT_TTL = 3000;
+const dropContentCache = () => { contentCache = null; };
+
+function allContent(): Promise<Record<string, unknown>> {
+  if (!contentCache || Date.now() - contentCache.at > CONTENT_TTL) {
+    const data = api('/api/store?prefix=content%3A').then((r) => r.json() as Promise<Record<string, unknown>>);
+    data.catch(dropContentCache);
+    contentCache = { at: Date.now(), data };
+  }
+  return contentCache.data;
 }
 
 export const kv = {
-  get<T = unknown>(key: string): Promise<T | undefined> {
-    return run<T>('kv', 'readonly', (s) => s.get(key) as IDBRequest<T>);
+  async get<T = unknown>(key: string): Promise<T | undefined> {
+    if (key.startsWith('content:')) return ((await allContent())[key] ?? undefined) as T | undefined;
+    const { value } = await (await api(`/api/store?key=${encodeURIComponent(key)}`)).json();
+    return (value ?? undefined) as T | undefined;
   },
   async set<T>(key: string, value: T): Promise<void> {
-    await run('kv', 'readwrite', (s) => s.put(value, key));
+    await api('/api/store', jsonInit('PUT', { key, value }));
+    if (key.startsWith('content:')) dropContentCache();
   },
   async del(key: string): Promise<void> {
-    await run('kv', 'readwrite', (s) => s.delete(key));
+    await api(`/api/store?key=${encodeURIComponent(key)}`, { method: 'DELETE' });
+    if (key.startsWith('content:')) dropContentCache();
   },
-  keys(): Promise<string[]> {
-    return run<IDBValidKey[]>('kv', 'readonly', (s) => s.getAllKeys()).then((k) => k.map(String));
+  async keys(): Promise<string[]> {
+    return (await api('/api/store?keys=1')).json();
+  },
+  /** Atomically add a record on the server (used by the public forms). Returns the stored record. */
+  async append<T>(key: 'applications' | 'enquiries', item: T): Promise<T> {
+    const { item: stored } = await (await api('/api/store', jsonInit('POST', { op: 'append', key, item }))).json();
+    return stored as T;
+  },
+  async isDuplicate(email: string, preferredJob: string): Promise<boolean> {
+    const { duplicate } = await (await api('/api/store', jsonInit('POST', { op: 'duplicate', email, preferredJob }))).json();
+    return !!duplicate;
   },
 };
 
 export const blobs = {
-  get(key: string): Promise<Blob | undefined> {
-    return run<Blob>('blobs', 'readonly', (s) => s.get(key) as IDBRequest<Blob>);
+  async get(key: string): Promise<Blob | undefined> {
+    try { return await (await api(`/api/blob?key=${encodeURIComponent(key)}`)).blob(); } catch { return undefined; }
   },
-  async set(key: string, value: Blob): Promise<void> {
-    await run('blobs', 'readwrite', (s) => s.put(value, key));
+  async set(key: string, file: File): Promise<void> {
+    await api(`/api/blob?key=${encodeURIComponent(key)}`, {
+      method: 'PUT', headers: { 'Content-Type': file.type || 'application/octet-stream', 'X-File-Name': encodeURIComponent(file.name) }, body: file,
+    });
   },
   async del(key: string): Promise<void> {
-    await run('blobs', 'readwrite', (s) => s.delete(key));
+    await api(`/api/blob?key=${encodeURIComponent(key)}`, { method: 'DELETE' });
   },
 };
 
 export async function clearAll(): Promise<void> {
-  await run('kv', 'readwrite', (s) => s.clear());
-  await run('blobs', 'readwrite', (s) => s.clear());
+  await api('/api/store', jsonInit('POST', { op: 'clear' }));
+  dropContentCache();
 }
 
-/** Cross-tab change notifications (admin tab -> public site tab / preview iframe). */
+/** Same-browser change notifications (admin tab -> public site tab / preview iframe). */
 const CHANNEL = 'meero-cms';
 let channel: BroadcastChannel | null = null;
 const localListeners = new Set<(msg: CmsEvent) => void>();
@@ -91,12 +95,16 @@ function getChannel(): BroadcastChannel | null {
   if (typeof BroadcastChannel === 'undefined') return null;
   if (!channel) {
     channel = new BroadcastChannel(CHANNEL);
-    channel.onmessage = (e) => localListeners.forEach((l) => l(e.data));
+    channel.onmessage = (e) => {
+      if (e.data?.type === 'content') dropContentCache();
+      localListeners.forEach((l) => l(e.data));
+    };
   }
   return channel;
 }
 
 export function emit(event: CmsEvent) {
+  if (event.type === 'content') dropContentCache();
   getChannel()?.postMessage(event);
   localListeners.forEach((l) => l(event));
 }

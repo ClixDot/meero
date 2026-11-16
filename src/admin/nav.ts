@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Home, Info, Briefcase, Users, Phone, Images, ClipboardList, FileUser, Inbox,
-  FolderOpen, FileStack, Palette, Search, PanelsTopLeft, ShieldCheck, Settings,
+  FolderOpen, FileStack, Search, PanelsTopLeft, ShieldCheck, Settings,
 } from 'lucide-react';
 import type { AdminRole } from '../lib/services';
 
@@ -32,11 +32,10 @@ export const navGroups: Array<{ title: string; items: NavItem[] }> = [
   {
     title: 'Settings',
     items: [
-      { label: 'Design & Branding', href: '/admin/design', icon: Palette, description: 'Colours, fonts and headings' },
       { label: 'SEO', href: '/admin/seo', icon: Search, description: 'Meta titles, descriptions and OG images' },
       { label: 'Header & Footer', href: '/admin/header-footer', icon: PanelsTopLeft, description: 'Logo, navigation and footer' },
       { label: 'Admin Users', href: '/admin/users', icon: ShieldCheck, description: 'Team accounts and roles', minRole: 'owner' },
-      { label: 'General Settings', href: '/admin/settings', icon: Settings, description: 'Announcements and data tools' },
+      { label: 'General Settings', href: '/admin/settings', icon: Settings, description: 'Announcements and site-wide options' },
     ],
   },
 ];

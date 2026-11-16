@@ -2,10 +2,10 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Database, Download, KeyRound, Pencil, Plus, ShieldCheck, Sparkles, Trash2, TriangleAlert, UserX, UserCheck } from 'lucide-react';
+import { KeyRound, Pencil, Plus, ShieldCheck, Trash2, TriangleAlert, UserX, UserCheck } from 'lucide-react';
 import { services, STORAGE_BACKEND, type AdminRole, type AdminUser } from '../../lib/services';
 import { useAdmin } from '../context';
-import { Badge, Button, Card, CardHeader, ConfirmDialog, EmptyState, FieldShell, Input, Modal, PageHeader, Select, Skeleton, downloadFile, formatBytes, timeAgo } from '../ui/kit';
+import { Badge, Button, Card, ConfirmDialog, EmptyState, FieldShell, Input, Modal, PageHeader, Select, Skeleton, timeAgo } from '../ui/kit';
 import { useToast } from '../ui/toast';
 import { GeneralSettingsEditor } from './content-pages';
 
@@ -111,7 +111,7 @@ export function UsersManager() {
         </div>
       )}
       <div className="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-5">
-        <Card>
+        <Card data-tour="admin-users">
           {!users ? <div className="p-5 space-y-2"><Skeleton className="h-14" /><Skeleton className="h-14" /></div> : users.length === 0 ? <EmptyState icon={ShieldCheck} title="No users" /> : (
             <ul className="divide-y divide-[#F2F5F4]">
               {users.map((u) => (
@@ -161,56 +161,5 @@ export function UsersManager() {
 }
 
 export function SettingsPage() {
-  const { isOwner } = useAdmin();
-  const toast = useToast();
-  const [usage, setUsage] = useState<{ usage: number; quota: number } | null>(null);
-  const [confirm, setConfirm] = useState<'' | 'clear' | 'reset'>('');
-  const [busy, setBusy] = useState('');
-  useEffect(() => { services.settings.storageEstimate().then(setUsage).catch(() => {}); }, []);
-
-  return (
-    <div className="space-y-8">
-      <GeneralSettingsEditor />
-      <div>
-        <h2 className="text-lg font-bold font-heading mb-3">Data & storage</h2>
-        <div className="grid md:grid-cols-2 gap-4">
-          <Card>
-            <CardHeader icon={Database} title="Where data is stored" subtitle={STORAGE_BACKEND} />
-            <div className="px-5 sm:px-6 pb-6 pt-3 space-y-3 text-sm text-[#4B5759]">
-              <p>Content, media, applications and admin accounts are saved in <b>this browser profile</b>. Other devices and visitors’ browsers don’t see them yet – the website falls back to its built-in content there.</p>
-              <p className="text-xs text-[#8A9496]">Next phase: MongoDB for data and Cloudinary for media. The dashboard already uses swappable service adapters, so no screens change.</p>
-              {usage && (
-                <div>
-                  <div className="flex justify-between text-xs font-semibold mb-1"><span>Browser storage used</span><span>{formatBytes(usage.usage)} of {formatBytes(usage.quota)}</span></div>
-                  <div className="h-1.5 rounded-full bg-[#EDF1F0] overflow-hidden"><div className="h-full bg-[#168F88] rounded-full" style={{ width: `${Math.min(100, (usage.usage / Math.max(1, usage.quota)) * 100)}%` }} /></div>
-                </div>
-              )}
-              <Button variant="secondary" icon={Download} onClick={async () => {
-                const data = await services.settings.exportAll();
-                downloadFile(`meero-cms-backup-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(data, null, 2));
-                toast.success('Backup downloaded', 'Uploaded files and CVs are not included in the JSON.');
-              }}>Download backup (JSON)</Button>
-            </div>
-          </Card>
-          <Card>
-            <CardHeader icon={Sparkles} title="Sample records" subtitle="Demo applications and enquiries marked “Sample”." />
-            <div className="px-5 sm:px-6 pb-6 pt-3 flex flex-wrap gap-2">
-              <Button variant="secondary" disabled={!isOwner} loading={busy === 'seed'} onClick={async () => { setBusy('seed'); await services.settings.seedSampleData(); setBusy(''); toast.success('Sample records loaded'); }}>Load sample records</Button>
-              <Button variant="secondary" disabled={!isOwner} onClick={() => setConfirm('clear')}>Remove sample records</Button>
-            </div>
-            <div className="mx-5 sm:mx-6 mb-6 rounded-2xl border border-red-200 bg-red-50/60 p-4">
-              <p className="text-sm font-bold text-[#c23b40]">Reset everything</p>
-              <p className="text-xs text-[#8a3a3d] mt-1">Deletes all CMS content, media, applications, enquiries and admin users stored in this browser. The website returns to its original content.</p>
-              <Button size="sm" variant="danger" className="mt-3" disabled={!isOwner} onClick={() => setConfirm('reset')}>Reset all data</Button>
-            </div>
-          </Card>
-        </div>
-      </div>
-      <ConfirmDialog open={confirm === 'clear'} onCancel={() => setConfirm('')} loading={busy === 'clear'} title="Remove sample records?" message="Only records marked “Sample” are deleted. Real submissions stay." confirmLabel="Remove samples"
-        onConfirm={async () => { setBusy('clear'); const n = await services.settings.clearSampleData(); setBusy(''); setConfirm(''); toast.success(`${n} sample record${n === 1 ? '' : 's'} removed`); }} />
-      <ConfirmDialog open={confirm === 'reset'} onCancel={() => setConfirm('')} loading={busy === 'reset'} title="Reset all data?" requireText="RESET" confirmLabel="Reset everything"
-        message="This cannot be undone. Download a backup first if you need one. You will be signed out."
-        onConfirm={async () => { setBusy('reset'); await services.settings.resetEverything(); window.location.href = '/admin/login'; }} />
-    </div>
-  );
+  return <GeneralSettingsEditor />;
 }

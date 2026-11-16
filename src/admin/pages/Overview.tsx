@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ArrowUpRight, Briefcase, CheckCircle2, ClipboardList, ExternalLink, FileStack, FileUser, Inbox, Plus, TriangleAlert, UploadCloud, Activity } from 'lucide-react';
+import { ArrowUpRight, Briefcase, CheckCircle2, ClipboardList, ExternalLink, FileStack, FileUser, Inbox, Plus, TriangleAlert, TrendingDown, TrendingUp, UploadCloud, Activity } from 'lucide-react';
 import { services, type ActivityEntry, type Application, type ContentDocMeta, type Enquiry, type Job } from '../../lib/services';
 import { subscribe } from '../../lib/cms/idb';
 import { contentLabels } from '../../lib/cms/defaults';
 import { useAdmin } from '../context';
-import { Badge, Button, Card, CardHeader, Skeleton, cx, timeAgo } from '../ui/kit';
+import { Badge, Button, Card, CardHeader, Select, Skeleton, cx, timeAgo } from '../ui/kit';
 import { GroupedBarChart, MiniBars, ProgressRow, RingChart } from '../ui/charts';
 import { appStatuses } from './records-pages';
 
@@ -19,31 +19,41 @@ function greeting() {
   return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
 }
 
-function StatCard({ label, value, sub, icon: Icon, trend, featured, bars, onClick }: {
-  label: string; value: React.ReactNode; sub: React.ReactNode; icon: React.ElementType; trend?: number | null; featured?: boolean; bars?: number[]; onClick?: () => void;
+/** Month-over-month change of the last two buckets; null when there is no base to compare. */
+const monthTrend = (s: number[]) => (s.length > 1 && s[s.length - 2] > 0 ? Math.round(((s[s.length - 1] - s[s.length - 2]) / s[s.length - 2]) * 100) : null);
+
+function TrendPill({ trend }: { trend: number | null }) {
+  if (trend === null) return <span className="text-[11px] font-semibold text-[#A3ACAE]">No change data</span>;
+  const up = trend >= 0;
+  return (
+    <span className={cx('inline-flex items-center gap-1 text-[11px] font-bold tabular-nums', up ? 'text-emerald-600' : 'text-[#E5484D]')} title="Change vs last month">
+      <span className={cx('w-4 h-4 rounded-full inline-flex items-center justify-center text-white', up ? 'bg-emerald-500' : 'bg-[#E5484D]')}>
+        {up ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
+      </span>
+      {up ? '+' : ''}{trend}%
+    </span>
+  );
+}
+
+/** Soft-UI stat card: label left, big number right, sparkline + trend along the bottom. */
+function StatCard({ label, value, sub, icon: Icon, accent, bars, onClick }: {
+  label: string; value: React.ReactNode; sub: React.ReactNode; icon: React.ElementType; accent: string; bars: number[]; onClick?: () => void;
 }) {
   return (
-    <button type="button" onClick={onClick} className={cx(
-      'group text-left rounded-[22px] p-4 sm:p-5 transition-all hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#168F88]',
-      featured
-        ? 'col-span-2 sm:col-span-1 bg-gradient-to-br from-[#168F88] via-[#169A93] to-[#21B8C1] text-white shadow-[0_20px_40px_-20px_rgba(22,143,136,0.8)]'
-        : 'bg-white/80 backdrop-blur-xl border border-white shadow-[0_12px_32px_-18px_rgba(23,27,32,0.18)] hover:shadow-[0_18px_40px_-18px_rgba(23,27,32,0.25)]',
-    )}>
-      <div className="flex items-start justify-between">
-        <span className={cx('w-10 h-10 rounded-2xl flex items-center justify-center', featured ? 'bg-white/20' : 'bg-[#F2F6F5] text-[#168F88]')}><Icon className="w-[18px] h-[18px]" /></span>
-        {trend !== undefined && trend !== null && (
-          <span className={cx('text-[11px] font-bold px-2 py-0.5 rounded-full', featured ? 'bg-white/25' : trend >= 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-600')}>
-            {trend >= 0 ? '+' : ''}{trend}%
+    <button type="button" onClick={onClick} className="soft-card group text-left rounded-[22px] p-4 sm:p-5 transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#168F88]">
+      <div className="flex items-start justify-between gap-3">
+        <span className="min-w-0">
+          <span className="flex items-center gap-2">
+            <span className="w-7 h-7 rounded-xl inline-flex items-center justify-center shrink-0" style={{ background: `${accent}1A`, color: accent }}><Icon className="w-3.5 h-3.5" /></span>
+            <span className="text-[13px] font-semibold text-[#2B3134] truncate">{label}</span>
           </span>
-        )}
+          <span className="block text-[11px] text-[#8A9496] mt-1.5 truncate">{sub}</span>
+        </span>
+        <span className="text-[28px] sm:text-[32px] leading-none font-semibold font-heading tracking-tight text-[#171B20] tabular-nums">{value}</span>
       </div>
-      <p className={cx('text-xs font-semibold mt-3 sm:mt-5', featured ? 'text-white/80' : 'text-[#6B7678]')}>{label}</p>
-      <div className="flex items-end justify-between gap-3 mt-1">
-        <div className="min-w-0">
-          <p className="text-2xl sm:text-[28px] leading-none font-extrabold font-heading tracking-tight">{value}</p>
-          <p className={cx('text-[11px] mt-1.5', featured ? 'text-white/75' : 'text-[#8A9496]')}>{sub}</p>
-        </div>
-        {bars && <MiniBars values={bars} color={featured ? '#FFFFFF' : '#168F88'} />}
+      <div className="flex items-end justify-between gap-3 mt-5">
+        <MiniBars values={bars} color={accent} />
+        <TrendPill trend={monthTrend(bars)} />
       </div>
     </button>
   );
@@ -63,25 +73,32 @@ export default function Overview() {
 
   useEffect(() => { load().catch(() => {}); return subscribe(() => load().catch(() => {})); }, [load]);
 
+  const [range, setRange] = useState<'6' | '12'>('6');
+
   const stats = useMemo(() => {
     if (!data) return null;
     const now = new Date();
-    const months = Array.from({ length: 7 }).map((_, i) => {
-      const d = new Date(now.getFullYear(), now.getMonth() - (6 - i), 1);
+    const monthsBack = (count: number) => Array.from({ length: count }).map((_, i) => {
+      const d = new Date(now.getFullYear(), now.getMonth() - (count - 1 - i), 1);
       return { key: `${d.getFullYear()}-${d.getMonth()}`, label: d.toLocaleString('en', { month: 'short' }) };
     });
-    const byMonth = (list: Application[]) => months.map((m) => list.filter((a) => { const d = new Date(a.submittedAt); return `${d.getFullYear()}-${d.getMonth()}` === m.key; }).length);
-    const received = byMonth(data.apps);
-    const selected = byMonth(data.apps.filter((a) => a.status === 'selected'));
+    const bucket = <T,>(months: Array<{ key: string }>, list: T[], date: (x: T) => string | undefined) =>
+      months.map((m) => list.filter((x) => { const s = date(x); if (!s) return false; const d = new Date(s); return `${d.getFullYear()}-${d.getMonth()}` === m.key; }).length);
+    const chartMonths = monthsBack(Number(range));
+    const received = bucket(chartMonths, data.apps, (a) => a.submittedAt);
+    const selected = bucket(chartMonths, data.apps.filter((a) => a.status === 'selected'), (a) => a.updatedAt ?? a.submittedAt);
+    // Sparklines: always the last 10 months.
+    const spark = monthsBack(10);
+    const sparkApps = bucket(spark, data.apps, (a) => a.submittedAt);
+    const sparkJobs = bucket(spark, data.jobs, (j) => j.postedDate);
+    const sparkEnq = bucket(spark, data.enqs, (e) => e.createdAt);
+    const sparkSel = bucket(spark, data.apps.filter((a) => a.status === 'selected'), (a) => a.updatedAt ?? a.submittedAt);
     const week = Date.now() - 7 * 864e5;
-    const thisMonth = received[6];
-    const lastMonth = received[5];
-    const trend = lastMonth ? Math.round(((thisMonth - lastMonth) / lastMonth) * 100) : null;
     const openJobs = data.jobs.filter((j) => j.visible !== false);
     const destinations = Object.entries(openJobs.reduce<Record<string, number>>((acc, j) => { acc[j.destinationCountry] = (acc[j.destinationCountry] ?? 0) + 1; return acc; }, {})).sort((a, b) => b[1] - a[1]).slice(0, 5);
     return {
-      chart: months.map((m, i) => ({ label: m.label, values: [received[i], selected[i]] })),
-      received, trend,
+      chart: chartMonths.map((m, i) => ({ label: m.label, values: [received[i], selected[i]] })),
+      sparkApps, sparkJobs, sparkEnq, sparkSel,
       newThisWeek: data.apps.filter((a) => Date.parse(a.submittedAt) > week).length,
       unreadEnq: data.enqs.filter((e) => !e.read).length,
       openEnq: data.enqs.filter((e) => e.status !== 'resolved').length,
@@ -92,7 +109,7 @@ export default function Overview() {
       drafts: data.metas.filter((m) => m.hasDraft),
       hasSamples: data.apps.some((a) => a.sample) || data.enqs.some((e) => e.sample),
     };
-  }, [data]);
+  }, [data, range]);
 
   const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -123,18 +140,28 @@ export default function Overview() {
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-40 rounded-[22px]" />)}</div>
       ) : (
         <>
-          <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
-            <StatCard featured label="Total applications" value={data!.apps.length} sub={`${stats.newThisWeek} new this week`} icon={FileUser} trend={stats.trend} bars={stats.received} onClick={() => navigate('/admin/applications')} />
-            <StatCard label="Open vacancies" value={stats.openJobs} sub={`${data!.jobs.length - stats.openJobs} hidden`} icon={Briefcase} onClick={() => navigate('/admin/jobs')} />
-            <StatCard label="Unread enquiries" value={stats.unreadEnq} sub={`${stats.openEnq} open in total`} icon={Inbox} onClick={() => navigate('/admin/enquiries')} />
-            <StatCard label="Candidates selected" value={stats.selectedTotal} sub={`${data!.mediaCount} files in media library`} icon={CheckCircle2} onClick={() => navigate('/admin/applications')} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4" data-tour="dashboard-stats">
+            <StatCard label="Applications" value={data!.apps.length} sub={`${stats.newThisWeek} new this week`} icon={FileUser} accent="#0E9F95" bars={stats.sparkApps} onClick={() => navigate('/admin/applications')} />
+            <StatCard label="Open vacancies" value={stats.openJobs} sub={`${data!.jobs.length - stats.openJobs} hidden`} icon={Briefcase} accent="#8B80F9" bars={stats.sparkJobs} onClick={() => navigate('/admin/jobs')} />
+            <StatCard label="Unread enquiries" value={stats.unreadEnq} sub={`${stats.openEnq} open in total`} icon={Inbox} accent="#E0609A" bars={stats.sparkEnq} onClick={() => navigate('/admin/enquiries')} />
+            <StatCard label="Selected" value={stats.selectedTotal} sub="Candidates placed" icon={CheckCircle2} accent="#3B82F6" bars={stats.sparkSel} onClick={() => navigate('/admin/applications')} />
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
-            <Card className="xl:col-span-8">
-              <CardHeader title="Application trend" subtitle="Received vs selected, last 7 months" action={stats.hasSamples ? <Badge tone="slate">Includes sample data</Badge> : undefined} />
-              <div className="px-5 sm:px-6 pb-6 pt-4">
-                <GroupedBarChart data={stats.chart} series={[{ name: 'Received', color: '#D5DEDC' }, { name: 'Selected', color: '#168F88' }]} />
+            <Card className="xl:col-span-8" data-tour="dashboard-trend">
+              <CardHeader
+                title="Application trend"
+                subtitle={stats.hasSamples ? 'Received vs selected · includes sample data' : 'Received vs selected'}
+                action={<Select size="sm" value={range} onChange={(e) => setRange(e.target.value as '6' | '12')} aria-label="Time range" className="w-40" options={[{ value: '6', label: 'Last 6 months' }, { value: '12', label: 'Last 12 months' }]} />}
+              />
+              <div className="px-5 sm:px-6 pb-6 pt-2">
+                <GroupedBarChart
+                  height={330}
+                  data={stats.chart}
+                  series={[{ name: 'Received', color: '#0E9F95' }, { name: 'Selected', color: '#8B80F9' }]}
+                  emptyText={`No applications in the last ${range} months`}
+                  emptyHint="New applications from the website will appear here."
+                />
               </div>
             </Card>
             <Card className="xl:col-span-4">

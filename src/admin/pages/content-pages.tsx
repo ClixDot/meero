@@ -14,7 +14,7 @@ import { newId } from '../editor/fields';
 
 export function HomeEditor() {
   const ctx = useCmsCtx();
-  return <DocEditor contentKey="home" title="Home page" description="Edit every section of the home page. Hide a section with its “Show on website” switch." sections={homeSchema} previewPath="/" ctx={ctx} />;
+  return <DocEditor contentKey="home" title="Home page" description="Edit every section of the home page. Pick a section on the left. Turn off “Shown on site” to hide it." sections={homeSchema} previewPath="/" ctx={ctx} />;
 }
 
 export function AboutEditor() {

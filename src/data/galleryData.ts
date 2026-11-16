@@ -9,7 +9,7 @@
  *   1. Copy the photo into public/images/gallery/ (create the folder if needed).
  *      Use a simple file name with no spaces, e.g. kochi-drive-2026.jpg
  *   2. Point `image` at it. Paths start from inside `public`:
- *        image: "/images/gallery/kochi-drive-2026.jpg",
+ *        image: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/gallery/kochi-drive-2026.jpg",
  *   3. Delete the `thumbnail` line, or point it at a smaller copy of the photo.
  *   4. Update `title`, `location`, `category` and `alt` to match the photo.
  *
