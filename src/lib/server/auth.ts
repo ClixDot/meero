@@ -2,7 +2,6 @@ import { createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypt
 import { userCol, type UserDoc } from './mongo';
 
 export const COOKIE = 'meero_session';
-export const DEFAULT_ADMIN = { email: 'admin@meerohr.com', password: 'Meero@2026' };
 
 const secret = () => {
   const s = process.env.AUTH_SECRET;
@@ -57,15 +56,36 @@ function cookieFrom(request: Request): string | undefined {
 /* ---------- users ---------- */
 export const publicUser = ({ hash: _h, salt: _s, _id, ...u }: UserDoc) => ({ id: _id, ...u });
 
-/** Creates the first owner account on a fresh database. */
+let adminChecked = false;
+
+/**
+ * Owner account comes from ADMIN_EMAIL / ADMIN_PASSWORD (env, never in code).
+ * - Empty database: creates the owner from the env values.
+ * - Account still on the old starter password: switched to the env values once.
+ * - Anything an owner has changed from the dashboard is never overwritten.
+ */
 export async function ensureDefaultAdmin() {
+  if (adminChecked) return;
+  const email = process.env.ADMIN_EMAIL?.trim();
+  const password = process.env.ADMIN_PASSWORD;
   const col = await userCol();
-  if ((await col.estimatedDocumentCount()) > 0) return;
+  if (!email || !password) {
+    if ((await col.estimatedDocumentCount()) === 0) throw new Error('Set ADMIN_EMAIL and ADMIN_PASSWORD in the environment to create the first admin.');
+    adminChecked = true;
+    return;
+  }
   const salt = newSalt();
-  await col.insertOne({
-    _id: `usr-${randomBytes(6).toString('hex')}`, name: 'MEERO Admin', email: DEFAULT_ADMIN.email, role: 'owner', active: true,
-    createdAt: new Date().toISOString(), usingDefaultPassword: true, salt, hash: hashPassword(DEFAULT_ADMIN.password, salt),
-  }).catch(() => undefined);
+  const hash = hashPassword(password, salt);
+  const starter = await col.findOne({ usingDefaultPassword: true });
+  if (starter) {
+    await col.updateOne({ _id: starter._id }, { $set: { email, salt, hash, usingDefaultPassword: false } });
+  } else if ((await col.estimatedDocumentCount()) === 0) {
+    await col.insertOne({
+      _id: `usr-${randomBytes(6).toString('hex')}`, name: 'MEERO Admin', email, role: 'owner', active: true,
+      createdAt: new Date().toISOString(), usingDefaultPassword: false, salt, hash,
+    }).catch(() => undefined);
+  }
+  adminChecked = true;
 }
 
 export async function getSessionUser(request: Request): Promise<UserDoc | null> {

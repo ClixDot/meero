@@ -51,8 +51,6 @@ async function log(action: string, target: string, href?: string) {
 /* ======================================================================
    Auth (server-side: password hashing, signed httpOnly session cookie, roles – see /api/auth)
    ====================================================================== */
-export const DEFAULT_ADMIN = { email: 'admin@meerohr.com', password: 'Meero@2026' };
-
 async function authCall<T = Record<string, never>>(body: Record<string, unknown>): Promise<T> {
   let res: Response;
   try {

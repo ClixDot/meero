@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import {
-  DEFAULT_ADMIN, clearCookieHeader, clientIp, cookieHeader, ensureDefaultAdmin, getSessionUser, hashPassword, makeSession,
+  clearCookieHeader, clientIp, cookieHeader, ensureDefaultAdmin, getSessionUser, hashPassword, makeSession,
   newSalt, publicUser, rateLimited, verifyPassword,
 } from '../../../lib/server/auth';
 import { userCol, type UserDoc } from '../../../lib/server/mongo';
@@ -36,8 +36,7 @@ export async function POST(request: Request) {
       return json({ user: publicUser({ ...user, lastLoginAt }) }, 200, { 'Set-Cookie': cookieHeader(makeSession(user._id, ttl), ttl / 1000) });
     }
     if (body.op === 'hint') {
-      const show = process.env.NODE_ENV !== 'production' && !!(await col.findOne({ email: DEFAULT_ADMIN.email, usingDefaultPassword: true }));
-      return json({ show });
+      return json({ show: false }); // credentials come from the environment and are never shown on the page
     }
     if (body.op === 'logout') return json({ ok: true }, 200, { 'Set-Cookie': clearCookieHeader() });
 
