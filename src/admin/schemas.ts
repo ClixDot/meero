@@ -307,14 +307,6 @@ export const stepFields: Field[] = [
 
 export const headerFooterSchema: Field[] = [
   { type: 'image', key: 'logo', label: 'Website logo', required: true, altKey: 'logoAlt', help: 'Shown in the header and footer. Use a white/light logo (PNG with transparency).' },
-  {
-    type: 'list', key: 'nav', label: 'Navigation menu', itemLabel: 'Menu link', itemTitle: (n) => `${n.name} → ${n.path}`,
-    newItem: () => ({ id: newId('nav'), name: '', path: '/', visible: true }),
-    fields: [
-      { type: 'text', key: 'name', label: 'Label', required: true, half: true },
-      { type: 'link', key: 'path', label: 'Link', required: true, half: true },
-    ],
-  },
   { type: 'text', key: 'headerCtaLabel', label: 'Header button label', half: true, required: true },
   { type: 'toggle', key: 'showWhatsappPill', label: 'Show WhatsApp pill in header (large screens)' },
   {

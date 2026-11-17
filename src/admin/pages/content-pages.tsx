@@ -98,7 +98,7 @@ export function GalleryEditor() {
 }
 
 export function HeaderFooterEditor() {
-  return <DocEditor contentKey="headerFooter" title="Header & footer" description="Logo, navigation menu, header button, footer text and social links." sections={headerFooterSchema} previewPath="/" />;
+  return <DocEditor contentKey="headerFooter" title="Header & footer" description="Logo, header button, footer text and social links." sections={headerFooterSchema} previewPath="/" />;
 }
 
 export function SeoEditor() {
