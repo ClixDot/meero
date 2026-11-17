@@ -41,11 +41,11 @@ const now = () => new Date().toISOString();
    ====================================================================== */
 let actorName = 'System';
 
+/** Audit trail entries are written by the server in a single call and never block the action that caused them. */
 async function log(action: string, target: string, href?: string) {
-  const list = ((await kv.get<ActivityEntry[]>('activity')) ?? []).slice(0, 199);
-  list.unshift({ id: uid('act'), at: now(), actor: actorName, action, target, href });
-  await kv.set('activity', list);
-  emit({ type: 'records', key: 'activity' });
+  kv.logActivity({ id: uid('act'), action, target, href })
+    .then(() => emit({ type: 'records', key: 'activity' }))
+    .catch(() => undefined);
 }
 
 /* ======================================================================
@@ -397,6 +397,10 @@ export const localApplications: ApplicationsService = {
     // The server validates, stores atomically and writes the activity entry (visitors cannot read or edit records).
     return kv.append('applications', app);
   },
+  async markAllRead() {
+    await kv.markAllRead('applications');
+    emit({ type: 'records', key: 'applications' });
+  },
   async update(id, patch) {
     const list = await listOf<Application>('applications');
     const app = list.find((a) => a.id === id);
@@ -438,6 +442,10 @@ export const localEnquiries: EnquiriesService = {
     const stamp = now();
     const enq: Enquiry = { ...input, id: uid('enq'), status: 'new', notes: [], read: false, createdAt: stamp, updatedAt: stamp };
     return kv.append('enquiries', enq);
+  },
+  async markAllRead() {
+    await kv.markAllRead('enquiries');
+    emit({ type: 'records', key: 'enquiries' });
   },
   async update(id, patch) {
     const list = await listOf<Enquiry>('enquiries');

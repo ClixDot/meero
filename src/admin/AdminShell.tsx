@@ -453,11 +453,7 @@ function Notifications() {
   }, [open]);
 
   const markAllRead = async () => {
-    const [apps, enqs] = await Promise.all([services.applications.list(), services.enquiries.list()]);
-    await Promise.all([
-      ...apps.filter((a) => !a.read).map((a) => services.applications.update(a.id, { read: true })),
-      ...enqs.filter((e) => !e.read).map((e) => services.enquiries.update(e.id, { read: true })),
-    ]);
+    await Promise.all([services.applications.markAllRead(), services.enquiries.markAllRead()]);
     await refreshUnread();
   };
 

@@ -88,11 +88,20 @@ export async function ensureDefaultAdmin() {
   adminChecked = true;
 }
 
+const userCache = new Map<string, { user: UserDoc | null; at: number }>();
+const USER_TTL = 15_000;
+/** Call after any change to user accounts so role/active changes apply immediately on this instance. */
+export const dropUserCache = () => userCache.clear();
+
 export async function getSessionUser(request: Request): Promise<UserDoc | null> {
   const id = readSession(cookieFrom(request));
   if (!id) return null;
-  const user = await (await userCol()).findOne({ _id: id });
-  return user && user.active ? user : null;
+  const hit = userCache.get(id);
+  if (hit && Date.now() - hit.at < USER_TTL) return hit.user;
+  const found = await (await userCol()).findOne({ _id: id });
+  const user = found && found.active ? found : null;
+  userCache.set(id, { user, at: Date.now() });
+  return user;
 }
 
 /* ---------- tiny in-memory rate limiter (per server instance) ---------- */

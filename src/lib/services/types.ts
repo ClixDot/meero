@@ -146,6 +146,7 @@ export interface ApplicationsService {
   list(): Promise<Application[]>;
   create(input: Omit<Application, 'id' | 'code' | 'status' | 'notes' | 'read' | 'submittedAt' | 'updatedAt' | 'hasCv'>, cv?: File | null): Promise<Application>;
   update(id: string, patch: Partial<Pick<Application, 'status' | 'read' | 'preferredJob'>>): Promise<Application>;
+  markAllRead(): Promise<void>;
   addNote(id: string, text: string): Promise<Application>;
   remove(id: string): Promise<void>;
   cvUrl(id: string): Promise<string | null>;
@@ -174,6 +175,7 @@ export interface EnquiriesService {
   list(): Promise<Enquiry[]>;
   create(input: Pick<Enquiry, 'name' | 'email' | 'phone' | 'message' | 'subject'>): Promise<Enquiry>;
   update(id: string, patch: Partial<Pick<Enquiry, 'status' | 'read'>>): Promise<Enquiry>;
+  markAllRead(): Promise<void>;
   addNote(id: string, text: string): Promise<Enquiry>;
   remove(id: string): Promise<void>;
 }

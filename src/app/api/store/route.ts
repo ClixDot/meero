@@ -51,8 +51,7 @@ function cleanEnquiry(i: Record<string, unknown>) {
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
-    const user = await getSessionUser(request);
-    const col = await kvCol();
+    const [user, col] = await Promise.all([getSessionUser(request), kvCol()]);
 
     const prefix = url.searchParams.get('prefix');
     if (prefix) {
@@ -125,6 +124,23 @@ export async function POST(request: Request) {
       };
       await col.updateOne({ _id: 'activity' }, { $push: { value: { $each: [entry], $position: 0, $slice: 200 } } as never }, { upsert: true });
       return json({ item });
+    }
+
+    if (body.op === 'log') {
+      const user = await getSessionUser(request);
+      if (!user) return fail('Please sign in again.', 401);
+      const e = (body.entry ?? {}) as Record<string, unknown>;
+      const entry = { id: str(e.id, 60), at: new Date().toISOString(), actor: user.name, action: str(e.action, 160), target: str(e.target, 200), href: str(e.href, 200) || undefined };
+      await col.updateOne({ _id: 'activity' }, { $push: { value: { $each: [entry], $position: 0, $slice: 200 } } as never }, { upsert: true });
+      return json({ ok: true });
+    }
+
+    if (body.op === 'markRead') {
+      const user = await getSessionUser(request);
+      if (!user || user.role === 'viewer') return fail('You do not have permission to do that.', user ? 403 : 401);
+      if (body.key !== 'applications' && body.key !== 'enquiries') return fail('Not allowed.', 403);
+      await col.updateOne({ _id: body.key, 'value.read': false }, { $set: { 'value.$[].read': true, updatedAt: new Date() } as never });
+      return json({ ok: true });
     }
 
     if (body.op === 'duplicate') {

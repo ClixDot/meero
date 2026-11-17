@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import {
-  clearCookieHeader, clientIp, cookieHeader, ensureDefaultAdmin, getSessionUser, hashPassword, makeSession,
+  clearCookieHeader, dropUserCache, clientIp, cookieHeader, ensureDefaultAdmin, getSessionUser, hashPassword, makeSession,
   newSalt, publicUser, rateLimited, verifyPassword,
 } from '../../../lib/server/auth';
 import { userCol, type UserDoc } from '../../../lib/server/mongo';
@@ -21,6 +21,7 @@ const ROLES = ['owner', 'editor', 'viewer'];
 export async function POST(request: Request) {
   try {
     const body = (await request.json().catch(() => ({}))) as Record<string, any>;
+    if (['setPassword', 'createUser', 'updateUser', 'deleteUser', 'login'].includes(body.op)) dropUserCache();
     const col = await userCol();
     await ensureDefaultAdmin();
 
