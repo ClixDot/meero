@@ -30,7 +30,6 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [show, setShow] = useState(false);
-  const [remember, setRemember] = useState(true);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [slide, setSlide] = useState(0);
@@ -58,7 +57,7 @@ export default function Login() {
     setBusy(true);
     setError('');
     try {
-      await services.auth.login(email, password, remember);
+      await services.auth.login(email, password, true);
       router.replace(next());
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign in failed.');
@@ -112,11 +111,7 @@ export default function Login() {
                     </button>
                   </label>
 
-                  <div className="flex items-center justify-between gap-4 pt-[16px]">
-                    <label className="flex items-center gap-2 text-[13px] text-[#7A8587] select-none cursor-pointer">
-                      <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="w-4 h-4 rounded accent-[#168F88]" />
-                      Keep me signed in
-                    </label>
+                  <div className="flex items-center justify-end gap-4 pt-[16px]">
                     <button
                       type="submit"
                       disabled={busy}
