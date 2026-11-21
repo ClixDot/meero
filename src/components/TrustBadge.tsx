@@ -77,7 +77,7 @@ export default function TrustBadge({
   return (
     <div className={`inline-flex flex-col items-start gap-2.5 sm:gap-3 ${className}`}>
       {logoImg}
-      <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-(--brand-turq)/10 text-white/95 border border-(--brand-turq)/30 backdrop-blur-sm text-xs sm:text-sm font-semibold tracking-wide shadow-sm">
+      <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-(--brand-turq)/10 text-white/95 border border-(--brand-turq)/30 backdrop-blur-sm text-[11px] sm:text-xs font-semibold tracking-wide shadow-sm">
         <span className="w-1.5 h-1.5 rounded-full bg-(--brand-turq) animate-pulse shrink-0" />
         <span>{label}</span>
       </div>
