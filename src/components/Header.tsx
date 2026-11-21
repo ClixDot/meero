@@ -63,7 +63,7 @@ export default function Header({ onOpenApplyModal }) {
             src={headerFooter.logo}
             alt={headerFooter.logoAlt}
             variant="light" 
-            size={isScrolled ? 'h-9 sm:h-10 md:h-11 lg:h-12' : 'h-13 sm:h-16 md:h-20 lg:h-24'} 
+            size={isScrolled ? 'h-[27px] sm:h-[30px] md:h-[33px] lg:h-9' : 'h-8 sm:h-10 md:h-12 lg:h-[54px]'}
           />
 
           {/* Desktop Navigation (Floating Pill) */}

@@ -41,7 +41,7 @@ export const companyInfo = {
   },
   credentials: {
     governmentApproval: "Govt. of India Approved Recruiting Agency",
-    approvalLogo: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/credentials/mea-logo-white.png",
+    approvalLogo: "https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:best,c_limit,w_1200/v1795250169/meero/images/credentials/mea-logo-white.png",
     approvalLogoAlt: "Ministry of External Affairs, Government of India",
     jurisdiction: "Government of India",
     focusMarkets: [

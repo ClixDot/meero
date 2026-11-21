@@ -171,11 +171,11 @@ export default function TourOverlay({ step, index, total, pathname, navigate, on
             animate={{ opacity: 1, ...rect }}
             exit={{ opacity: 0 }}
             transition={spring}
-            style={{ boxShadow: '0 0 0 3px #21B8C1, 0 0 0 7px rgba(33,184,193,0.25), 0 0 0 9999px rgba(11,15,23,0.55)' }}
+            style={{ boxShadow: '0 0 0 3px #21B8C1, 0 0 0 7px rgba(33,184,193,0.25), 0 0 0 9999px rgba(3,0,39,0.55)' }}
           />
         )}
       </AnimatePresence>
-      {!rect && <div aria-hidden className="fixed inset-0 z-[85] pointer-events-none bg-[#0B0F17]/30" />}
+      {!rect && <div aria-hidden className="fixed inset-0 z-[85] pointer-events-none bg-[#030027]/30" />}
 
       {/* Step card */}
       <motion.div
@@ -190,8 +190,8 @@ export default function TourOverlay({ step, index, total, pathname, navigate, on
         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
         className={
           docked
-            ? 'fixed z-[86] left-3 right-3 bottom-3 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-[380px] rounded-[22px] bg-white shadow-[0_30px_70px_-24px_rgba(11,15,23,0.55)] border border-white outline-none pb-[env(safe-area-inset-bottom)]'
-            : 'fixed z-[86] rounded-[22px] bg-white shadow-[0_30px_70px_-24px_rgba(11,15,23,0.55)] border border-white outline-none'
+            ? 'fixed z-[86] left-3 right-3 bottom-3 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-[380px] rounded-[22px] bg-white shadow-[0_30px_70px_-24px_rgba(3,0,39,0.55)] border border-white outline-none pb-[env(safe-area-inset-bottom)]'
+            : 'fixed z-[86] rounded-[22px] bg-white shadow-[0_30px_70px_-24px_rgba(3,0,39,0.55)] border border-white outline-none'
         }
         style={docked ? undefined : { top: cardPos!.top, left: cardPos!.left, width: Math.min(CARD_W, window.innerWidth - EDGE * 2) }}
       >

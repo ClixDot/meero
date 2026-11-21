@@ -84,7 +84,7 @@ export default function Login() {
           {/* ---------------- Form side (685 wide) ---------------- */}
           <div className="flex min-h-[600px] lg:min-h-0 flex-col rounded-[28px] bg-[#F7F5F2] px-6 pt-8 pb-7 sm:px-[40px] sm:pt-[30px] sm:pb-[30px]">
             <a href="/" aria-label="MEERO – back to website" className="inline-block self-start">
-              <img src={`${CDN}/meero-logo-dark.png`} alt="MEERO HR Consultancy" className="h-[54px] w-auto" />
+              <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:best,c_limit,w_1600/v1795250179/meero/images/meero-logo-dark.png" alt="MEERO Overseas HR Consultancy" className="h-[58px] w-auto" />
             </a>
 
             <div className="flex flex-1 items-center justify-center">
@@ -138,11 +138,11 @@ export default function Login() {
 
           {/* ---------------- Brand side (685 wide) ---------------- */}
           <div
-            className="hidden lg:block relative overflow-hidden rounded-[28px] bg-[#08131B]"
+            className="hidden lg:block relative overflow-hidden rounded-[28px] bg-[#030027]"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
           >
-            <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_20%_0%,#0E3B45_0%,#08131B_55%,#050A10_100%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_20%_0%,#0B1A55_0%,#030027_55%,#02001B_100%)]" />
             {SHAPES.map((s, i) => (
               <motion.div
                 key={i}
@@ -152,7 +152,7 @@ export default function Login() {
                 transition={{ duration: 9 + i, repeat: Infinity, ease: 'easeInOut', delay: s.d }}
               />
             ))}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050A10]/55 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#02001B]/55 via-transparent to-transparent" />
 
             {/* Glass card: 375 wide, centred */}
             <div className="absolute inset-0 flex items-center justify-center">
@@ -175,7 +175,7 @@ export default function Login() {
                 </div>
                 <div className="mt-[14px] pt-[16px] border-t border-white/10 flex items-center gap-3">
                   <span className="w-12 h-12 rounded-full bg-white flex items-center justify-center shrink-0">
-                    <img src={`${CDN}/meero-mark.png`} alt="" aria-hidden className="w-8 h-8 object-contain" />
+                    <img src={`https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:good,c_limit,w_300/v1795254714/meero/images/meero-mark.png`} alt="" aria-hidden className="w-8 h-8 object-contain" />
                   </span>
                   <div className="min-w-0">
                     <p className="text-[15px] font-bold text-white leading-tight">MEERO Admin</p>

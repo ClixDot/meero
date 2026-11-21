@@ -24,7 +24,7 @@ export default function About({ onOpenApplyModal }) {
             fetchPriority="high"
             decoding="async"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-(--brand-dark)/95 via-(--brand-dark)/70 to-(--brand-dark)/50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/75 to-black/65" />
         </div>
 
         <div className="max-w-[1560px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
@@ -107,7 +107,7 @@ export default function About({ onOpenApplyModal }) {
           {/* Closing call to action */}
           {closing.visible && (
           <div className="pt-8 border-t border-slate-200">
-            <div className="rounded-2xl sm:rounded-3xl bg-[#0D151E] text-white p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+            <div className="rounded-2xl sm:rounded-3xl bg-[#030027] text-white p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
               <div className="space-y-2">
                 <h3 className="text-xl sm:text-2xl font-extrabold font-heading">{closing.heading}</h3>
                 <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">{closing.text}</p>

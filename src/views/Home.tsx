@@ -20,7 +20,6 @@ import {
 } from 'lucide-react';
 
 import Button from '../components/Button';
-import FingerprintGraphic from '../components/FingerprintGraphic';
 import TrustBadge from '../components/TrustBadge';
 
 import { useSite, useVisible } from '../lib/cms/SiteContent';
@@ -245,8 +244,8 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
             decoding="async"
           />
           {/* Subtle gradient vignette */}
-          <div className="absolute inset-0 bg-gradient-to-r from-(--brand-dark)/95 via-(--brand-dark)/70 to-(--brand-dark)/35" />
-          <div className="absolute inset-0 bg-gradient-to-t from-(--brand-dark) via-transparent to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/75 to-black/65" />
+          <div className="absolute inset-0 bg-gradient-to-t from-(--brand-dark)/85 via-transparent via-35% to-black/10" />
         </div>
 
         {/* Hero Content Container */}
@@ -259,7 +258,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              {home.hero.showTrustBadge && <TrustBadge size="h-20 sm:h-24 md:h-28" showTagline />}
+              {home.hero.showTrustBadge && <TrustBadge size="h-[44px] sm:h-[52px] md:h-[60px]" showTagline />}
             </motion.div>
 
             {/* Huge Clean Bold Headline (Style: "Digital Marketing Services") */}
@@ -390,11 +389,11 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
             </div>
 
             {/* Col 3: High-Contrast Dark Feature Card (Right) */}
-            <div className="lg:col-span-4 rounded-3xl bg-[#0D151E] text-white p-6 sm:p-7 flex flex-col justify-between shadow-xl relative overflow-hidden group">
+            <div className="lg:col-span-4 rounded-3xl bg-[#030027] text-white p-6 sm:p-7 flex flex-col justify-between shadow-xl relative overflow-hidden group">
 
               {/* Background watermark */}
               <div className="absolute -right-8 -bottom-8 opacity-10 pointer-events-none group-hover:scale-105 transition-transform duration-500">
-                <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-mark.png" alt="" aria-hidden="true" className="w-56 h-auto" />
+                <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:good,c_limit,w_1200/v1795254714/meero/images/meero-mark.png" alt="" aria-hidden="true" className="w-56 h-auto" />
               </div>
 
               <div className="relative z-10 space-y-3">
@@ -416,7 +415,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
                 <button
                   type="button"
                   onClick={() => onOpenApplyModal && onOpenApplyModal()}
-                  className="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-[#0D151E] hover:bg-slate-100 hover:scale-105 active:scale-95 transition-all shadow-md flex items-center gap-2 whitespace-nowrap shrink-0"
+                  className="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-[#030027] hover:bg-slate-100 hover:scale-105 active:scale-95 transition-all shadow-md flex items-center gap-2 whitespace-nowrap shrink-0"
                 >
                   <span>{home.explorer.cardButtonLabel}</span>
                   <ArrowRight className="w-3.5 h-3.5 shrink-0" />
@@ -623,12 +622,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
           ---------------------------------------------------- */}
           {home.careerDesk.visible && (
           <div className="pt-14 pb-14 border-b border-slate-200">
-            <div className="gsap-desk-banner rounded-2xl sm:rounded-3xl bg-[#0D151E] text-white p-6 sm:p-10 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 relative overflow-hidden">
-
-              {/* Subtle background decoration */}
-              <div className="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
-                <FingerprintGraphic className="w-72 h-72" color="#21B8C1" />
-              </div>
+            <div className="gsap-desk-banner rounded-2xl sm:rounded-3xl bg-[#030027] text-white p-6 sm:p-10 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 relative overflow-hidden">
 
               {/* Left Column: Heading & Simple Subtitle */}
               <div className="relative z-10 max-w-xl space-y-3 text-center lg:text-left">
@@ -668,7 +662,7 @@ export default function Home({ onOpenApplyModal, onOpenJobDetails }) {
           ---------------------------------------------------- */}
           {home.location.visible && (
           <div className="pt-10 sm:pt-14">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 bg-gradient-to-r from-(--brand-bg) to-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#E5ECEA] overflow-hidden w-full max-w-full">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 bg-gradient-to-r from-(--brand-bg) to-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl border-2 border-(--brand-teal)/35 hover:border-(--brand-teal)/60 shadow-[0_10px_30px_-18px_rgba(22,143,136,0.35)] transition-colors overflow-hidden w-full max-w-full">
               <div className="w-full min-w-0 text-center lg:text-left flex flex-col items-center lg:items-start space-y-1.5">
                 <div className="flex items-center gap-2 text-xl sm:text-2xl font-bold text-(--brand-text) font-heading">
                   <MapPin className="w-5 h-5 text-(--brand-teal) shrink-0" />

@@ -196,8 +196,8 @@ function Sidebar({ collapsed, onToggle, onClose, forceExpanded }: { collapsed: b
       {/* Brand */}
       <div className="flex items-center justify-between gap-2 px-4 pt-5 pb-4">
         <Link href="/admin" className="flex items-center gap-2.5 min-w-0">
-          <span className="w-10 h-10 rounded-2xl bg-[#0B0F17] flex items-center justify-center shrink-0 shadow-md">
-            <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-mark.png" alt="" className="w-7 h-7 object-contain" />
+          <span className="w-10 h-10 rounded-2xl bg-[#030027] flex items-center justify-center shrink-0 shadow-md">
+            <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:good,c_limit,w_1200/v1795254714/meero/images/meero-mark.png" alt="" className="w-7 h-7 object-contain" />
           </span>
           {showLabels && (
             <span className={cx('min-w-0', !forceExpanded && 'hidden lg:block')}>
@@ -261,11 +261,11 @@ function Sidebar({ collapsed, onToggle, onClose, forceExpanded }: { collapsed: b
       {/* Footer card */}
       {showLabels && (
         <div className={cx('p-3 [@media(max-height:940px)]:hidden', !forceExpanded && 'hidden lg:block')}>
-          <div className="relative overflow-hidden rounded-[20px] bg-[#0B0F17] text-white p-4">
-            <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-mark.png" alt="" aria-hidden className="absolute -right-6 -bottom-6 w-24 opacity-15" />
+          <div className="relative overflow-hidden rounded-[20px] bg-[#030027] text-white p-4">
+            <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:good,c_limit,w_1200/v1795254714/meero/images/meero-mark.png" alt="" aria-hidden className="absolute -right-6 -bottom-6 w-24 opacity-15" />
             <p className="text-sm font-bold font-heading">View live website</p>
             <p className="text-[11px] text-slate-400 mt-0.5 leading-snug">Published changes appear instantly.</p>
-            <a href="/" target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full bg-[#21B8C1] text-[#0B0F17] text-xs font-bold hover:brightness-110">
+            <a href="/" target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full bg-[#21B8C1] text-[#030027] text-xs font-bold hover:brightness-110">
               Open site <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>

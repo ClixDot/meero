@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link } from '../lib/router';
-const meeroLogo = 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero.png';
+const meeroLogo = 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:best,c_limit,w_1600/v1795250185/meero/images/meero.png';
 
 /**
  * Meero Official Brand Logo Component
@@ -14,7 +14,7 @@ export default function Logo({
   showLink = true,
   className = '',
   imgClassName = '',
-  src = 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero.png',
+  src = 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:best,c_limit,w_1600/v1795250185/meero/images/meero.png',
   alt = 'MEERO Overseas HR Consultancy'
 }: any) {
   

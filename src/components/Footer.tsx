@@ -20,12 +20,8 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
     <footer className="bg-(--brand-dark) text-white pt-16 pb-12 border-t border-white/10 relative overflow-hidden">
       
       {/* Decorative subtle fingerprint background watermark */}
-      <div className="absolute right-0 bottom-0 opacity-5 pointer-events-none transform translate-x-1/4 translate-y-1/4">
-        <svg viewBox="0 0 400 400" className="w-[500px] h-[500px]">
-          <circle cx="200" cy="200" r="180" stroke="#21B8C1" strokeWidth="6" strokeDasharray="30 15 45 15" fill="none"/>
-          <circle cx="200" cy="200" r="130" stroke="#168F88" strokeWidth="6" strokeDasharray="25 12 35 12" fill="none"/>
-          <circle cx="200" cy="200" r="80" stroke="#21B8C1" strokeWidth="5" strokeDasharray="20 10 30 10" fill="none"/>
-        </svg>
+      <div className="absolute -right-10 -bottom-12 sm:-right-14 sm:-bottom-16 opacity-10 pointer-events-none select-none" aria-hidden="true">
+        <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:good,c_limit,w_1200/v1795254714/meero/images/meero-mark.png" alt="" className="w-64 sm:w-80 lg:w-[420px] h-auto" loading="lazy" />
       </div>
 
       <div className="max-w-[1560px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
@@ -35,13 +31,21 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
           
           {/* Col 1: Brand & Overview (Col span 4) */}
           <div className="lg:col-span-4 space-y-4">
-            <Logo variant="light" size="md" src={headerFooter.logo} alt={headerFooter.logoAlt} />
+            <Logo variant="light" size="h-[30px] sm:h-[36px] md:h-[42px] lg:h-[46px]" src={headerFooter.logo} alt={headerFooter.logoAlt} />
             
             <p className="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-sm pt-2">
               {footer.description}
             </p>
 
-            {footer.showTrustBadge && <TrustBadge size="h-14 sm:h-16 md:h-20" showTagline className="pt-2" />}
+            {footer.showTrustBadge && (
+              <div className="pt-3 flex flex-col items-start gap-2.5">
+                <span className="inline-flex items-center gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-(--brand-turq)">
+                  <span className="w-5 h-px bg-(--brand-turq)/60" aria-hidden="true" />
+                  Approved by
+                </span>
+                <TrustBadge size="h-[40px] sm:h-[46px] md:h-[52px]" />
+              </div>
+            )}
           </div>
 
           {/* Col 2: Navigation (Col span 2) */}
@@ -105,8 +109,9 @@ export default function Footer({ onOpenPrivacy, onOpenTerms }) {
                   <div className="text-xs">
                     <a href={`tel:+${companyInfo.contact.cleanOfficeMobile}`} className="hover:text-white text-slate-300">
                       {companyInfo.contact.officeMobile}
-                    </a> (Office) · 
-                    <a href={`tel:${companyInfo.contact.cleanTelephone}`} className="hover:text-white text-slate-300 ml-1">
+                    </a>
+                    <span className="text-slate-500 mx-1.5">·</span>
+                    <a href={`tel:${companyInfo.contact.cleanTelephone}`} className="hover:text-white text-slate-300">
                       {companyInfo.contact.telephone}
                     </a>
                   </div>

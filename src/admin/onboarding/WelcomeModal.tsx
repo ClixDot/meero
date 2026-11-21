@@ -48,7 +48,7 @@ export default function WelcomeModal({ name, stepCount, resumeAt, hideWelcome, o
 
   return createPortal(
     <div className="fixed inset-0 z-[90] flex items-end sm:items-center justify-center p-0 sm:p-4" data-lenis-prevent>
-      <motion.div className="absolute inset-0 bg-[#0B0F17]/45 backdrop-blur-[3px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => onSkip(hide)} />
+      <motion.div className="absolute inset-0 bg-[#030027]/45 backdrop-blur-[3px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => onSkip(hide)} />
       <motion.div
         ref={dialog}
         role="dialog"
@@ -58,7 +58,7 @@ export default function WelcomeModal({ name, stepCount, resumeAt, hideWelcome, o
         initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.97 }}
         animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-full sm:max-w-[520px] max-h-[94dvh] overflow-y-auto rounded-t-[28px] sm:rounded-[28px] bg-white shadow-[0_40px_90px_-30px_rgba(11,15,23,0.55)] pb-[env(safe-area-inset-bottom)]"
+        className="relative w-full sm:max-w-[520px] max-h-[94dvh] overflow-y-auto rounded-t-[28px] sm:rounded-[28px] bg-white shadow-[0_40px_90px_-30px_rgba(3,0,39,0.55)] pb-[env(safe-area-inset-bottom)]"
       >
         {/* Brand header */}
         <div className="relative h-40 sm:h-44 overflow-hidden bg-gradient-to-br from-[#0E3B3A] via-[#127a74] to-[#1FA9A7]">
@@ -66,8 +66,8 @@ export default function WelcomeModal({ name, stepCount, resumeAt, hideWelcome, o
           <span aria-hidden className="absolute right-10 top-5 w-16 h-16 rounded-full bg-[#21B8C1]/40" />
           <span aria-hidden className="absolute -right-10 -bottom-16 w-44 h-44 rounded-full border-[14px] border-dashed border-white/15" />
           <div className="relative h-full flex items-center justify-center gap-3">
-            <span className="w-16 h-16 rounded-[20px] bg-[#0B0F17] flex items-center justify-center shadow-[0_12px_30px_-10px_rgba(0,0,0,0.6)] ring-1 ring-white/15">
-              <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-mark.png" alt="" className="w-11 h-11 object-contain" />
+            <span className="w-16 h-16 rounded-[20px] bg-[#030027] flex items-center justify-center shadow-[0_12px_30px_-10px_rgba(0,0,0,0.6)] ring-1 ring-white/15">
+              <img src="https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:good,c_limit,w_1200/v1795254714/meero/images/meero-mark.png" alt="" className="w-11 h-11 object-contain" />
             </span>
             <span className="text-white">
               <span className="block text-2xl font-extrabold font-heading tracking-tight leading-none">MEERO</span>

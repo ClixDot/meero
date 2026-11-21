@@ -250,7 +250,7 @@ export default function CollectionEditor({
                       dragIndex === index && 'opacity-50',
                     )}>
                     {/* Image */}
-                    <button type="button" onClick={openEdit} className="relative block aspect-[4/3] overflow-hidden bg-[#0B0F17] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#168F88]" aria-label={`Edit ${itemTitle(item) || itemLabel}`}>
+                    <button type="button" onClick={openEdit} className="relative block aspect-[4/3] overflow-hidden bg-[#030027] text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#168F88]" aria-label={`Edit ${itemTitle(item) || itemLabel}`}>
                       {imageKey && item[imageKey] ? (
                         // object-top keeps the poster's heading ("NOW HIRING", title) in view.
                         <MediaThumb refValue={item[imageKey]} className={cx('w-full h-full object-top transition-transform duration-300 group-hover:scale-[1.03]', hidden && 'grayscale-[60%]')} alt={item.alt} />

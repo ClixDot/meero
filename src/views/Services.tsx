@@ -49,7 +49,7 @@ export default function Services({ onOpenApplyModal }) {
             fetchPriority="high"
             decoding="async"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-(--brand-dark)/95 via-(--brand-dark)/75 to-(--brand-dark)/50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/75 to-black/65" />
         </div>
 
         <div className="max-w-[1560px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
@@ -148,7 +148,7 @@ export default function Services({ onOpenApplyModal }) {
           {/* Interactive Enquiry Switcher */}
           {page.cta.visible && (
           <div className="pt-10 border-t border-slate-200">
-            <div className="rounded-2xl sm:rounded-3xl bg-[#0D151E] text-white p-6 sm:p-10 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 shadow-xl">
+            <div className="rounded-2xl sm:rounded-3xl bg-[#030027] text-white p-6 sm:p-10 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 shadow-xl">
               <div className="space-y-3 text-center md:text-left">
                 <span className="text-xs font-bold uppercase tracking-widest text-(--brand-turq)">
                   {page.cta.eyebrow}

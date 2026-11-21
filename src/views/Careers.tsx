@@ -97,7 +97,7 @@ export default function Careers({
             fetchPriority="high"
             decoding="async"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-(--brand-dark)/95 via-(--brand-dark)/75 to-(--brand-dark)/50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/75 to-black/65" />
         </div>
 
         <div className="max-w-[1560px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
@@ -235,7 +235,7 @@ export default function Careers({
           {/* Talent Pool Banner */}
           {page.drives.visible && (
           <div className="pt-8 border-t border-slate-200">
-            <div className="rounded-2xl sm:rounded-3xl bg-[#0D151E] text-white p-6 sm:p-10 text-center space-y-3 shadow-xl">
+            <div className="rounded-2xl sm:rounded-3xl bg-[#030027] text-white p-6 sm:p-10 text-center space-y-3 shadow-xl">
               <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading">
                 {page.drives.heading}
               </h3>
@@ -247,7 +247,7 @@ export default function Careers({
                   href={whatsappChannelUrl || driveUpdatesChatUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold bg-[#25D366] text-[#0D151E] hover:bg-[#20ba5a] hover:scale-105 active:scale-95 transition-all shadow-md"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold bg-[#25D366] text-[#030027] hover:bg-[#20ba5a] hover:scale-105 active:scale-95 transition-all shadow-md"
                 >
                   <MessageCircle className="w-4 h-4 shrink-0" />
                   {whatsappChannelUrl ? page.drives.channelLabel : page.drives.chatLabel}
@@ -255,7 +255,7 @@ export default function Careers({
                 <button
                   type="button"
                   onClick={() => onOpenApplyModal && onOpenApplyModal()}
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold bg-white text-[#0D151E] hover:bg-slate-100 hover:scale-105 active:scale-95 transition-all shadow-md"
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold bg-white text-[#030027] hover:bg-slate-100 hover:scale-105 active:scale-95 transition-all shadow-md"
                 >
                   {page.drives.registerLabel}
                 </button>

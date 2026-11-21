@@ -201,12 +201,12 @@ const MEDIA_PREFIX = 'media:';
 const kindOf = (mime: string): MediaKind => (mime.startsWith('image/') ? 'image' : mime.startsWith('video/') ? 'video' : 'document');
 
 const seedAssets: Array<{ url: string; name: string; alt: string; folder: string }> = [
-  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero.png', name: 'MEERO logo (white)', alt: 'MEERO Overseas HR Consultancy', folder: 'Brand' },
-  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-mark.png', name: 'MEERO fingerprint mark', alt: '', folder: 'Brand' },
-  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-logo.png', name: 'MEERO logo', alt: 'MEERO Overseas HR Consultancy', folder: 'Brand' },
-  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-logo-dark.png', name: 'MEERO logo (dark)', alt: 'MEERO Overseas HR Consultancy', folder: 'Brand' },
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:best,c_limit,w_1600/v1795250185/meero/images/meero.png', name: 'MEERO logo (white)', alt: 'MEERO Overseas HR Consultancy', folder: 'Brand' },
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:good,c_limit,w_1200/v1795254714/meero/images/meero-mark.png', name: 'MEERO fingerprint mark', alt: '', folder: 'Brand' },
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:best,c_limit,w_1600/v1795250183/meero/images/meero-logo.png', name: 'MEERO logo', alt: 'MEERO Overseas HR Consultancy', folder: 'Brand' },
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:best,c_limit,w_1600/v1795250179/meero/images/meero-logo-dark.png', name: 'MEERO logo (dark)', alt: 'MEERO Overseas HR Consultancy', folder: 'Brand' },
   { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero-badge.jpg', name: 'MEERO badge', alt: 'MEERO badge', folder: 'Brand' },
-  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/credentials/mea-logo-white.png', name: 'Ministry of External Affairs logo', alt: 'Ministry of External Affairs, Government of India', folder: 'Brand' },
+  { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:best,c_limit,w_1200/v1795250169/meero/images/credentials/mea-logo-white.png', name: 'Ministry of External Affairs logo', alt: 'Ministry of External Affairs, Government of India', folder: 'Brand' },
   { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/hero-bg.jpg', name: 'Home hero background', alt: 'International HR team collaboration', folder: 'Backgrounds' },
   { url: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/business-card.jpg', name: 'Business card', alt: 'MEERO business card', folder: 'Brand' },
   ...['001', '002', '003', '004', '005', '006', '007', '008'].map((n) => ({ url: `https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/posters/job-${n}.jpg`, name: `Hiring poster job-${n}`, alt: `Hiring poster for job ${n}`, folder: 'Posters' })),

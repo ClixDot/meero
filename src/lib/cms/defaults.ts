@@ -150,8 +150,8 @@ export const defaultContent = {
     hero: {
       title: 'Our Recruitment Drives',
       highlight: '& Events',
-      image: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=1600&q=75',
-      imageAlt: '',
+      image: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto,c_limit,w_1800/v1795256385/meero/images/gallery-hero.jpg',
+      imageAlt: 'HR consultant interviewing a candidate',
     },
     categories: clone(galleryCategories),
     emptyText: 'No photos yet.',
@@ -166,7 +166,7 @@ export const defaultContent = {
   steps: recruitmentSteps.map((s) => ({ ...clone(s), id: `step-${s.step}`, visible: true })),
 
   headerFooter: {
-    logo: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto/meero/images/meero.png',
+    logo: 'https://res.cloudinary.com/inu9dzib/image/upload/f_auto,q_auto:best,c_limit,w_1600/v1795250185/meero/images/meero.png',
     logoAlt: 'MEERO Overseas HR Consultancy',
     nav: [
       { id: 'nav-home', name: 'Home', path: '/', visible: true },
@@ -218,7 +218,7 @@ export const defaultContent = {
     bodyFont: 'Plus Jakarta Sans',
     headingScale: 100,
     pageBackground: '#FFFFFF',
-    darkBackground: '#0B0F17',
+    darkBackground: '#030027',
   },
 
   general: {
